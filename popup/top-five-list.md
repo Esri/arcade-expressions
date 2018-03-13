@@ -82,7 +82,6 @@ function getValuesArray(a){
   for(var i in a){
     valuesArray[i] = a[i].value;
   }
-  console(valuesArray);
   return valuesArray;
 }
 
