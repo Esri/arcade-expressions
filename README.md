@@ -25,7 +25,7 @@ Each expression lives in a Markdown file, which contains a general description o
 
 ## Contributing
 
-Esri welcomes [contributions](CONTRIBUTING.md) from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
+Esri welcomes [contributions](https://github.com/esri/contributing) from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
 
 ## License
 Copyright 2018 Esri
