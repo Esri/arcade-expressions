@@ -126,3 +126,7 @@ getTopGroups(groups);
 ```
 
 ## Example output
+
+See [this webmap](https://jsapi.maps.arcgis.com/home/webmap/viewer.html?webmap=1add0bb044974d558f263ea468710aad) for examples of how to use this expression in ArcGIS Online.
+
+[![top-5](../images/top-5.png)](https://jsapi.maps.arcgis.com/home/webmap/viewer.html?webmap=1add0bb044974d558f263ea468710aad)
