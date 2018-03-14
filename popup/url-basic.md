@@ -36,7 +36,7 @@ Left($feature.WELL_ID, 3) + "/" + $feature.WELL_ID + ".pdf"
 
 ```js
 "Your Base URL" + 
-Left($feature.field_name_1, 3) + "/" + $feature.field_name_1 + ".pdf"
+$feature.field_name_1 + "/" + $feature.field_name_2 + ".pdf"
 ```
 
 ## Example output
