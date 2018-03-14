@@ -1,5 +1,5 @@
 
-# Dynamically creates a hyperlink in a popup
+# Dynamically create a hyperlink in a popup
 
 This example shows how to create a custom hyperlink based of field values from a feature 
 
