@@ -4,12 +4,13 @@ This folder contains Arcade expression templates and functions that may be used 
 
 ## General workflow
 
-Each expression lives in a Markdown file, which contains a general description of the expression, its use case, a depiction of the result, the code to copy, and an example of an executable form of the expression along with its output. It may also include a link to a webmap demonstrating the expression in action.
+Each expression lives in a Markdown file, which contains a general description of the expression, its use case, a depiction of the result, the code to copy, and an example of an executable form of the expression along with its output. It may also include a link to a web map demonstrating the expression in action.
 
 > Note that expressions living in this folder don't have to be exclusively used in the visualization profile. They can likely be used in different profiles, though they were originally designed for the visualization profile.
 
 See the list below for shared expressions.
 
+* [Change over time](./change-over-time.md)
 * [Predominance](./predominance.md)
 * [Strength of Predominance](./predominance-strenth.md)
 * [Margin of Victory (gap)](./predomainance-gap.md)

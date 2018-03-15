@@ -41,6 +41,6 @@ $feature.field_name_1 + "/" + $feature.field_name_2 + ".pdf"
 
 ## Example output
 
-See [this webmap](https://arcg.is/1K9jbu) for examples of how to use this expression in ArcGIS Online.  Note not all wells have a pdf log.
+See [this web map](https://arcg.is/1K9jbu) for examples of how to use this expression in ArcGIS Online.  Note not all wells have a pdf log.
 
 [![url-basic](./images/url-basic.png)](https://arcg.is/1K9jbu)

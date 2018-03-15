@@ -16,7 +16,7 @@ Click on the desired profile name to view relevant expressions.
 
 > Note that expressions living in one folder don't have to be exclusively used in the associated profile. They can likely be used in different profiles, though they were designed for the profile indicated by the folder name.
 
-Each expression lives in a Markdown file, which contains a general description of the expression, its use case, a depiction of the result, the code to copy, and an example of an executable form of the expression along with its output. It may also include a link to a webmap demonstrating the expression in action.
+Each expression lives in a Markdown file, which contains a general description of the expression, its use case, a depiction of the result, the code to copy, and an example of an executable form of the expression along with its output. It may also include a link to a web map demonstrating the expression in action.
 
 ## Resources
 
