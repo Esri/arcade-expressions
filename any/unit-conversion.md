@@ -54,4 +54,4 @@ fieldToConvert * factor;
 
 See [this webmap](https://urbanobservatory.maps.arcgis.com/home/webmap/viewer.html?webmap=6211aae5a03148c4b646376e21afef76) for examples of how to use this expression for both visualization and popups in ArcGIS Online. 
 
-![Change Over Time](./images/change-over-time.png)
+![Change Over Time](./images/unit-conversion.png)
