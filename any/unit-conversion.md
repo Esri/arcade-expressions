@@ -31,6 +31,7 @@ fieldToConvert * factor;
 ## Expression Template
 The expression you implement depends on the type of conversion that you would like to perform. [Google conversion](https://goo.gl/R61roL) is a great tool to determine the conversion factor. The example below multiplies meters by 3.28 to obtain the measurement in feet. 
 
+```js
 // Common conversion factors
 //
 // meters to feet = 3.28
@@ -47,9 +48,10 @@ var fieldToConvert = $feature.FIELD_NAME;
 // Replace 1 with the conversion factor here
 var factor = 1;  // e.g. use 3.28 to convert from meters to feet
 fieldToConvert * factor;
+```
 
 ## Example output
 
 See [this webmap](https://urbanobservatory.maps.arcgis.com/home/webmap/viewer.html?webmap=6211aae5a03148c4b646376e21afef76) for examples of how to use this expression for both visualization and popups in ArcGIS Online. 
 
-![Change Over Time](https://i.imgur.com/59i8SbD.png)
+![Change Over Time](./images/change-over-time.png)
