@@ -3,7 +3,7 @@
 
 This example shows how to add a custom project phase or status graphic to a pop-up
 
-[![project-phase-overview](./images/project-phase-overview.png)]
+![project-phase-overview](./images/project-phase-overview.png)
 
 ## Use cases
 
