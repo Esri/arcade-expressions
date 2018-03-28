@@ -21,8 +21,8 @@ For example, in a layer with a field called PROJPHASE with a domain for the 4 ph
 
 ```js
 if ($feature.FIELD == 'PHASE1') {
-        return 'background-color:#000000';
-    }
+  return 'background-color:#000000';
+}
 return 'background-color:#DDDDDD';
 ```
 
@@ -30,8 +30,8 @@ With something like the following:
 
 ```js
 if ($feature.PROJPHASE == 'PreDesign') {
-        return 'background-color:#1987bb';
-    }
+  return 'background-color:#1987bb';
+}
 return 'background-color:#DDDDDD';
 ```
 
