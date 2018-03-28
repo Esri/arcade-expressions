@@ -1,7 +1,9 @@
 
 # Add a project phase/status graphic
 
-This example shows how to add a custom project phase or status to a pop-up
+This example shows how to add a custom project phase or status graphic to a pop-up
+
+[![project-phase-overview](./images/project-phase-overview.png)]
 
 ## Use cases
 
@@ -40,7 +42,7 @@ You will need to do this for each phase in the project. In the example above you
 
 Next you will need to configure the pop-up with a custom attribute display. Click the View HTML source button and add the following HTML table. You will want to update the expression references to correspond to the 4 expressions you created above. You will also need to update the project phase names to correspond to the different stages in your project phase field. You can add additional cells to each of the rows if you support more phases, for example you would replace this:
 
-```js
+```html
 <span><b>Phase</b></span>
 <table style=" border-collapse: separate; border-spacing: 6px 4px; width: 100%; table-layout: fixed;">
   <tbody><tr height="16">
@@ -58,7 +60,7 @@ Next you will need to configure the pop-up with a custom attribute display. Clic
 
 With something like the following:
 
-```js
+```html
 <span><b>Phase</b></span>
 <table style=" border-collapse: separate; border-spacing: 6px 4px; width: 100%; table-layout: fixed;">
   <tbody><tr height="16">
