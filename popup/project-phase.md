@@ -20,19 +20,16 @@ To configure the script to your layer, you must replace the field variable to th
 For example, in a layer with a field called PROJPHASE with a domain for the 4 phases of the project (PreDesign, Design, Construction, and Closeout), you would replace this:
 
 ```js
-if ($feature.FIELD == 'PHASE1') {
-  return 'background-color:#000000';
-}
-return 'background-color:#DDDDDD';
+// Update the background colors as needed. 
+// The first color is the color displayed when the feature is in the phase.
+// The second color is the color displayed when the feature is not in the phase.
+IIF($feature.FIELD == 'PHASE1', 'background-color:#000000', 'background-color:#DDDDDD')
 ```
 
 With something like the following:
 
 ```js
-if ($feature.PROJPHASE == 'PreDesign') {
-  return 'background-color:#1987bb';
-}
-return 'background-color:#DDDDDD';
+IIF($feature.PROJPHASE == 'PreDesign', 'background-color:#1987bb', 'background-color:#DDDDDD')
 ```
 
 You will need to do this for each phase in the project. In the example above you would need 4 arcade expressions (PreDesign, Design, Construction, and Closeout).
