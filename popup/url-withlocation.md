@@ -33,7 +33,7 @@ if (BaseUrl == "Invalid"){
   Console(EndGoal + " is an invalid value for EndGoal.");
 }
 
-/Convert Lines/Polygons to Points
+//Convert Lines/Polygons to Points
 var PointGeometry = Centroid(Geometry($feature));
 
 var ArcadeX = PointGeometry.x;
