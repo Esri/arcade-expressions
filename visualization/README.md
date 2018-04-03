@@ -13,7 +13,7 @@ See the list below for shared expressions.
 * [Change over time](./change-over-time.md)
 * [Predominance](./predominance.md)
 * [Strength of Predominance](./predominance-strenth.md)
-* [Margin of Victory (gap)](./predomainance-gap.md)
+* [Margin of Victory (gap)](./predominance-gap.md)
 
 ## Resources
 
