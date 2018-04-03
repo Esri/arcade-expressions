@@ -33,9 +33,12 @@ if (BaseUrl == "Invalid"){
   Console(EndGoal + " is an invalid value for EndGoal.");
 }
 
-var ArcadeX = Geometry($feature).x;
-var ArcadeY = Geometry($feature).y;
-var ArcadeSr = Geometry($feature).spatialReference.wkid;
+/Convert Lines/Polygons to Points
+var PointGeometry = Centroid(Geometry($feature));
+
+var ArcadeX = PointGeometry.x;
+var ArcadeY = PointGeometry.y;
+var ArcadeSr = PointGeometry.spatialReference.wkid;
 var Latitude, Longitude;
 
 function AuxSphereToLatLon(x, y) {
@@ -56,6 +59,8 @@ if (ArcadeSr == 4326) {
 } else if (ArcadeSr == 102100) {
     Console("102100 Spatial Reference - Conversion Necessary");
     AuxSphereToLatLon(ArcadeX, ArcadeY);
+} else {
+    Console(ArcadeSr + " Spatial Reference is not supported - currently works with Web Maps where the basemap is in WGS84 (4326) or Web Mercator Auxiliary Sphere 102100");
 }
 
 //Build Url Link
