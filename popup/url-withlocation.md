@@ -25,7 +25,7 @@ var EndGoal = "Google Directions"
 var BaseUrl = Decode( EndGoal,
   "Google Directions", "https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=",
   "Google Panoramic", "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=",
-  "Google Pin", "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=",
+  "Google Pin", "https://maps.google.com/maps?t=k&q=loc:",
   "Invalid"
 );
 
