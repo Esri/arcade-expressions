@@ -22,15 +22,15 @@ To configure the script to your layer, you replace the EndGoal variable with one
 //Options are Google Directions, Google Panoramic and Google Pin
 var EndGoal = "Google Directions"
 
-var BaseUrl;
-if (EndGoal == "Google Directions") {
-	BaseUrl = "https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination="
-} else if (EndGoal == "Google Panoramic") {
-	BaseUrl = "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint="
-} else if (EndGoal == "Google Pin") {
-	BaseUrl = "https://maps.google.com/maps?t=k&q=loc:"
-} else {
-	Console("Invalid End Goal")
+var BaseUrl = Decode(EndGoal,
+  "Google Directions", "https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=",
+  "Google Panoramic", "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=",
+  "Google Pin", "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=",
+  "Invalid"
+);
+
+if (BaseUrl == "Invalid"){
+  Console(EndGoal + " is an invalid value for EndGoal.");
 }
 
 var ArcadeX = Geometry($feature).x;
