@@ -14,6 +14,7 @@ See the list below for shared expressions.
 * [Dynamically create a hyperlink](./url-basic.md)
 * [Project phase table](./project-phase.md)
 * [Dynamically create a hyperlink with latitude and longitude values](./url-withlocation.md)
+* [Style the difference between 2 numeric fields](./numeric-difference.md)
 
 ## Resources
 
