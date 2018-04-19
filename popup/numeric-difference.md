@@ -43,7 +43,7 @@ IIF($feature.ACTCOST > $feature.ESTCOST, Text(Abs($feature.ACTCOST - $feature.ES
 
 ## HTML Template
 
-Next you will need to configure the pop-up with a custom attribute display. Click the View HTML source button and add the following HTML. You will want to update the expression references to correspond to the 2 expressions you created above. In this scenario we are styling under budget with a green font color and over budget with a red font color. You can customize this to fit your scenario. When an expression returns a null value it will not display this means that only one of the expressions below will display for any given feature.
+Next you will need to configure the pop-up with a custom attribute display. Click the View HTML source button and add the following HTML. You will want to update the expression references to correspond to the 2 expressions you created above. In this scenario we are styling under budget with a green font color and over budget with a red font color. You can customize this to fit your scenario. When an expression returns a null value, it will not display. This means the value returned from only one of the expressions below will display for any given feature.
 
 ```html
 The project is <font color="#228b22">{expression/expr0}</font><font color="#ff0000">{expression/expr1}</font>
