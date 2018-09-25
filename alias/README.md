@@ -22,6 +22,7 @@ See the list below for shared expressions.
 Esri welcomes [contributions](CONTRIBUTING.md) from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
 
 ## License
+
 Copyright 2018 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -37,6 +38,3 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 A copy of the license is available in the repository's [LICENSE](LICENSE) file.
-
-[](Esri Tags: ArcGIS Arcade)
-[](Esri Language: Arcade)
