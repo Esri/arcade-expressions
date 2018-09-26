@@ -12,7 +12,7 @@ These expressions are organized based on their intended [execution profile](http
 * [Popup](https://github.com/ArcGIS/arcade-expressions/tree/master/popup)
 * [Alias](https://github.com/ArcGIS/arcade-expressions/tree/master/alias)
 
-Click on the desired profile name to view relevant expressions. 
+Click on the desired profile name to view relevant expressions.
 
 > Note that expressions living in one folder don't have to be exclusively used in the associated profile. They can likely be used in different profiles, though they were designed for the profile indicated by the folder name.
 
@@ -28,6 +28,7 @@ Each expression lives in a Markdown file, which contains a general description o
 Esri welcomes [contributions](https://github.com/esri/contributing) from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
 
 ## License
+
 Copyright 2018 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -43,6 +44,3 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 A copy of the license is available in the repository's [LICENSE](LICENSE) file.
-
-[](Esri Tags: ArcGIS Arcade)
-[](Esri Language: Arcade)
