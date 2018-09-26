@@ -10,7 +10,7 @@ Converting units is useful when you have one numeric field that you'd like to re
 
 Copy and paste the expression found in the expression template below to the Arcade editor in ArcGIS Online, the relevant location in ArcGIS Pro, or the relevant location in a custom app.
 
-To configure the script to your layer, fill in the field name with the measurement field that you would like to convert and set the convrsion factor in your expression.
+To configure the script to your layer, fill in the field name with the measurement field that you would like to convert and set the conversion factor in your expression.
 
 For example, in a layer representing the depth in meters of ocean contours, you would replace this:
 
