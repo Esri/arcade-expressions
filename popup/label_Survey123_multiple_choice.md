@@ -54,3 +54,4 @@ formatMulti($feature["like_fruits"], choices);
 
 ## Example output
 See [this webmap](http://www.arcgis.com/home/webmap/viewer.html?webmap=f7d8c24c84e34f97a553ed31336e00ca) for an example of how to use this expression in ArcGIS Online.
+![Survey123 multiple choice question labels in a popup](./images/MultipelChoiceLablesPopup.png)
