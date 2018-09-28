@@ -15,6 +15,7 @@ See the list below for shared expressions.
 * [Project phase table](./project-phase.md)
 * [Dynamically create a hyperlink with latitude and longitude values](./url-withlocation.md)
 * [Style the difference between 2 numeric fields](./numeric-difference.md)
+* [Label Survey123 multiple choice questions](./label_Survey123_multiple_choice.md)
 
 ## Resources
 
