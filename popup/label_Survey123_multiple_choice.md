@@ -10,7 +10,7 @@ Copy and paste the expression found in the expression template below to
 the Arcade editor in ArcGIS Online, the relevant location in ArcGIS Pro, or
 the relevant location in a custom app.
 
-To configure the script to your layer, you must replace the choices in the template with tne `name` and `label` values from the Survey123 form.  For the template below, the multiple choice question had a choice list of:
+To configure the script to your layer, you must replace the choices in the template with the `name` and `label` values from the Survey123 form.  For the template below, the multiple choice question had a choice list of:
 
 |list_name|name       |label         |
 |---------|-----------|--------------|
@@ -25,7 +25,12 @@ To configure the script to your layer, you must replace the choices in the templ
 Optionally, you can reconfigure `formatLabels`'s `Concatenate` function if you want to have different text before or after the label.
 
 ## Expression Template
+
 ```js
+// Replace the field name here
+var fieldName = "like_fruits";
+
+// Replace the choices here
 var choices = {};
 choices['apple'] = 'Apple 🍎';
 choices['banana'] = 'Banana 🍌';
@@ -49,7 +54,7 @@ function formatMulti(inField, d) {
     return outText;
 }
 
-formatMulti($feature["like_fruits"], choices);
+formatMulti($feature[fieldName], choices);
 ```
 
 ## Example output
