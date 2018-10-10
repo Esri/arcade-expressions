@@ -10,6 +10,7 @@ Each expression lives in a Markdown file, which contains a general description o
 
 See the list below for shared expressions.
 
+* [Convert military time to civilian time](./military-to-civilian-time.md)
 * [Dynamically create a hyperlink](./url-basic.md)
 * [Dynamically create a hyperlink with latitude and longitude values](./url-withlocation.md)
 * [Label Survey123 multiple choice questions](./label_Survey123_multiple_choice.md)
