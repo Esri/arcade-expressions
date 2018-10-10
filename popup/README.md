@@ -10,12 +10,12 @@ Each expression lives in a Markdown file, which contains a general description o
 
 See the list below for shared expressions.
 
-* [Top 5 numbers](./top-five-list.md)
 * [Dynamically create a hyperlink](./url-basic.md)
-* [Project phase table](./project-phase.md)
 * [Dynamically create a hyperlink with latitude and longitude values](./url-withlocation.md)
-* [Style the difference between 2 numeric fields](./numeric-difference.md)
 * [Label Survey123 multiple choice questions](./label_Survey123_multiple_choice.md)
+* [Project phase table](./project-phase.md)
+* [Style the difference between 2 numeric fields](./numeric-difference.md)
+* [Top 5 numbers](./top-five-list.md)
 
 ## Resources
 
