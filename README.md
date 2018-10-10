@@ -7,10 +7,12 @@ This repository is intended for sharing and maintaining reuseable Arcade express
 These expressions are organized based on their intended [execution profile](https://developers.arcgis.com/arcade/guide/profiles/). The following folders correspond with each profile:
 
 * [Any](https://github.com/ArcGIS/arcade-expressions/tree/master/any)
-* [Visualization](https://github.com/ArcGIS/arcade-expressions/tree/master/visualization)
+* [Alias](https://github.com/ArcGIS/arcade-expressions/tree/master/alias)
+* [Calculation](https://github.com/ArcGIS/arcade-expressions/tree/master/calculation)
+* [Constraint](https://github.com/ArcGIS/arcade-expressions/tree/master/constraint)
 * [Labeling](https://github.com/ArcGIS/arcade-expressions/tree/master/labeling)
 * [Popup](https://github.com/ArcGIS/arcade-expressions/tree/master/popup)
-* [Alias](https://github.com/ArcGIS/arcade-expressions/tree/master/alias)
+* [Visualization](https://github.com/ArcGIS/arcade-expressions/tree/master/visualization)
 
 Click on the desired profile name to view relevant expressions.
 
@@ -20,7 +22,7 @@ Each expression lives in a Markdown file, which contains a general description o
 
 ## Resources
 
-* [ArcGIS Arcade Documentation](https://developers.arcgis.com/arcade/)
+* [ArcGIS Arcade Documentation](https://developers.arcgis.com/arcade/guide/)
 * [ArcGIS Arcade Playground](https://developers.arcgis.com/arcade/playground/)
 
 ## Contributing
