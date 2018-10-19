@@ -35,6 +35,14 @@ wind == 70, "#BD6D6D", wind == 80, "#BD6D6D", wind == 90, "#CA4E4A",
 wind == 100, "#CD292A", null)
 
 ```
+## HTML Template
+
+Next you will need to configure the pop-up with a custom attribute display. Click the View HTML source button and add the following HTML. You will want to update the expression references to correspond to the expression you created above. Add the expression to your font color in the html.
+
+```html
+<font size="4">This was an </font><font size="5"><b><font color="{expression/expr0}" style="">F{F_SCALE}</font></b> </font><font size="4">tornado.</font>
+
+```
 
 ## Expression Template
 Create a variable then use a When function to set a hex value to each Fujita scale betweeon 0 and 5.
