@@ -48,7 +48,7 @@ Next you will need to configure the pop-up with a custom attribute display. Clic
 Create a variable then use a When function to set a hex value to each Fujita scale betweeon 0 and 5.
 ```js
 //Create a variable that represents a field of interest
-vavar variablename = $feature["YOUR_FIELD_NAME"]
+var variablename = $feature["YOUR_FIELD_NAME"]
 
 //When the variable value is equal to a certain category, return a specific hex value
 When (variablename == insert value here, "#inserthexvaluehere", variablename == insert value here, "#inserthexvaluehere",
