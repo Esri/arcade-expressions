@@ -1,5 +1,7 @@
 
-# Add a project phase/status graphic
+# Add a date since last update field to a pop-up
+
+[![time_popup](./images/timing.PNG)]
 
 This example shows how to add days since the last update to a pop-up
 
