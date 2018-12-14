@@ -46,4 +46,4 @@ last update: {expression/timesince}
 
 ## Example output
 
-[![time-popup](./images/timing.png)]
+[![time_popup](./images/timing.PNG)]
