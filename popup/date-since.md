@@ -3,11 +3,11 @@
 
 [![time_popup](./images/timing.PNG)]
 
-This example shows how to add days since the last update to a pop-up
+This example shows how to add days since the last update for the AGO map viewer popup configuration panel 
 
 ## Use cases
 
-This is designed specifically for the popup profile. These set of expressions allow you to represent the number of days since a point or polygon has been udpated.
+This is designed specifically for the AGO map viewer popup. These set of expressions allow you to represent the number of days since a point or polygon has been udpated.
 
 ## Workflow
 
@@ -38,7 +38,7 @@ When(
 Now add this expression into yoour custom attribute display with the name of your attribute expression. I added the expression to the pop-up title instead so it is displayed more prominently in widgets such as near-me.
 
 ```html
-last update: {expression/timesince}
+last update: {expression/expr["YOUR EXPRESSION NUMBER HERE"]}
 ```
 
 ## Example output
