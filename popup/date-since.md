@@ -19,7 +19,7 @@ Create an expression to identify the date field and find the
 
 ```js
 //get the time currently
-var timeNow = Date()
+var timeNow = Date();
 //get the time field form your feature layer
 var survey = $feature["date_survey1"]
 //get time in hrs, days and use datediff to get the differnce betwen the time now and the time when the layer was updated
