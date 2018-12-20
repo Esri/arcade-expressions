@@ -23,7 +23,7 @@ var timeNow = Date();
 //get the time field form your feature layer
 var survey = $feature["YOUR_DATE_FIELD_NAME_HERE"];
 //get time in hrs, days and use datediff to get the differnce betwen the time now and the time when the layer was updated
-var datehrs = Round(DateDiff(timeNow, survey, 'hours'),1)
+var datehrs = Round(DateDiff(survey, timeNow, 'hours'),1)
 var datedays = Round(DateDiff(survey, timeNow, 'days'),0)
 var dateDisplay = 0
 //display hrs, day or days depending on how long since last updated.
