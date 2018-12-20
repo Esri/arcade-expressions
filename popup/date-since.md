@@ -21,7 +21,7 @@ Create an expression to identify the date field and find the
 //get the time currently
 var timeNow = Date();
 //get the time field form your feature layer
-var survey = $feature["date_survey1"]
+var survey = $feature["YOUR_DATE_FIELD_NAME_HERE"];
 //get time in hrs, days and use datediff to get the differnce betwen the time now and the time when the layer was updated
 var datehrs = Round(DateDiff(timeNow, survey, 'hours'),1)
 var datedays = Round(DateDiff(timeNow, survey, 'days'),0)
