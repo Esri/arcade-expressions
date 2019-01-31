@@ -10,6 +10,12 @@ See the list below for shared expressions.
 
 * [Weekdays](./weekdays.md)
 * [Unit Conversion](./unit-conversion.md)
+* [Barcode - Gas Component Type](./barcode-gas/barcode-gas-componenttype.md)
+* [Barcode - Gas Component Size](./barcode-gas/barcode-gas-componentsize.md)
+* [Barcode - Gas Component Lot Number](./barcode-gas/barcode-gas-lotnumber.md)
+* [Barcode - Gas Component Manufacturer](./barcode-gas/barcode-gas-manufacturer.md)
+* [Barcode - Gas Component Material](./barcode-gas/barcode-gas-material.md)
+* [Barcode - Gas Component Production Date](./barcode-gas/barcode-gas-productionDate.md)
 
 ## Resources
 
