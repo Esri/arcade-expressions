@@ -1,12 +1,10 @@
 # Return production date from barcode
 
-This example shows how to extract the component material for a given gas distribution components encoded using the [ASTM F2897 standard](https://www.astm.org/Standards/F2897.htm). This specification defines requirements for the data used in the tracking and traceability base-62 encoding system and the format of the resultant code to characterize various components used in fuel gas piping systems.
+This example shows how to extract the component material for given gas distribution components encoded using the [ASTM F2897 standard](https://www.astm.org/Standards/F2897.htm). This specification defines requirements for the data used in the tracking and traceability base-62 encoding system and the format of the resultant code to characterize various components used in fuel gas piping systems.
 
 ## Use cases
 
 In this example we are highlighting how to efficiently display the manufacturer production date for a natural gas component from a barcode captured in the field.  In the example below we are extracting the component manufacture date from the barcode string.  
-
-In this example we are highlighting how to efficiently display the production date for a natural gas component from a barcode captured in the field. The component production date is extracted and decoded from the barcode string and returns the full material name.
 
 ## Workflow
 

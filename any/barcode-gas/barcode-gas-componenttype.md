@@ -1,6 +1,6 @@
 # Return component type from barcode
 
-This example shows how to extract the component material for a given gas distribution components encoded using the [ASTM F2897 standard](https://www.astm.org/Standards/F2897.htm). This specification defines requirements for the data used in the tracking and traceability base-62 encoding system and the format of the resultant code to characterize various components used in fuel gas piping systems.
+This example shows how to extract the component material for given gas distribution components encoded using the [ASTM F2897 standard](https://www.astm.org/Standards/F2897.htm). This specification defines requirements for the data used in the tracking and traceability base-62 encoding system and the format of the resultant code to characterize various components used in fuel gas piping systems.
 
 ## Use cases
 
@@ -15,10 +15,10 @@ To configure the script to your layer, you must replace the BARCODE variables wi
 ## Expression Template
 
 ```js
-var BARCODE = $feature.BARCODE
+var BARCODE = $feature.BARCODE;
 
 // extract component information from barcode
-var componentType = Mid(BARCODE,10,2)
+var componentType = Mid(BARCODE,10,2);
 
 var d = Dictionary(
     '10', 'Other Pipe', 
@@ -219,13 +219,13 @@ var d = Dictionary(
     'V4', 'Relief Valve', 
     'V5', 'Gate Valve',
     'V6', 'Needle Valve', 
-    'V7', 'Plug Valve')
+    'V7', 'Plug Valve');
 
 // look up description for componentType
 if (hasKey(d, componentType)) {
-    return d[componentType]  
+    return d[componentType];  
 } else {
-    return 'Unknown'
+    return 'Unknown';
 }
 ```
 
