@@ -30,31 +30,31 @@ This Arcade expression will extract the attribute value from a feature in a feat
 var set = FeatureSetByName($datastore, 'Building Footprints')
 
 function getAttributeFromLargestArea(feat, set, field) {
-    var items = intersects(set, feat)
+    var items = intersects(set, feat);
 
     if (items == false) {
-        return { 'errorMessage': 'No intersection found' }
+        return { 'errorMessage': 'No intersection found' };
     }
 
     if (count(items) == 1) {
-        var result = first(items)
+        var result = first(items);
 
-        return result[field]
+        return result[field];
     }
 
-    var largest = -1
-    var result
+    var largest = -1;
+    var result;
 
     for (var item in items) {
-        var size = area(intersection(item, feat))
+        var size = area(intersection(item, feat));
 
         if (size > largest) {
-            largest = size
-            result = item[field]
+            largest = size;
+            result = item[field];
         }
     }
 
-    return result
+    return result;
 }
 
 getAttributeFromLargestArea($feature, set, 'objectid') 
