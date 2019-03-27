@@ -4,7 +4,7 @@ This expression returns an attribute value from a featureSet where the largest f
 
 ## Use cases
 
-To suggest a value from a majority intersection
+To suggest a value from a majority intersection. For instance, when drawing a polygon, return the county name for which the majority of the new polygon is in.
 
 ## Workflow
 
