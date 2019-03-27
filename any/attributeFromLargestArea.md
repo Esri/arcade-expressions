@@ -27,7 +27,12 @@ getAttributeFromLargestArea($feature, set, 'objectid')
 This Arcade expression will extract the attribute value from a feature in a featureSet where the input feature intersection area is the largest.
 
 ```js
-var set = FeatureSetByName($datastore, 'Building Footprints')
+// Refer to the name of the layer used to search areas here.
+var layerName = 'Building Footprints';
+// your field name should go here
+var fieldName = "objectid";
+
+var set = FeatureSetByName($datastore, layerName)
 
 function getAttributeFromLargestArea(feat, set, field) {
     var items = intersects(set, feat);
@@ -57,5 +62,5 @@ function getAttributeFromLargestArea(feat, set, field) {
     return result;
 }
 
-getAttributeFromLargestArea($feature, set, 'objectid') 
+getAttributeFromLargestArea($feature, set, fieldName) 
 ```
