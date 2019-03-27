@@ -31,7 +31,6 @@ var set = FeatureSetByName($datastore, 'Building Footprints')
 
 function getAttributeFromLargestArea(feat, set, field) {
     var items = intersects(set, feat)
-    console(items)
 
     if (items == false) {
         return { 'errorMessage': 'No intersection found' }
