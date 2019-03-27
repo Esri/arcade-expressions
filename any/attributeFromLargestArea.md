@@ -36,12 +36,13 @@ var set = FeatureSetByName($datastore, layerName)
 
 function getAttributeFromLargestArea(feat, set, field) {
     var items = intersects(set, feat);
-
-    if (items == false) {
+    var counts = count(items);
+    
+    if (counts == 0) {
         return { 'errorMessage': 'No intersection found' };
     }
 
-    if (count(items) == 1) {
+    if (counts == 1) {
         var result = first(items);
 
         return result[field];
