@@ -28,7 +28,7 @@ if (!haskey($feature, field) || isempty($feature[field])) {
     return true;
 }
 
-return iif (isempty(domainname($feature, 'field, $feature[field])), {
+return iif (isempty(domainname($feature, field, $feature[field])), {
     'errorMessage': 'Value does not fall within the allowable domain values. Input: ' + $feature[field]
 }, true);
 ```
