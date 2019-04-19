@@ -4,7 +4,7 @@ This expression constrains new input values to values within the domain applied 
 
 ## Use cases
 
-As you may or may not know, it was a mistake for esri to allow values to be stored into a field managed by a domain that are outside of the domain values using normal esri editing tools etc. This constraint aims to fix that.
+As you may or may not know, esri allows values to be stored in a field managed by a domain that are outside of the domain values. You are able to do this using normal esri editing tools etc. This constraint aims to remove this loophole.
 
 ## Workflow
 
