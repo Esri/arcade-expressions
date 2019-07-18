@@ -26,7 +26,7 @@ join_char = "-"
 suffix = "XYZ"
 
 if (IsEmpty($feature.assetid)) {
-   return Concatenate([prefix, Text(NextSequenceValue("GDB_SEQUENCE_NAME")), suffix], join_char)
+   return Concatenate([prefix, NextSequenceValue("GDB_SEQUENCE_NAME"), suffix], join_char)
 }
 else {
    return $feature.assetid
