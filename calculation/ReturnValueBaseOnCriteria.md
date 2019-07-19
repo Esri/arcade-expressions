@@ -52,7 +52,9 @@ if (count(conductive_types) > 0)
 //Return the value in the field when no other condition is met
 return $feature.cptraceability;
 ```
-// Variation, where conductive types of the feature are not known
+
+Variation, where conductive types of the feature are not known
+
 ```js
 // This rules evaluates a set of fields to determine CP traceability.
 var traceable = 1; // Also used for Bonded
