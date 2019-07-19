@@ -17,28 +17,7 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 
 ## Expression Template
 
-This Arcade expression will evaluaet a set of fields to set a valid in another field.
-
-```js
-// This rules evaluates a set of fields to determine CP traceability.
-// Create variables for the valid return values
-var traceable = 1; // Also used for Bonded
-var not_traceable = 2; // Also used for Insulated
-
-// If an override field is specified, use that value regardless of other attributes
-if ($feature.cpoverride > 0)
-{
-    return $feature.cpoverride;
-}
-
-// If a value is set on the bonded, insulated field, return that value
-if ($feature.bondedinsulated > 0)
-{
-  return $feature.bondedinsulated;
-}
-//Return the value in the field when no other condition is met
-return $feature.cptraceability;
-```
+This Arcade expression will evaluates a set of fields to set a valid in another field.
 
 ```js
 // This rules evaluates a set of fields to determine CP traceability.
