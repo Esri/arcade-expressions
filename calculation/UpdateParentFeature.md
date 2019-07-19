@@ -32,9 +32,9 @@ if (IsEmpty(parent_id))
 parent_id = Upper(parent_id);
 
 // Using the GDB name, get the parent classes records and Global ID field
-var parent_class = FeatureSetByName($datastore, "testar.unadmin.ParentLayer", ["globalid",'laststatus'], false);
+var parent_class = FeatureSetByName($datastore, "testar.unadmin.ParentLayer", ["globalid", 'laststatus'], false);
 // Filter the parent class for only related features
-var parent_records = Filter(parent_class, "globalid = '" + parent_id + "'");
+var parent_records = Filter(parent_class, "globalid = @parent_id");
 
 var updates = [];
 var i = 0;
