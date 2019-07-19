@@ -17,18 +17,18 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 
 ## Expression Template
 
-This Arcade expression will return the a value from an intersected feature
+This Arcade expression will return the a value from an intersected feature. An example with using this rule is included in the [Example](./CopyValueIntersectingFeature.zip)
 
 ```js
 // This rule will populate the edited features field with a value from an intersecting feature
 
 // Value to copy from the intersected feature
-var intersecting_field = "maintby";
+var intersecting_field = "ValueToCopy";
 //Field rule is assigned to in the Attribute Rule
-var feature_field = "maintby";
+var feature_field = "ValueCopied";
 
 // Create feature set to the intersecting class using the GDB Name
-var intersecting_featset = FeatureSetByName($datastore, 'WaterLine', [intersecting_field], true);
+var intersecting_featset = FeatureSetByName($datastore, 'Line', [intersecting_field], true);
 
 // Intersect the edited feature with the feature set and retrieve the first feature
 var intersected_feature = First(Intersects(intersecting_featset, $feature));
