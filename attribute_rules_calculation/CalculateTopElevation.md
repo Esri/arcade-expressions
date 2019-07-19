@@ -1,6 +1,6 @@
 # Calculate Top Elevation
 
-This calculation attribute sets the surfance elevation of a feature based on the Z and an height/invert value 
+This calculation attribute sets the surface elevation of a feature based on the Z and an height/invert value 
 
 ## Use cases
 
