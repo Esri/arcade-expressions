@@ -1,6 +1,6 @@
 # Generate Unique ID
 
-This expression rule uses a database sequence to generate a new ID for a feature.
+This calculation attribute rule uses a database sequence to generate a new ID for a feature.
 
 ## Use cases
 
@@ -22,11 +22,14 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 This Arcade expression will return the ID if already set or generate a new ID based on a database sequence
 
 ```js
+//Define the leading text, the trailing text and the delimiter for the ID
 prefix = "ABC"
 join_char = "-"
 suffix = "XYZ"
 
+//Ensure the ID is not already set, if it is, return the original id
 if (IsEmpty($feature.assetid)) {
+   // If you do not want to use a prefix, or suffix, remove it from the list
    return Concatenate([prefix, NextSequenceValue("GDB_SEQUENCE_NAME"), suffix], join_char)
 }
 else {
