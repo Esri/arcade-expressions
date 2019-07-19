@@ -1,4 +1,4 @@
-# Generate Unique ID
+# Rotate Feature by Intersected Line
 
 This calculation attribute rule rotates a feature by angle of an intersected line
 
