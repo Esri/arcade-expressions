@@ -18,7 +18,7 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 
 ## Expression Template
 
-This Arcade expression will return the a value from an intersected feature
+This Arcade expression will return the a value from an intersected feature.  An example with using this rule is included in the UpdateParentFeature.zip
 
 ```js
 // This rule will update an attribute in the parent feature
