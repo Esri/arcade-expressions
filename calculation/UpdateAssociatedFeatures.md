@@ -45,7 +45,7 @@ return {
 'result': Count(content),
 'edit': [
             {'className': 'WaterDevice',
-             'updates': devices
+             'updates': contained_features
             } 
         ]
 }
