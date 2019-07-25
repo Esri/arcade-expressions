@@ -15,15 +15,19 @@ Select a layer in ArcGIS Pro, Right click and select Configure Pop-up.  Add a ne
 
 Create an expression to identify parent networks
 
+
 ```js
 function get_parents(current_subnetwork) {
     // Filter the subnetwork table to get the controllers for the subnetwork the feature is on
     var results = Filter(subnetwork_table, 'subnetworkname = @current_subnetwork AND isdirty = 0');
     var global_ids = [];
     var i = 0;
+
     // Create a list of the controllers global IDs for the features subnetwork
+    // NOTE: Count does not work on results
     for (var result in results) {
         global_ids[i++] = result.featureglobalid;
+        controller_guid[Count(controller_guid)] = result.globalid;
     }
     if (Count(global_ids) == 0){
         return
@@ -50,7 +54,6 @@ function get_parents(current_subnetwork) {
     // using recursion, call get parents for each parent
     for (var parent_sub_idx in device_subnetworks) {
         var sub_net = device_subnetworks[parent_sub_idx];
-        parent_networks[Count(parent_networks)] = sub_net;
         get_parents(sub_net)
     }
     return
@@ -58,7 +61,8 @@ function get_parents(current_subnetwork) {
 
 //  Create links to the required layers
 // The subnetwork table is always 500002, alt you could use Subnetworks
-var subnetwork_table = FeatureSetByName($datastore, '500002', ['subnetworkname', 'featureglobalid', 'isdirty'], false);
+var subnetwork_table = FeatureSetByName($datastore, '500002', ['subnetworkname', 'globalid',
+    'featureglobalid', 'isdirty', 'tierrank', 'tiername'], false);
 if (IsEmpty(subnetwork_table) == true)
 {
     return "Subnetwork table not found"
@@ -70,14 +74,47 @@ if (IsEmpty(device_table) == true)
 {
     return "Device table not found"
 }
-// Get the current subnetwork that features is on
-var parent_networks = [$feature.subnetworkname];
+
+var controller_guid = [];
 // Call Get Parents to get parent Subnetworks
 get_parents($feature.subnetworkname);
-// Concat the networks, using the :: syntax
-return Concatenate(parent_networks, '::')
+if (Count(controller_guid) == 0)
+{
+    return "No Controllers Found";
+}
+var results_dict = {}
+var tier_names = {}
+var parent_controllers = Filter(subnetwork_table, "globalid IN @controller_guid");// ORDER BY tierrank ASC
+parent_controllers = OrderBy(parent_controllers, 'tierrank DESC')
+var tier_keys = [];
+for (var p_cont in parent_controllers) {
+    var tier_rank = Text(p_cont.tierrank);
+    tier_keys[Count(tier_keys)] = p_cont.tierrank;
+    if (HasKey(results_dict, tier_rank) == False)
+    {
+        results_dict[tier_rank] = [];
+    }
+    if (HasKey(tier_names, tier_rank) == False)
+    {
+        tier_names[tier_rank] = p_cont.tiername;
+    }
+    if (p_cont.subnetworkname == $feature.subnetworkname)
+    {
+        continue
+    }
+    results_dict[tier_rank][Count(results_dict[tier_rank])] = p_cont.subnetworkname
+}
 
+tier_keys = Distinct(tier_keys);
+var result_string = "On subnetwork " + $feature.subnetworkname + " \n";
+for(var key_idx in tier_keys)
+{
+    var tier_key = Text(tier_keys[key_idx])
+    result_string = result_string +  tier_names[tier_key] + " - " + Concatenate(results_dict[tier_key], ', ') + " \n";
+}
+return result_string;
 ```
+
 
 ## Example output
 
