@@ -17,7 +17,12 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 
 This Arcade expression will calculates the slope of the line based on two fields
 ```js
-ABS(($feature.UPELEV - $feature.DOWNELEV)/Length(Geometry($feature)))
+// If either field not populated, return the original value
+if (IsEmpty($feature.UPELEV) || IsEmpty($feature.DOWNELEV))
+{
+  return $feature.slope;
+}
+return ABS(($feature.UPELEV - $feature.DOWNELEV)/Length(Geometry($feature)));
 ```
 
 This Arcade expression will calculates the slope of the line based on start and end vertex Z values
