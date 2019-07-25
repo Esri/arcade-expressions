@@ -1,5 +1,5 @@
 
-# Get the current and parent subnetworks in a pope
+# Get the current and parent subnetworks in a pop-up
 
 This example shows how to add a new attribute to quickly identify all parent subnetworks
 
