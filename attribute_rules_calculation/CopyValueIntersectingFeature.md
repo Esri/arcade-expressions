@@ -39,7 +39,7 @@ if (intersected_feature == null)
     return $feature[feature_field];
 }
 // If the intersected feature is null, return the original value
-if (IsEmpty(intersected_feature.valueToCopy))
+if (IsEmpty(intersected_feature[intersecting_field]))
 {
     return $feature[feature_field];
 }
