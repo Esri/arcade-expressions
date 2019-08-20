@@ -17,7 +17,7 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 
 ## Expression Template
 
-This Arcade expression will return the a value from an intersected feature
+This Arcade expression will update all features that are contain via a UN containment association
 
 ```js
 // This rule will update an attribute in all the features it contains
