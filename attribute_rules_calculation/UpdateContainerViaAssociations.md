@@ -1,6 +1,6 @@
 # Update Associated Features
 
-This calculation attribute rule is designed for the feature classes that participate in a Utility Network and are content of container features.  When content is changed, it will update feature container feature.
+This calculation attribute rule is designed for the feature classes that participate in a Utility Network and for features that are content of a container.  When an attribute is changed in the content, that value is pushed to the container.
 
 ## Use cases
 
