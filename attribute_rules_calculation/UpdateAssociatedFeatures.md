@@ -12,7 +12,7 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
   
   - **Rule Type:** Calculation
   - **Triggering Events:** Update
-
+  - **Exclude from application evaluation:** True
 
 
 ## Expression Template
