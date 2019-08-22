@@ -17,7 +17,7 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 
 ## Expression Template
 
-This Arcade expression will update parent related feature.  The feature is related through the association table.  This FGDB example represents containment associations in the Utility Network.  To use in the Utility network, the rule will have to be adjust to use the Association table in the service.  Remove the 0: 'ParentFeatures' from the ID lookup.  For this example, this rule is defined on a table on the DETAILS field.  This value is copied to the parent/containers LABELTEXT field. An example with using this rule is included in the [Example](./UpdateContainerViaAssociations.zip)
+This Arcade expression will update parent related feature.  The feature is related through the association table.  This FGDB example represents containment associations in the Utility Network.  To use in the Utility network, the rule will have to be adjust to use the Association table in the service.  Remove the 0: 'ParentFeatures' from the ID lookup.  For this example, this rule is defined on a table on the DETAILS field.  This value is copied to the parent/containers LABELTEXT field. An example with using this rule is included in the [Example](./UpdateContainerViaAssociations.zip).  To demostrate, open the related rows table and change the Details field value in a row.  Review the parent features labeltext field to see the value updated.
 
 ```js
 // This rule will update an attribute in the the container of the feature
