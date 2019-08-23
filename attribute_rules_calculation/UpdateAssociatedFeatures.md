@@ -26,7 +26,8 @@ This Arcade expression will update all features that are contain via a UN contai
 var globalID = $feature.globalID
 
 // Using the GDB name, get the associations for this feature
-var associations = FeatureSetByName($datastore, "naperville_water.unadmin.UN_6_Associations", ["ToGlobalID"], false)
+// The association table is always 500001, alt you could use Associations
+var associations = FeatureSetByName($datastore, '500001', ['ToGlobalID','FromGlobalID','AssociationType'], false)
 // Filter the associations for features that are content
 var content = Filter(associations, "FromGlobalID = @globalID AND AssociationType = 2")
 
@@ -42,7 +43,7 @@ for (var row in content) {
 
 // Return the count of features and in the edit parameter the class of features to update and the list of updates
 return {
-'result': Count(content),
+'result': Count(contained_features),
 'edit': [
             {'className': 'WaterDevice',
              'updates': contained_features
