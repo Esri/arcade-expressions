@@ -41,7 +41,7 @@ feature_id = Upper(feature_id);
 var child_class = FeatureSetByName($datastore, 'RelatedRows', ['PARENTGUID', 'SUBTYPE', 'LIFECYCLE'], false);
 // Filter the child class for only related features that are in service
 // Optionally, extend query, such as filter by lifecycle - and LIFECYCLE <> 1
-var child_records = Filter(child_class, 'PARENTGUID = @feature_id and LIFECYCLE <> 1');
+var child_records = Filter(child_class, 'PARENTGUID = @feature_id');
 
 // If no child records, return no issue
 if (IsEmpty(child_records)) {
