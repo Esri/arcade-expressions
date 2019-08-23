@@ -62,23 +62,24 @@ var globalID = $feature.globalID
 // Query to get all the content assoications
 var associations = FeatureSetByAssociation($feature, 'content', null, null, ['*'], false);
 
-var contained_features= []
+var contained_features = []
 var i = 0
 // Loop through each contained feature, create a dict of the Global ID and the new install date
 for (var row in associations) {
     contained_features[i++] = {
-        'globalid': row.ToGlobalID,
-        'attributes': {"InstallDate": $feature.InstallDate}    
+        'globalid': row.globalId,
+        'attributes': {"InstallDate": $feature.InstallDate}
     }
 }
 
 // Return the count of features and in the edit parameter the class of features to update and the list of updates
 return {
-'result': Count(contained_features),
-'edit': [
-            {'className': 'WaterDevice',
-             'updates': contained_features
-            } 
-        ]
+    'result': Count(contained_features),
+    'edit': [
+        {
+            'className': row.className,
+            'updates': contained_features
+        }
+    ]
 }
 ```
