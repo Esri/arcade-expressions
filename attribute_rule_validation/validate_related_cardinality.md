@@ -21,17 +21,21 @@ This Arcade expression will calculates the slope of the line based on two fields
 
 // dict with the max number of records by subtype
 var max_counts = {
-    '1': 2, // Subtype 1 in the child
+    '1': 4, // Subtype 1 in the child
     '2': 1, // Subtype 2 in the child
-    '3': 0 // Subtype 3 in the child is not allowed at all to this parent
+    '3': 0, // Subtype 3 in the child is not allowed at all to this parent
+    '4': 0 // Subtype 3 in the child is not allowed at all to this parent
 };
+
+// A flag to determine if types table are allowed if not defined in max_counts
+var non_defined_types_allowed = false;
 
 var no_violation_text = 'No relationship violations';
 
 // Store the parent feature global from the key field in the relationship
 var feature_id = $feature.globalid;
 if (IsEmpty(feature_id)) {
-    return no_violation_text;
+    return true;
 }
 
 // force to upper as the sql is case sensitive
@@ -45,7 +49,7 @@ var child_records = Filter(child_class, 'PARENTGUID = @feature_id');
 
 // If no child records, return no issue
 if (IsEmpty(child_records)) {
-    return no_violation_text;
+    return true;
 }
 var rec_count = {};
 // Loop through each feature, create a dict by the subtype and the count of child records
@@ -72,12 +76,18 @@ for (var key in rec_count) {
             result = result + rec_count[key] + ' related ' + DomainName(child_class, 'SUBTYPE', key) +
                 ' only ' + max_counts[key] + ' allowed\n';
         }
+    } else if (non_defined_types_allowed == false)
+    // When flag is set that requires all types to be defined and a value is not define, add to error list
+    {
+        result = result + rec_count[key] + ' related ' + DomainName(child_class, 'SUBTYPE', key) +
+            ' these types are not allowed\n';
     }
 }
 
 if (result == '') {
-    return no_violation_text;
+    return true;
 }
-return result;
-
+return {
+    "errorMessage": result
+};
 ```

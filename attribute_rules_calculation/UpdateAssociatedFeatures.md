@@ -59,7 +59,7 @@ return {
 // Query the associations table to find all features that are content of feature.
 var globalID = $feature.globalID
 
-// Query to get all the content assoications
+// Query to get all the content associations
 var associations = FeatureSetByAssociation($feature, 'content', null, null, ['*'], false);
 
 var contained_features = []
