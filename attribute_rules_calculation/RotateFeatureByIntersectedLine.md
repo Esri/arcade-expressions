@@ -33,11 +33,12 @@ var segment = Clip(line, search)["paths"][0]
 // Start and end points of the line
 var x1 = segment[0]['x']
 var y1 = segment[0]['y']
-var x2 = segment[1]['x']
-var y2 = segment[1]['y']
+var x2 = segment[-1]['x']
+var y2 = segment[-1]['y']
 
 // Arithmetic angle (counter-clockwise from + X axis)
-return Atan2(y2 - y1, x2 - x1) * 180 / PI  
+var degrees = Atan2(y2 - y1, x2 - x1) * 180 / PI;
+return (degrees + 360) % 360;
 ```
 
 Using the angle function
@@ -54,12 +55,6 @@ if (line == null)
 var search = Extent(Buffer($feature, .01, "meter"))
 var segment = Clip(line, search)["paths"][0]
 
-// Start and end points of the line
-var x1 = segment[0]['x']
-var y1 = segment[0]['y']
-var x2 = segment[1]['x']
-var y2 = segment[1]['y']
-
-// Get angle of line
-return Angle(segment[0], segment[1])  
+// Get angle of line using the start and end vertex
+return Angle(segment[0], segment[-1])  
 ```
