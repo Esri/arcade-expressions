@@ -111,3 +111,74 @@ return {
     ]
 };
 ```
+
+
+```js
+// This rule will update an attribute in the the container of the feature
+
+// Function to check if a bit is in an int value
+function has_bit(num, test_value) {
+    // num = number to test if it contains a bit
+    // test_value = the bit value to test for
+    // determines if num has the test_value bit set
+    // Equivalent to num AND test_value == test_value
+    
+    // first we need to determine the bit position of test_value
+    var bit_pos = -1;
+    for (var i=0; i < 64; i++) {
+        // equivalent to test_value >> 1
+        var test_value = Floor(test_value / 2);
+        bit_pos++
+        if (test_value == 0)
+            break;        
+    }
+    // now that we know the bit position, we shift the bits of
+    // num until we get to the bit we care about
+    for (var i=1; i <= bit_pos; i++) {
+        var num = Floor(num / 2);
+    }
+
+    if (num % 2 == 0) {
+        return false
+    }
+    else {
+       return true
+    }
+
+}
+
+if (IsEmpty($feature.DETAILS)) {
+    return $feature.DETAILS;
+}
+var association_status = $feature.ASSOCIATIONSTATUS;
+// Only features with an association status of content(bit 4) or visible content(bit 16)
+// need to be evaluated
+if (IsEmpty(association_status) || 
+    (has_bit(association_status,4) || has_bit(association_status,16)) == false) {
+    return $feature.DETAILS;
+}
+
+// Query to get all the content associations
+var associations = FeatureSetByAssociation($feature, 'container', null, null, ['*'], false);
+if (count(associations) == 0)
+{
+    return $feature.DETAILS;
+}
+// Get the first container
+var assoc_record = First(associations);
+var container_feature = {
+    'globalid': assoc_record.GlobalID,
+    'attributes': {"LABELTEXT": $feature.DETAILS}
+};
+
+// Return the value of the field this is assigned on and the edit info for the container
+return {
+    'result': $feature.DETAILS,
+    'edit': [
+        {
+            'className': assoc_record.className,
+            'updates': [container_feature]
+        }
+    ]
+};
+```

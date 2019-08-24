@@ -43,7 +43,7 @@ for (var row in content) {
 
 // Return the count of features and in the edit parameter the class of features to update and the list of updates
 return {
-'result': Count(contained_features),
+'result': $feature.InstallDate,
 'edit': [
             {'className': 'WaterDevice',
              'updates': contained_features
@@ -53,33 +53,45 @@ return {
 ```
 
 
+
+
+
+
+
 ```js
 // This rule will update an attribute in all the features it contains, requires ArcGIS Pro 2.5
-
-// Query the associations table to find all features that are content of feature.
-var globalID = $feature.globalID
-
+// Return in date is null
+if (IsEmpty($feature.InstallDate)) {
+    return $feature.InstallDate;
+}
 // Query to get all the content associations
 var associations = FeatureSetByAssociation($feature, 'content', null, null, ['*'], false);
 
-var contained_features = []
-var i = 0
+if (count(associations) == 0) {
+    return $feature.InstallDate;
+}
+
+var edits = {};
 // Loop through each contained feature, create a dict of the Global ID and the new install date
 for (var row in associations) {
-    contained_features[i++] = {
+    if (HasKey(edits, row.className) == False) {
+        edits[row.className] = []
+    }
+    edits[row.className][count(edits[row.className])] = {
         'globalid': row.globalId,
         'attributes': {"InstallDate": $feature.InstallDate}
     }
 }
-
+var contained_features = [];
+for (var k in edits) {
+    contained_features[count(contained_features)] = {
+        'className': k,
+        'updates': edits[k]
+    }
+}
 // Return the count of features and in the edit parameter the class of features to update and the list of updates
 return {
-    'result': Count(contained_features),
-    'edit': [
-        {
-            'className': row.className,
-            'updates': contained_features
-        }
-    ]
+    'result': $feature.InstallDate,
+    'edit': contained_features
 }
 ```
