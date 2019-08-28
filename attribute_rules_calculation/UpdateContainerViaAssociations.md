@@ -164,6 +164,13 @@ if (count(associations) == 0)
 {
     return $feature.DETAILS;
 }
+// Loop over all associations to get the classes that are containers
+// TODO
+
+// Loop over each feature classes features and check the feature value against set value
+// TODO
+
+
 // Get the first container
 var assoc_record = First(associations);
 var container_feature = {
