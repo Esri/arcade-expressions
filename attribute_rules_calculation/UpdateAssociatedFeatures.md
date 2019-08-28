@@ -56,71 +56,91 @@ return {
 ```js
 // This rule will update an attribute in all the features it contains, requires ArcGIS Pro 2.5
 // Return in date is null
-if (IsEmpty($feature.InstallDate)) {
-    return $feature.InstallDate;
-}
-// Query to get all the content associations
-var associations = FeatureSetByAssociation($feature, 'content', null, null, ['*'], false);
 
-// If there is no content, exit the function 
-if (count(associations) == 0) {
-    return $feature.InstallDate;
-}
-var associated_classes = []
-for (var row in associations) {
-     associated_classes[Count(associated_classes)] = row.className;
-}
-
-// Get a unique list of classes
-associated_classes = Distinct(associated_classes)
-
-// Dict to store the edits by classname
-var edits = {};
-// For each class, gets its features and compare to the value to set, if the value is already set, do not update it
-// as it will still trigger an edit event and store, which will fire Attribute Rules and change edit tracking
-for (var i in associated_classes) {
-    var class_name = associated_classes[i];
-    // Get the features, get all fields as we cannot check the layer ahead of time if it has the field to set
-    var features = FeatureSetByAssociation($feature, 'content', null, class_name, ['*'], false);
-    // No content features from this class, move to next class
-    if (count(features) == 0) {
-        continue;
+function associated_records(feature, association_type, target_field, source_field) {
+    // Dict to store the edits by classname
+    var edits = {};
+    // Query to get all the content associations
+    var associations = FeatureSetByAssociation(feature, association_type, null, null, ['className'], false);
+    // If there is no content, exit the function
+    if (count(associations) == 0) {
+        return edits;
     }
-    return HasKey(first(features),'InstallDate');
-    // Get the first feature and check if it has the target field
-    if (HasKey(first(features),'InstallDate') == false) {
-        continue;
+    // loop over all associated records to get a list of the associated classes
+    var associated_classes = [];
+    for (var row in associations) {
+         associated_classes[Count(associated_classes)] = row.className;
     }
-    for (var feat in features)
-    {
-        // If the values are the same, move to next feautre
-        if (feat.InstallDate ==  $feature.InstallDate)
-        {
+    // Get a unique list of classes
+    associated_classes = Distinct(associated_classes);
+
+    // For each class, gets its features and compare to the value to set, if the value is already set, do not update it
+    // as it will still trigger an edit event and store, which will fire Attribute Rules and change edit tracking
+    for (var i in associated_classes) {
+        var class_name = associated_classes[i];
+        // Get the features, get all fields as we cannot check the layer ahead of time if it has the field to set
+        // NOTE: The Class Name might need to be hard coded
+        var features = FeatureSetByAssociation(feature, association_type, null, class_name, ['*'], false);
+       
+        // Eval moving towards
+        //var features = FeatureSetByName($datastore, class_name, ['*'], false);
+        
+        // No content features from this class, move to next class
+        if (count(features) == 0) {
             continue;
         }
-        // Initalize the dict with an empty array, if not done so
-        if (HasKey(edits, class_name) == False) {
-            edits[class_name] = []
+        // Get the first feature and check if it has the target field
+        if (HasKey(first(features), target_field) == false) {
+            continue;
         }
-        // Using classname, get the count of existing features in the array and use it to set the next features 
-        edits[class_name][count(edits[class_name])] = {
-            'globalid': feat.globalId,
-            'attributes': {"InstallDate": $feature.InstallDate}
+        // Get the first feature and check if it has the target field
+        for (var feat in features)
+        {
+            // If the values are the same, move to next feautre
+            if (feat[target_field] == feature[source_field])
+            {
+                continue;
+            }
+            // Initalize the dict with an empty array, if not done so
+            if (HasKey(edits, class_name) == False) {
+                edits[class_name] = []
+            }
+            // Using classname, get the count of existing features in the array and use it to set the next features
+            edits[class_name][count(edits[class_name])] = {
+                'globalid': feat.globalId,
+                'attributes': Dictionary(target_field, feature[source_field])
+            }
         }
     }
+    return edits;
+}
+function convert_to_edits(record_dict){
+    // Convert the dict to a return edit statement
+    var contained_features = [];
+    for (var k in record_dict) {
+        contained_features[count(contained_features)] = {
+            'className': k,
+            'updates': record_dict[k]
+        }
+    }
+    return contained_features;
 }
 
-// Convert the dict to a return edit statement
-var contained_features = [];
-for (var k in edits) {
-    contained_features[count(contained_features)] = {
-        'className': k,
-        'updates': edits[k]
-    }
+var source_field = 'InstallDate';
+var target_field = 'InstallDate';
+if (IsEmpty($feature[source_field]) == true) {
+    return $feature[source_field];
 }
-// Return the count of features and in the edit parameter the class of features to update and the list of updates
+// Get the first container
+var record_dict = associated_records($feature, 'content', target_field, source_field);
+if (IsEmpty(record_dict))
+{
+   return $feature[source_field];
+}
+var edits = convert_to_edits(record_dict);
+// Return the value of the field this is assigned on and the edit info for the container
 return {
-    'result': $feature.InstallDate,
-    'edit': contained_features
-}
+    'result': $feature[source_field],
+    'edit': edits
+};
 ```

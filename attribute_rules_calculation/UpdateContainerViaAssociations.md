@@ -122,7 +122,7 @@ function has_bit(num, test_value) {
     // test_value = the bit value to test for
     // determines if num has the test_value bit set
     // Equivalent to num AND test_value == test_value
-    
+
     // first we need to determine the bit position of test_value
     var bit_pos = -1;
     for (var i=0; i < 64; i++) {
@@ -130,7 +130,7 @@ function has_bit(num, test_value) {
         var test_value = Floor(test_value / 2);
         bit_pos++
         if (test_value == 0)
-            break;        
+            break;
     }
     // now that we know the bit position, we shift the bits of
     // num until we get to the bit we care about
@@ -146,46 +146,97 @@ function has_bit(num, test_value) {
     }
 
 }
+function associated_records(feature, association_type, target_field, source_field) {
+    // Dict to store the edits by classname
+    var edits = {};
+    // Query to get all the content associations
+    var associations = FeatureSetByAssociation(feature, association_type, null, null, ['className'], false);
+    // If there is no content, exit the function
+    if (count(associations) == 0) {
+        return edits;
+    }
+    // loop over all associated records to get a list of the associated classes
+    var associated_classes = [];
+    for (var row in associations) {
+         associated_classes[Count(associated_classes)] = row.className;
+    }
+    // Get a unique list of classes
+    associated_classes = Distinct(associated_classes);
 
-if (IsEmpty($feature.DETAILS)) {
-    return $feature.DETAILS;
+    // For each class, gets its features and compare to the value to set, if the value is already set, do not update it
+    // as it will still trigger an edit event and store, which will fire Attribute Rules and change edit tracking
+    for (var i in associated_classes) {
+        var class_name = associated_classes[i];
+        // Get the features, get all fields as we cannot check the layer ahead of time if it has the field to set
+        // NOTE: The Class Name might need to be hard coded
+        var features = FeatureSetByAssociation(feature, association_type, null, class_name, ['*'], false);
+       
+        // Eval moving towards
+        //var features = FeatureSetByName($datastore, class_name, ['*'], false);
+        
+        // No content features from this class, move to next class
+        if (count(features) == 0) {
+            continue;
+        }
+        // Get the first feature and check if it has the target field
+        if (HasKey(first(features), target_field) == false) {
+            continue;
+        }
+        // Get the first feature and check if it has the target field
+        for (var feat in features)
+        {
+            // If the values are the same, move to next feautre
+            if (feat[target_field] == feature[source_field])
+            {
+                continue;
+            }
+            // Initalize the dict with an empty array, if not done so
+            if (HasKey(edits, class_name) == False) {
+                edits[class_name] = []
+            }
+            // Using classname, get the count of existing features in the array and use it to set the next features
+            edits[class_name][count(edits[class_name])] = {
+                'globalid': feat.globalId,
+                'attributes': Dictionary(target_field, feature[source_field])
+            }
+        }
+    }
+    return edits;
 }
+function convert_to_edits(record_dict){
+    // Convert the dict to a return edit statement
+    var contained_features = [];
+    for (var k in record_dict) {
+        contained_features[count(contained_features)] = {
+            'className': k,
+            'updates': record_dict[k]
+        }
+    }
+    return contained_features;
+}
+
+var source_field = 'DETAILS';
+var target_field = 'LABELTEXT';
+if (IsEmpty($feature[source_field]) == true) {
+    return $feature[source_field];
+}
+
 var association_status = $feature.ASSOCIATIONSTATUS;
 // Only features with an association status of content(bit 4) or visible content(bit 16)
 // need to be evaluated
-if (IsEmpty(association_status) || 
-    (has_bit(association_status,4) || has_bit(association_status,16)) == false) {
-    return $feature.DETAILS;
+if (IsEmpty(association_status) || (has_bit(association_status,4) || has_bit(association_status,16)) == false) {
+    return $feature[source_field];
 }
-
-// Query to get all the content associations
-var associations = FeatureSetByAssociation($feature, 'container', null, null, ['*'], false);
-if (count(associations) == 0)
-{
-    return $feature.DETAILS;
-}
-// Loop over all associations to get the classes that are containers
-// TODO
-
-// Loop over each feature classes features and check the feature value against set value
-// TODO
-
-
 // Get the first container
-var assoc_record = First(associations);
-var container_feature = {
-    'globalid': assoc_record.GlobalID,
-    'attributes': {"LABELTEXT": $feature.DETAILS}
-};
-
+var record_dict = associated_records($feature, 'container', target_field, source_field);
+if (IsEmpty(record_dict))
+{
+   return $feature[source_field];
+}
+var edits = convert_to_edits(record_dict);
 // Return the value of the field this is assigned on and the edit info for the container
 return {
-    'result': $feature.DETAILS,
-    'edit': [
-        {
-            'className': assoc_record.className,
-            'updates': [container_feature]
-        }
-    ]
+    'result': $feature[source_field],
+    'edit': edits
 };
 ```
