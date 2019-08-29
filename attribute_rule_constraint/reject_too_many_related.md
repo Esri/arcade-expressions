@@ -1,21 +1,21 @@
-# Validate Related Cardinality
+# Reject Too Many Related
 
-This validation attribute rule evaluates the related features to ensure they are valid related features and they do not exceed allowable counts of related features.
+This constraint attribute rule evaluates the feature when inserted and if it exceed the allowable number of related ojects of this type, rejects the edit.
 
 ## Use cases
 
-In a electric network, where the GIS location is modeling the location of the asset, not the units or devices that make it up.  For instance, a 3 Phase transformer may be one point in GIS, but actually be composed of 3 Single Phase transformers. 
+In a electric network, a feature may be used to represent the location and a table used to store assets.  This rule can ensure that only a certain number of assets are added. 
 
 ## Workflow
 
 Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this rule on a feature class and optionally on a subtype in that feature class.  Use the following values when defining the rule, the other options are not required or depend on your situation.
   
-  - **Rule Type:** Validation
-  - **Triggering Events:** 
+  - **Rule Type:** Constraint
+  - **Triggering Events:** Insert
 
 ## Expression Template
 
-This validation attribute rule evaluates the related features to ensure they are valid related features and they do not exceed allowable counts of related features.
+This Arcade expression will calculates the slope of the line based on two fields
 ```js
 // This rule is designed to check the count of child records and ensure they do not exceed the required amount
 
