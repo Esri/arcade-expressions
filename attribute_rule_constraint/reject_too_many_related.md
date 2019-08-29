@@ -15,7 +15,9 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 
 ## Expression Template
 
-This constraint attribute rule evaluates the feature when inserted and if it exceed the allowable number of related ojects of this type, rejects the edit.
+This constraint attribute rule evaluates the feature when inserted and if it exceed the allowable number of related ojects of this type, rejects the edit.  
+An example with using this rule is included in the [Example](../attribute_rule_calculation/UpdateContainerViaAssociations.zip).  
+To demonstrate, open the related rows table and add a row with a subtype prior to committing the edit.
 
 ```js
 // This rule is designed to check the count of child records and ensure they do not exceed the required amount

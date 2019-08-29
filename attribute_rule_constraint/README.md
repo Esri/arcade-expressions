@@ -10,7 +10,7 @@ Each expression lives in a Markdown file, which contains a general description o
 
 See the list below for shared expressions.
 
-- [Calc Slope of Line](./CalcSlopeOfLine.md)
+- [Reject too many related features](./reject_too_many_related.md)
 
 
 ## Resources
