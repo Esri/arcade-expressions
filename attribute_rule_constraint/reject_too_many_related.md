@@ -15,79 +15,53 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 
 ## Expression Template
 
-This Arcade expression will calculates the slope of the line based on two fields
+This constraint attribute rule evaluates the feature when inserted and if it exceed the allowable number of related ojects of this type, rejects the edit.
+
 ```js
 // This rule is designed to check the count of child records and ensure they do not exceed the required amount
 
 // dict with the max number of records by subtype
 var max_counts = {
-    '1': 4, // Subtype 1 in the child
+    '1': 1, // Subtype 1 in the child
     '2': 1, // Subtype 2 in the child
     '3': 0, // Subtype 3 in the child is not allowed at all to this parent
     '4': 0 // Subtype 3 in the child is not allowed at all to this parent
 };
 
+if (HasKey(max_counts, $feature.subtype) == false)
+{
+    return true;
+}
+var max_value = max_counts[Text($feature.subtype)];
 // A flag to determine if types table are allowed if not defined in max_counts
 var non_defined_types_allowed = false;
 
-var no_violation_text = 'No relationship violations';
-
-// Store the parent feature global from the key field in the relationship
+// Store the featurse global from the key field in the relationship
 var feature_id = $feature.globalid;
-if (IsEmpty(feature_id)) {
+var parent_id = $feature.parentguid;
+if (IsEmpty(feature_id) || IsEmpty(parent_id)) {
     return true;
 }
 
 // force to upper as the sql is case sensitive
 feature_id = Upper(feature_id);
-
-// Using the GDB name, get the related classes records and fields
-var child_class = FeatureSetByName($datastore, 'RelatedRows', ['PARENTGUID', 'SUBTYPE', 'LIFECYCLE'], false);
-// Filter the child class for only related features that are in service
+parent_id = Upper(parent_id);
+// Using the GDB name, get the other related records 
+var child_class = FeatureSetByName($datastore, 'RelatedRows', ['parent_guid', 'SUBTYPE', 'LIFECYCLE'], false);
+// Filter the class the feature is in to get fellow related rows
 // Optionally, extend query, such as filter by lifecycle - and LIFECYCLE <> 1
-var child_records = Filter(child_class, 'PARENTGUID = @feature_id');
+var pier_records = Filter(child_class, 'PARENTGUID = @parent_id and GlobalID <> @feature_id and SUBTYPE = ' + $feature.subtype);
 
-// If no child records, return no issue
-if (IsEmpty(child_records)) {
+// If no pier records, return
+if (IsEmpty(pier_records)) {
     return true;
 }
-var rec_count = {};
-// Loop through each feature, create a dict by the subtype and the count of child records
-for (var row in child_records) {
-    // Get the subtype code as text
-    var sub_text = 'Null';
-    if (IsEmpty(row['SUBTYPE']) == false) {
-        sub_text = Text(row['SUBTYPE']);
-    }
-    // Increment the count by subtype
-    if (HasKey(rec_count, sub_text) == false) {
-        rec_count[sub_text] = 1;
-    } else {
-        rec_count[sub_text] = rec_count[sub_text] + 1;
-    }
+if (Count(pier_records) > max_value)
+{
+    return {'errorMessage':'Adding this row violated allowable count(' + max_value + ') of related records for type: ' + DomainName($feature, 'SUBTYPE')};
 }
-// Loop over the counts by subtype and add a message for any that violate the counts
-var result = '';
-for (var key in rec_count) {
-    // If the subtype exist in the max count dict, check it max value
-    if (HasKey(max_counts, key)) {
-        // If the count exceeds, add a message
-        if (rec_count[key] > max_counts[key]) {
-            result = result + rec_count[key] + ' related ' + DomainName(child_class, 'SUBTYPE', key) +
-                ' only ' + max_counts[key] + ' allowed\n';
-        }
-    } else if (non_defined_types_allowed == false)
-    // When flag is set that requires all types to be defined and a value is not define, add to error list
-    {
-        result = result + rec_count[key] + ' related ' + DomainName(child_class, 'SUBTYPE', key) +
-            ' these types are not allowed\n';
-    }
-}
-
-if (result == '') {
+else
+{
     return true;
 }
-return {
-    "errorMessage": result
-};
 ```

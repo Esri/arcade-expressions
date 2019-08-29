@@ -19,39 +19,6 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 
 This Arcade expression will update all features that are contain via a UN containment association
 
-```js
-// This rule will update an attribute in all the features it contains
-
-// Query the associations table to find all features that are content of feature.
-var globalID = $feature.globalID
-
-// Using the GDB name, get the associations for this feature
-// The association table is always 500001, alt you could use Associations
-var associations = FeatureSetByName($datastore, '500001', ['ToGlobalID','FromGlobalID','AssociationType'], false)
-// Filter the associations for features that are content
-var content = Filter(associations, "FromGlobalID = @globalID AND AssociationType = 2")
-
-var contained_features= []
-var i = 0
-// Loop through each contained feature, create a dict of the Global ID and the new install date
-for (var row in content) {
-    contained_features[i++] = {
-        'globalid': row.ToGlobalID,
-        'attributes': {"InstallDate": $feature.InstallDate}    
-    }
-}
-
-// Return the count of features and in the edit parameter the class of features to update and the list of updates
-return {
-'result': $feature.InstallDate,
-'edit': [
-            {'className': 'WaterDevice',
-             'updates': contained_features
-            } 
-        ]
-}
-```
-
 
 ```js
 // This rule will update an attribute in all the features it contains, requires ArcGIS Pro 2.5
@@ -143,4 +110,39 @@ return {
     'result': $feature[source_field],
     'edit': edits
 };
+```
+
+### Retired versions
+This version is no longer maintained and is saved for reference and as a code sample 
+```js
+// This rule will update an attribute in all the features it contains
+
+// Query the associations table to find all features that are content of feature.
+var globalID = $feature.globalID
+
+// Using the GDB name, get the associations for this feature
+// The association table is always 500001, alt you could use Associations
+var associations = FeatureSetByName($datastore, '500001', ['ToGlobalID','FromGlobalID','AssociationType'], false)
+// Filter the associations for features that are content
+var content = Filter(associations, "FromGlobalID = @globalID AND AssociationType = 2")
+
+var contained_features= []
+var i = 0
+// Loop through each contained feature, create a dict of the Global ID and the new install date
+for (var row in content) {
+    contained_features[i++] = {
+        'globalid': row.ToGlobalID,
+        'attributes': {"InstallDate": $feature.InstallDate}    
+    }
+}
+
+// Return the count of features and in the edit parameter the class of features to update and the list of updates
+return {
+'result': $feature.InstallDate,
+'edit': [
+            {'className': 'WaterDevice',
+             'updates': contained_features
+            } 
+        ]
+}
 ```
