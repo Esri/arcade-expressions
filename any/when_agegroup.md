@@ -1,0 +1,17 @@
+# when_agegroup
+
+This expression assigns a value of a certain age group based on the value of the column "age".
+
+## Use cases
+
+To categorize your age data into age groups for easier analysis and visualization.
+
+## Workflow
+
+Create a new field of type "String" in your feature layer and name it "AgeGroup". In the "field calculator" create the following Arcade expression:
+
+when($feature["applicant_age"]<15,'Under 15',$feature["applicant_age"]>=15 && $feature["applicant_age"]<25,'16-25','NA')
+
+In the above expression we only had two categories ('Under 15' and '16-25') but you can add as many categories as needed.
+
+You need to always have a default value at the end of eexpression (in our example - 'NA') or you will recieve an error.
