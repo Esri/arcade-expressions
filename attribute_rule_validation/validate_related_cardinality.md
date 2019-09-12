@@ -74,7 +74,7 @@ for (var key in rec_count) {
         // If the count exceeds, add a message
         if (rec_count[key] > max_counts[key]) {
             result = result + rec_count[key] + ' related ' + DomainName(child_class, 'SUBTYPE', key) +
-                ' only ' + max_counts[key] + ' allowed\n';
+                ' only ' + max_counts[key] + ' allowed' + TextFormatting.NewLine;
         }
     } else if (non_defined_types_allowed == false)
     // When flag is set that requires all types to be defined and a value is not define, add to error list
