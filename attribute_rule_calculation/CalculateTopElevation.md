@@ -18,7 +18,7 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 This Arcade expression will calculates the slope of the line based on two fields
 ```js
 // Get the Z of the feature
-bottom_elevation = Geometry($feature).z;
+var bottom_elevation = Geometry($feature).z;
 
 // Return the top elevation
 return bottom_elevation + $feature.DEPTH;
