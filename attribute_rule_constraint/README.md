@@ -11,6 +11,7 @@ Each expression lives in a Markdown file, which contains a general description o
 See the list below for shared expressions.
 
 - [Reject too many related features](./reject_too_many_related.md)
+- [Restrict Editing](./restrict_edting.md)
 
 
 ## Resources
