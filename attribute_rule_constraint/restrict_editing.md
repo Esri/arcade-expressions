@@ -1,4 +1,4 @@
-# Reject Too Many Related
+# Restrict Editing
 
 This constraint attribute rule evaluates the user from edit tracking and an table to determine if the user can edit a feature of this type.
 
