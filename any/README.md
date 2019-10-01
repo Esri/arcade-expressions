@@ -17,6 +17,9 @@ See the list below for shared expressions.
 * [Barcode - Gas Component Manufacturer](./barcode-gas/barcode-gas-manufacturer.md)
 * [Barcode - Gas Component Material](./barcode-gas/barcode-gas-material.md)
 * [Barcode - Gas Component Production Date](./barcode-gas/barcode-gas-productionDate.md)
+* [Sandbag Wall Estimation - Sandbags](./sandbag-wall-estimation/sandbag-estimate.md)
+* [Sandbag Wall Estimation - Sand](./sandbag-wall-estimation/sand-estimate.md)
+* [Sandbag Wall Estimation - Sheeting](./sandbag-wall-estimation/sheeting-estimate.md)
 
 ## Resources
 
