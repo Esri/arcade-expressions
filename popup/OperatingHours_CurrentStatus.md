@@ -59,7 +59,7 @@ function DayTime(field){
 	return array
 }
 
-//finds all days present in a range
+//Function to find all days present in a range
 function range_finder(range){
     var sp = split(range,"-")
     var start =When(sp[0]=="Mo",1,sp[0]=="Tu",2,sp[0]=="We",3,sp[0]=="Th",4,sp[0]=="Fr",5,sp[0]=="Sa",6,sp[0]=="Su",0,8)
@@ -85,7 +85,7 @@ function range_finder(range){
 }
 
 
-//Converts values with hyphens into array and replaces them in the list
+//Functino to convert values with hyphens into array and replaces them in the list
 function Day_Splitter(list){
     var new_days= []
     var x = (count(list))
@@ -130,7 +130,7 @@ function between(value,start,end){
 	}
 }
 
-//function to calculate relative holidays
+//Function to calculate relative holidays
 function calcRelativeHoliday(week, month, day, year) {
 	var holiday;
 	if (week < 0){
@@ -180,7 +180,7 @@ function today_holiday(hday){
     }
 }
 
-//Reorder array to put sunday in place 0
+//Function to reorder array to put Sunday in place 0
 function reorder(array){
 	var days = [["Su",0],["Mo",1],["Tu",2],["We",3],["Th",4],["Fr",5],["Sa",6]]
 	var list =[]
