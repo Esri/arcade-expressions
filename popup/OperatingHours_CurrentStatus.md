@@ -226,7 +226,8 @@ function Open (times){
     return holiday_today
 }
 
-Open($feature.operhours)```
+Open($feature.operhours)
+```
 
 ## Output
 
