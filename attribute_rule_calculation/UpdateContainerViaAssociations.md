@@ -54,34 +54,52 @@ function has_bit(num, test_value) {
     }
 
 }
-function associated_records(feature, association_type, target_field, source_field) {
-    // Dict to store the edits by classname
-    var edits = {};
+function get_associated_feature_ids(feature, association_type) {
     // Query to get all the content associations
-    var associations = FeatureSetByAssociation(feature, association_type, null, null, ['className'], false);
+    var associations = FeatureSetByAssociation(feature, association_type);
     // If there is no content, exit the function
     if (count(associations) == 0) {
-        return edits;
+        return null;
     }
-    // loop over all associated records to get a list of the associated classes
-    var associated_classes = [];
+    // loop over all associated records to get a list of the associated classes and the IDs of the features
+    var associated_ids = {};
     for (var row in associations) {
-         associated_classes[Count(associated_classes)] = row.className;
+        if (HasKey(associated_ids, row.className) == false) {
+            associated_ids[row.className] = [];
+        }
+        associated_ids[row.className][Count(associated_ids[row.className])] = row.globalId;
     }
-    // Get a unique list of classes
-    associated_classes = Distinct(associated_classes);
-
-    // For each class, gets its features and compare to the value to set, if the value is already set, do not update it
-    // as it will still trigger an edit event and store, which will fire Attribute Rules and change edit tracking
-    for (var i in associated_classes) {
-        var class_name = associated_classes[i];
-        // Get the features, get all fields as we cannot check the layer ahead of time if it has the field to set
-        // NOTE: The Class Name might need to be hard coded
-        var features = FeatureSetByAssociation(feature, association_type, null, class_name, ['*'], false);
-       
-        // Eval moving towards
-        //var features = FeatureSetByName($datastore, class_name, ['*'], false);
+    //return a dict by class name with GlobalIDs of features
+    return associated_ids;
+}
+function get_features(associated_ids){
+    // dict to store the features by class name
+    var associated_features = {};
+    // loop over classes
+    for (var class_name in associated_ids) {
+        // Get a feature set of the class
+        var feature_set = FeatureSetByName($datastore, class_name, ['*'], false);
+        // Store the GlobalIDs as a variable to use in SQL
+        var global_ids = associated_ids[class_name];
+        // Filter the class for only the associated features
+        var features = Filter(feature_set, "globalid IN @global_ids");
+        // Loop over the features and store them into a dict by class name
+        associated_features[class_name] = []
+        for(var feature in features)
+        {
+            associated_features[class_name][Count(associated_features[class_name])] = feature;
+        }
         
+    }
+    // Return the features
+    return associated_features
+}
+
+function update_features(features, value, target_field)
+{
+    var edits = {};
+    for (var class_name in associated_classes) {
+        var features = associated_classes[class_name]
         // No content features from this class, move to next class
         if (count(features) == 0) {
             continue;
@@ -91,26 +109,28 @@ function associated_records(feature, association_type, target_field, source_fiel
             continue;
         }
         // Get the first feature and check if it has the target field
-        for (var feat in features)
+        for (var feature in features)
         {
-            // If the values are the same, move to next feautre
-            if (feat[target_field] == feature[source_field])
+            // If the values are the same, move to next feature
+            if (feature[target_field] == value)
             {
                 continue;
             }
-            // Initalize the dict with an empty array, if not done so
+            // Init the dict with an empty array, if not done so
             if (HasKey(edits, class_name) == False) {
                 edits[class_name] = []
             }
             // Using classname, get the count of existing features in the array and use it to set the next features
             edits[class_name][count(edits[class_name])] = {
-                'globalid': feat.globalId,
-                'attributes': Dictionary(target_field, feature[source_field])
+                'globalid': feature.globalId,
+                'attributes': Dictionary(target_field, value)
             }
         }
     }
     return edits;
 }
+    
+
 function convert_to_edits(record_dict){
     // Convert the dict to a return edit statement
     var contained_features = [];
@@ -135,12 +155,12 @@ var association_status = $feature.ASSOCIATIONSTATUS;
 if (IsEmpty(association_status) || (has_bit(association_status,4) || has_bit(association_status,16)) == false) {
     return $feature[source_field];
 }
-// Get the first container
-var record_dict = associated_records($feature, 'container', target_field, source_field);
-if (IsEmpty(record_dict))
-{
-   return $feature[source_field];
+var associated_ids = get_associated_feature_ids($feature, "content");
+if (IsEmpty(associated_ids)){
+    return "No Associations";
 }
+var associated_features = get_features(associated_ids);
+update_features(features)
 var edits = convert_to_edits(record_dict);
 // Return the value of the field this is assigned on and the edit info for the container
 return {
