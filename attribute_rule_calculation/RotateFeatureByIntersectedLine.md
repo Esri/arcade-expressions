@@ -78,14 +78,12 @@ var lineClass = FeatureSetByName($datastore, "lines", ["objectid"], true);
 // Find the intersecting lines
 var lines = Intersects(lineClass, $feature);
 //If no lines intersect, return the original value
-if (lines == null) {
+if (Count(lines) == 0) {
     return $feature.symbolrotation;
 }
 var diff_tol = 5;
-var intersectcount = Count(lines);
 // Variable to store all found angles
 var angles = [];
-var new_segment = null;
 // Store the features geometry
 var feature_geometry = Geometry($feature);
 // Loop over all intersecting lines and find their angles
