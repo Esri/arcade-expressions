@@ -20,6 +20,20 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 
 ```js
 // This rule will update an Z of the container if the edited point has a different Z and is the lowest
+
+// Converts dict to required return edits format
+function convert_to_edits(record_dict){
+    // Convert the dict to a return edit statement
+    var contained_features = [];
+    for (var k in record_dict) {
+        contained_features[count(contained_features)] = {
+            'className': k,
+            'updates': record_dict[k]
+        }
+    }
+    return contained_features;
+}
+
 // Function to check if a bit is in an int value
 function has_bit(num, test_value) {
     // num = number to test if it contains a bit
@@ -55,9 +69,11 @@ function pop_empty(dict) {
     var new_dict = {}
     for (var k in dict) {
         if (IsNan(dict[k])) {
+            //new_dict[k] = null;
             continue;
         }
         if (IsEmpty(dict[k])) {
+            //new_dict[k] = null;
             continue;
         }
         new_dict[k] = dict[k]
@@ -232,12 +248,12 @@ new_cont_geom = pop_empty(Dictionary(Text(new_cont_geom)));
 new_cont_geom['z'] = feature_z;
 
 // Create a return edits dict
-var edits = {}
-edits[container_class] = {
+var edits = {};
+edits[container_class] = [{
     'globalid': container_feature.globalId,
     'geometry': Geometry(new_cont_geom)
-}
-
+}]
+edits = convert_to_edits(edits);
 // Return the value of the field this is assigned on and the edit info for the container
 return {
     'result': field_value,
