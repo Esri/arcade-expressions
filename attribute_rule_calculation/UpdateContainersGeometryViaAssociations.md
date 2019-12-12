@@ -190,18 +190,18 @@ if (IsEmpty(associated_ids)) {
 var associated_features = get_features(associated_ids, false, []);
 // Get an array of the first point container with a z value
 var res = get_first_container(associated_features);
-
-var container_class = res[0];
-var container_feature = res[1];
-if (IsEmpty(container_feature)) {
+if (IsEmpty(res)) {
     return field_value;
 }
+var container_class = res[0];
+var container_feature = res[1];
+
 // Store the features Z value
-var feature_Z = Geometry($feature).z;
-var container_Z = Geometry(container_feature).z;
+var feature_z = Geometry($feature).z;
+var container_z = Geometry(container_feature).z;
 
 // Compare the of the container to the feature, exit if the same
-if (Number(container_Z) == Number(feature_Z)) {
+if (Number(container_z) == Number(feature_z)) {
     return field_value;
 }
 
@@ -219,9 +219,9 @@ if (IsEmpty(container_content_features)) {
 var lowest_z = get_lowest_z(container_content_features);
 
 // If the other features are lower than the edited features, return
-if (lowest_z < feature_Z) {
-    if (lowest_z < container_Z) {
-        // TODO: If the lowest feature in the container is lower tahn container, do we adjust?
+if (lowest_z < feature_z) {
+    if (lowest_z < container_z) {
+        // TODO: If the lowest feature in the container is lower than container, do we adjust?
         return field_value;
     }
     return field_value;
@@ -229,7 +229,7 @@ if (lowest_z < feature_Z) {
 // Get the containers geometry and adjust the z
 var new_cont_geom = Geometry(container_feature);
 new_cont_geom = pop_empty(Dictionary(Text(new_cont_geom)));
-new_cont_geom['z'] = feature_Z;
+new_cont_geom['z'] = feature_z;
 
 // Create a return edits dict
 var edits = {}
