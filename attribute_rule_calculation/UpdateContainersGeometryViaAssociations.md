@@ -1,5 +1,5 @@
 
-# Update Associated Features
+# Update Containers Z value when feature is the lowest feature 
 
 This calculation attribute rule is designed for the feature classes that participate in a Utility Network and for features that are content of a container.  When the features elevation is changed, it will compare the new elevation to the containers and other content in that container.  If the feature is the lowest feature, it will update the containers z to the features value.
 
