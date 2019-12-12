@@ -200,12 +200,11 @@ if (IsEmpty(container_feature)) {
 var feature_Z = Geometry($feature).z;
 var container_Z = Geometry(container_feature).z;
 
-// Comnpare the of the container to the feature, exit if the same
-// Bypassed for testing
-//if (Number(container_Z) == Number(feature_Z)) {
-//    return field_value;
-//}
-//
+// Compare the of the container to the feature, exit if the same
+if (Number(container_Z) == Number(feature_Z)) {
+    return field_value;
+}
+
 // Get a dict by class name of the content of the container to determine if the new point is the lowest item
 var content_ids = get_associated_feature_ids(container_feature, "content", [$feature.globalid]);
 if (IsEmpty(content_ids)) {
