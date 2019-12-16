@@ -133,6 +133,8 @@ function get_features_switch_yard(class_name, fields, include_geometry) {
         feature_set = FeatureSetByName($datastore, 'StructureLine', fields, include_geometry);
     } else if (class_name == 'StructureBoundary') {
         feature_set = FeatureSetByName($datastore, 'StructureBoundary', fields, include_geometry);
+    } else {
+        feature_set = FeatureSetByName($datastore, 'StructureBoundary', fields, include_geometry);
     }
     return feature_set;
 }
@@ -148,7 +150,6 @@ function get_features(associated_ids, only_geometry, fields) {
     // loop over classes
     for (var class_name in associated_ids) {
         // Get a feature set of the class
-       
         var feature_set = get_features_switch_yard(class_name, fields, true);
         // Store the GlobalIDs as a variable to use in SQL
         var global_ids = associated_ids[class_name];
@@ -179,9 +180,11 @@ function get_features(associated_ids, only_geometry, fields) {
 
 // Loop over the associated features and get the first point feature with a Z
 function get_first_container(features) {
+
     for (var class_name in features) {
         for (var globalid in associated_features[class_name]) {
             var feature = associated_features[class_name][globalid];
+
             var geom = Geometry(feature);
             var geom_dict = Dictionary(Text(geom));
             if (TypeOf(geom) == 'Point' && HasKey(geom_dict, 'z')) {
@@ -227,10 +230,13 @@ if (IsEmpty(associated_ids)) {
 // Get a dict by class name of the container features
 var associated_features = get_features(associated_ids, false, []);
 // Get an array of the first point container with a z value
+
 var res = get_first_container(associated_features);
+
 if (IsEmpty(res)) {
     return field_value;
 }
+
 var container_class = res[0];
 var container_feature = res[1];
 
@@ -245,6 +251,7 @@ if (Number(container_z) == Number(feature_z)) {
 
 // Get a dict by class name of the content of the container to determine if the new point is the lowest item
 var content_ids = get_associated_feature_ids(container_feature, "content", [$feature.globalid]);
+
 if (IsEmpty(content_ids)) {
     return field_value;
 }
