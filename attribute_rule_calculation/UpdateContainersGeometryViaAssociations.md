@@ -22,7 +22,7 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 // This rule will update an Z of the container if the edited point has a different Z and is the lowest
 
 // Converts dict to required return edits format
-function convert_to_edits(record_dict){
+function convert_to_edits(record_dict) {
     // Convert the dict to a return edit statement
     var contained_features = [];
     for (var k in record_dict) {
@@ -46,7 +46,7 @@ function has_bit(num, test_value) {
     for (var i = 0; i < 64; i++) {
         // equivalent to test_value >> 1
         var test_value = Floor(test_value / 2);
-        bit_pos++
+        bit_pos++;
         if (test_value == 0)
             break;
     }
@@ -76,7 +76,7 @@ function pop_empty(dict) {
             //new_dict[k] = null;
             continue;
         }
-        new_dict[k] = dict[k]
+        new_dict[k] = dict[k];
     }
     return new_dict
 }
@@ -116,6 +116,27 @@ function get_associated_feature_ids(feature, association_type, ignore_ids) {
     return associated_ids;
 }
 
+// Get Feature Switch yard
+function get_features_switch_yard(class_name, fields, include_geometry) {
+    var feature_set = null;
+    if (class_name == 'SewerDevice') {
+        feature_set = FeatureSetByName($datastore, 'SewerDevice', fields, include_geometry);
+    } else if (class_name == 'SewerJunction') {
+        feature_set = FeatureSetByName($datastore, 'SewerJunction', fields, include_geometry);
+    } else if (class_name == 'SewerAssembly') {
+        feature_set = FeatureSetByName($datastore, 'SewerAssembly', fields, include_geometry);
+    } else if (class_name == 'SewerLine') {
+        feature_set = FeatureSetByName($datastore, 'SewerLine', fields, include_geometry);
+    } else if (class_name == 'StructureJunction') {
+        feature_set = FeatureSetByName($datastore, 'StructureJunction', fields, include_geometry);
+    } else if (class_name == 'StructureLine') {
+        feature_set = FeatureSetByName($datastore, 'StructureLine', fields, include_geometry);
+    } else if (class_name == 'StructureBoundary') {
+        feature_set = FeatureSetByName($datastore, 'StructureBoundary', fields, include_geometry);
+    }
+    return feature_set;
+}
+
 // Get features using a dict with keys of classname and values of Global IDs
 function get_features(associated_ids, only_geometry, fields) {
     // If not fields, default to only globalid
@@ -127,7 +148,8 @@ function get_features(associated_ids, only_geometry, fields) {
     // loop over classes
     for (var class_name in associated_ids) {
         // Get a feature set of the class
-        var feature_set = FeatureSetByName($datastore, class_name, fields, true);
+       
+        var feature_set = get_features_switch_yard(class_name, fields, true);
         // Store the GlobalIDs as a variable to use in SQL
         var global_ids = associated_ids[class_name];
         // Filter the class for only the associated features
