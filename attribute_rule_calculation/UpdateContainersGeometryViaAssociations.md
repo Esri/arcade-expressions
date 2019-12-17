@@ -21,6 +21,36 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 ```js
 // This rule will update an Z of the container if the edited point has a different Z and is the lowest
 
+// ***************************************
+// This section has the functions and variables that need to be adjusted based on your implementation
+
+// The field the rule is assigned to
+var field_value = $feature.ownedby;
+
+// Get Feature Switch yard, adjust the string literals to match your GDB feature class names
+function get_features_switch_yard(class_name, fields, include_geometry) {
+    var feature_set = null;
+    if (class_name == 'SewerDevice') {
+        feature_set = FeatureSetByName($datastore, 'SewerDevice', fields, include_geometry);
+    } else if (class_name == 'SewerJunction') {
+        feature_set = FeatureSetByName($datastore, 'SewerJunction', fields, include_geometry);
+    } else if (class_name == 'SewerAssembly') {
+        feature_set = FeatureSetByName($datastore, 'SewerAssembly', fields, include_geometry);
+    } else if (class_name == 'SewerLine') {
+        feature_set = FeatureSetByName($datastore, 'SewerLine', fields, include_geometry);
+    } else if (class_name == 'StructureJunction') {
+        feature_set = FeatureSetByName($datastore, 'StructureJunction', fields, include_geometry);
+    } else if (class_name == 'StructureLine') {
+        feature_set = FeatureSetByName($datastore, 'StructureLine', fields, include_geometry);
+    } else if (class_name == 'StructureBoundary') {
+        feature_set = FeatureSetByName($datastore, 'StructureBoundary', fields, include_geometry);
+    } else {
+        feature_set = FeatureSetByName($datastore, 'StructureBoundary', fields, include_geometry);
+    }
+    return feature_set;
+}
+// ************* End Section *****************
+
 // Converts dict to required return edits format
 function convert_to_edits(record_dict) {
     // Convert the dict to a return edit statement
@@ -116,28 +146,7 @@ function get_associated_feature_ids(feature, association_type, ignore_ids) {
     return associated_ids;
 }
 
-// Get Feature Switch yard
-function get_features_switch_yard(class_name, fields, include_geometry) {
-    var feature_set = null;
-    if (class_name == 'SewerDevice') {
-        feature_set = FeatureSetByName($datastore, 'SewerDevice', fields, include_geometry);
-    } else if (class_name == 'SewerJunction') {
-        feature_set = FeatureSetByName($datastore, 'SewerJunction', fields, include_geometry);
-    } else if (class_name == 'SewerAssembly') {
-        feature_set = FeatureSetByName($datastore, 'SewerAssembly', fields, include_geometry);
-    } else if (class_name == 'SewerLine') {
-        feature_set = FeatureSetByName($datastore, 'SewerLine', fields, include_geometry);
-    } else if (class_name == 'StructureJunction') {
-        feature_set = FeatureSetByName($datastore, 'StructureJunction', fields, include_geometry);
-    } else if (class_name == 'StructureLine') {
-        feature_set = FeatureSetByName($datastore, 'StructureLine', fields, include_geometry);
-    } else if (class_name == 'StructureBoundary') {
-        feature_set = FeatureSetByName($datastore, 'StructureBoundary', fields, include_geometry);
-    } else {
-        feature_set = FeatureSetByName($datastore, 'StructureBoundary', fields, include_geometry);
-    }
-    return feature_set;
-}
+
 
 // Get features using a dict with keys of classname and values of Global IDs
 function get_features(associated_ids, only_geometry, fields) {
@@ -216,7 +225,6 @@ function get_lowest_z(features) {
 }
 
 var association_status = $feature.ASSOCIATIONSTATUS;
-var field_value = $feature.ownedby;
 // Only features with an association status of content(bit 4) or visible content(bit 16)
 // need to be evaluated
 if (IsEmpty(association_status) || (has_bit(association_status, 4) || has_bit(association_status, 16)) == false) {
