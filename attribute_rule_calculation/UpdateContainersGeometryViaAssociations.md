@@ -29,6 +29,7 @@ var field_value = $feature.ownedby;
 
 // Get Feature Switch yard, adjust the string literals to match your GDB feature class names
 function get_features_switch_yard(class_name, fields, include_geometry) {
+    var class_name = Split(class_name, '.')[-1];    
     var feature_set = null;
     if (class_name == 'SewerDevice') {
         feature_set = FeatureSetByName($datastore, 'SewerDevice', fields, include_geometry);
@@ -114,7 +115,7 @@ function pop_empty(dict) {
 // Function to get UN associated features
 function get_associated_feature_ids(feature, association_type, ignore_ids) {
     // feautre(Feature): A feature object used to lookup assoications
-    // association_type(String): Type of assoication to look up
+    // association_type(String): Type of association to look up
     //    Values = content, container, structure
     // ignore_ids(List[Global Ids]): A list of global IDs to ignore and not include in the results
 
@@ -260,24 +261,22 @@ if (Number(container_z) == Number(feature_z)) {
 // Get a dict by class name of the content of the container to determine if the new point is the lowest item
 var content_ids = get_associated_feature_ids(container_feature, "content", [$feature.globalid]);
 
-if (IsEmpty(content_ids)) {
-    return field_value;
-}
-// Get a dict by class name of the other content features
-var container_content_features = get_features(content_ids, false, []);
-if (IsEmpty(container_content_features)) {
-    return field_value;
-}
-// Get the lowest Z of its siblings
-var lowest_z = get_lowest_z(container_content_features);
-
-// If the other features are lower than the edited features, return
-if (lowest_z < feature_z) {
-    if (lowest_z < container_z) {
-        // TODO: If the lowest feature in the container is lower than container, do we adjust?
-        return field_value;
+// Only if there is other content, check to see if current point is the lowest
+if (IsEmpty(content_ids) == false) {
+    // Get a dict by class name of the other content features
+    var container_content_features = get_features(content_ids, false, []);
+    if (IsEmpty(container_content_features) == false) {
+        // Get the lowest Z of its siblings
+        var lowest_z = get_lowest_z(container_content_features);
+        // If the other features are lower than the edited features, return
+        if (lowest_z < feature_z) {
+            if (lowest_z < container_z) {
+                // TODO: If the lowest feature in the container is lower than container, do we adjust?
+                return field_value;
+            }
+            return field_value;
+        }
     }
-    return field_value;
 }
 // Get the containers geometry and adjust the z
 var new_cont_geom = Geometry(container_feature);
