@@ -6,12 +6,12 @@ This is based on a modified version of the standardized Schema for Operating Hou
 
 With this format, there are a few things to keep in mind. Days of the week are two letter abbreviations (Mo, Tu, We, etc.) and all time use a 24 hour clock. So, if a location is open form 9-5 every day of the week, the operating hours field will look like this: “Mo-Su (9:00-17:00 )”. To tweak this to say closed on weekends, simply add a semicolon and the new times like this: “Mo-Fr (9:00-17:00); Sa-Su (Closed)”.
 
-•	All times are stored as 24 hours without a leading 0
-•	All days are abbreviated to two letters, with the first letter capitalized
-•	All times are in parenthesis
-•	When separating multiple day ranges, use a semicolon to denote the two (or more) groups of day/times
-•	When a location is open 24 hours a day, use “24 Hours”
-•	When a location is closed on a specific day, use “Closed”
+• All times are stored as 24 hours without a leading 0
+• All days are abbreviated to two letters, with the first letter capitalized
+• All times are in parenthesis
+• When separating multiple day ranges, use a semicolon to denote the two (or more) groups of day/times
+• When a location is open 24 hours a day, use “24 Hours”
+• When a location is closed on a specific day, use “Closed”
 
 
 ## Use Cases
