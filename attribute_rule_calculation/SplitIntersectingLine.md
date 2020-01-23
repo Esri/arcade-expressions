@@ -18,7 +18,6 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 This Arcade expression will split a line when a point is placed.  [Example](./SplitIntersectingLine.zip)
 
 ```js
-
 // Split the intersecting line
 
 // NOTES
@@ -170,7 +169,7 @@ for (var line_feature in intersecting_lines) {
         }
     }
     // If a split was not found, do not modify the feature
-    if (Count(new_shape_2) == 0){
+    if (Count(new_shape_2) == 0) {
         continue;
     }
     // Convert feature to dictionary to get all its attributes
@@ -209,14 +208,15 @@ for (var line_feature in intersecting_lines) {
             };
     }
 }
-return {
-    'result': field_value,
-    'edit': [
-        {
-            'className': line_class_name,
-            'updates': update_features,
-            'adds': new_features
-        }
-    ]
-};
+var results = {'result': field_value};
+// Only include edit info when a split was required
+if (Count(update_features) > 0 && Count(new_features)) {
+    results['edit'] = {
+        'className': line_class_name,
+        'updates': update_features,
+        'adds': new_features
+    }
+
+}
+return results;
 ```
