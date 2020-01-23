@@ -17,10 +17,16 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 
 This Arcade expression will split a line when a point is placed.  [Example](./SplitIntersectingLine.zip)
 
-
-
 ```js
+
 // Split the intersecting line
+
+// NOTES
+//   Need to handle Zs and Ms better.
+//   As this is not calling a GDB split, Domain Split policy will not be honored, this would have to add to this logic
+//   The logic for a point on a line but not at vertex might need rework
+//   Would like to convert some blocks to functions for cleaner code
+// END NOTES
 
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation
@@ -114,19 +120,20 @@ for (var line_feature in intersecting_lines) {
         var new_path_2 = [];
 
         for (var j in current_path) {
+            // Split has occurs, just store the rest of the paths and segments in segment 2
             if (split_found == true) {
                 new_path_2[Count(new_path_2)] = current_path[j];
                 continue
             }
             // Add the coordinate to both features if the split is on the from
+            // NOTE, as this is on a known vertex, no Z interpolation should be needed
             if (compare_coordinate(point_geo, current_path[j])) {
                 new_path_1[Count(new_path_1)] = point_coord;
                 new_path_2[Count(new_path_2)] = point_coord;
                 split_found = true;
                 continue;
             }
-
-            // Save the last coordinate
+            // Save the last coordinate of a path
             if (Count(current_path) == j - 1) {
                 new_path_1[Count(new_path_1)] = current_path[j];
                 continue;
@@ -136,10 +143,12 @@ for (var line_feature in intersecting_lines) {
                 new_path_1[Count(new_path_1)] = current_path[j];
                 continue;
             }
-
+            // Check to see if point is between vertexs
             var from_coord = current_path[j];
             var to_coord = current_path[j + 1];
-
+            //TODO: Interpolate Z values if present based on perctange split occurs
+            //TODO: reevaluate distance to line function, do we need to build in a fuzzy tolerance, could construct
+            // a line and use intersect function
             if (dist_to_line(from_coord, to_coord, point_coord) < .01) {
                 new_path_1[Count(new_path_1)] = current_path[j];
                 new_path_1[Count(new_path_1)] = point_coord;
@@ -148,15 +157,21 @@ for (var line_feature in intersecting_lines) {
                 split_found = true;
                 continue
             }
+            // Save the coordinate in first segment and move on to next point
             new_path_1[Count(new_path_1)] = current_path[j];
 
         }
+        // Save the paths to the new path collections
         if (Count(new_path_1) > 0) {
             new_shape_1[Count(new_shape_1)] = new_path_1;
         }
         if (Count(new_path_2) > 0) {
             new_shape_2[Count(new_shape_2)] = new_path_2;
         }
+    }
+    // If a split was not found, do not modify the feature
+    if (Count(new_shape_2) == 0){
+        continue;
     }
     // Convert feature to dictionary to get all its attributes
     var line_att = Dictionary(Text(line_feature))['attributes'];
