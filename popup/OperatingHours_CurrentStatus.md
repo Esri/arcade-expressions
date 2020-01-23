@@ -4,15 +4,23 @@ This example shows how standardized opening and closing times can be used in con
 
 This is based on a modified version of the standardized Schema for Operating Hours: https://schema.org/openingHours#Pharmacy-gen-202 . 
 
+With this format, there are a few things to keep in mind. Days of the week are two letter abbreviations (Mo, Tu, We, etc.) and all time use a 24 hour clock. So, if a location is open form 9-5 every day of the week, the operating hours field will look like this: “Mo-Su (9:00-17:00 )”. To tweak this to say closed on weekends, simply add a semicolon and the new times like this: “Mo-Fr (9:00-17:00); Sa-Su (Closed)”.
+
+•	All times are stored as 24 hours without a leading 0
+•	All days are abbreviated to two letters, with the first letter capitalized
+•	All times are in parenthesis
+•	When separating multiple day ranges, use a semicolon to denote the two (or more) groups of day/times
+•	When a location is open 24 hours a day, use “24 Hours”
+•	When a location is closed on a specific day, use “Closed”
+
+
 ## Use Cases
 
-This can be used whenever a feature or set of features has an operating hours property (buildings, parks, businesses, etc.) These expression allow for further customiztions to account for static and floating holidays to ensure the most accurate information. 
+This can be used whenever a feature or set of features has an operating hours property (buildings, parks, businesses, etc.) These expression allow for further customizations to account for static and floating holidays to ensure the most accurate information. 
 
 ## Workflow
 
-Copy and paste the expressions found in the expression template below to the Arcade editor in ArcGIS Online, the relevant location in ArcGIS Pro, or the relevant location in a custom application.
-
-Modify the variables in each expression to point at the field containing operating hours, specify holidays, and determine the display of the results. 
+Copy and paste the expressions found in the expression template below to the Arcade editor in ArcGIS Online, the relevant location in ArcGIS Pro, or the relevant location in a custom application. Modify the variables in each expression to point at the field containing operating hours, specify holidays, and determine the display of the results. 
 
 ## Operating Hours Expression
 
