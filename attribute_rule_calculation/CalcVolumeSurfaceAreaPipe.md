@@ -18,9 +18,12 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 This calculation attribute rule calculates the volume of a pipe or the surface area using the length and diameter. An example with using this rule is included in the [Example](./CopyValueIntersectingFeature.zip)
 
 ```js
-// This rule is designed to return the volume or surface area of a pipe
-
+// This rule is designed to return the volume or surface area of a pip
+// e
+// If you model outside diamter, use this field and set thickness to 0
 var diameter = $feature.NOMINALDIAMETER;
+// If the diameter is the nominal diameter, set the wall thickness 
+var thickness = 0; //$feature.WALLTHICKNESS
 if (IsEmpty(diameter) || diameter == 0)
 {
     return 0;
@@ -37,6 +40,9 @@ if (IsEmpty(len) || len == 0)
 }
 // Surface Area = PI x L x D
 var surface_area =  PI * len * diameter;
+if (thickness != 0){
+surface_area = surface_area * (2 * thickness);
+}
 // Volume = PI * (R^2) * L
 var volume = PI * POW((diameter/2), 2) * len;
 
