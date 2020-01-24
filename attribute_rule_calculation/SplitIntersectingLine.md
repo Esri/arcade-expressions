@@ -35,6 +35,7 @@ var field_value = $feature.ValueCopied;
 // The line class to split
 var line_class_name = "Line";
 var line_fs = FeatureSetByName($datastore, "Line", ['*'], true);
+var use_cutter = true;
 
 // ************* End Section *****************
 
@@ -71,40 +72,73 @@ function pop_keys(dict, keys) {
     return new_dict
 }
 
-var intersecting_lines = Intersects(line_fs, $feature);
-// If no features were found, return the original value
-if (IsEmpty(intersecting_lines) || Count(intersecting_lines) == 0) {
-    return field_value;
+function cut_line_at_point_cutter(line_feature, point_geometry) {
+    var search = Extent(Buffer(point_geometry, .1, "meter"));
+    var geo = Geometry(line_feature);
+    var segment = Clip(geo, search)["paths"][0];
+
+    // Start and end points of the line
+    var x1 = segment[0]['x']
+    var y1 = segment[0]['y']
+    var x2 = segment[-1]['x']
+    var y2 = segment[-1]['y']
+    //find the center
+    var cx = (x1 + x2) / 2;
+    var cy = (y1 + y2) / 2;
+
+    //move the line to center on the origin
+    x1 -= cx;
+    y1 -= cy;
+    x2 -= cx;
+    y2 -= cy;
+
+    //rotate both points
+    var xtemp = x1;
+    var ytemp = y1;
+    x1 = -ytemp;
+    y1 = xtemp;
+
+    xtemp = x2;
+    ytemp = y2;
+    x2 = -ytemp;
+    y2 = xtemp;
+
+    //move the center point back to where it was
+    x1 += cx;
+    y1 += cy;
+    x2 += cx;
+    y2 += cy;
+
+    var cutter = Polyline({
+        "paths": [[[x1, y1], [x2, y2]]],
+        "spatialReference": {"wkid": geo.spatialReference.wkid}
+    });
+    return Cut(line_feature, cutter);
 }
-var point_geo = Geometry($feature);
 
-var update_features = [];
-var new_features = [];
-
-// Get the first line to get spatial ref, Z info and determine if Zs should be return/interpolated in lines
-// TODO: Handle M's
-var interpolate_z = false;
-var first_line = First(intersecting_lines);
-var first_geo = Geometry(first_line);
-var first_shape = Dictionary(Text(first_geo));
-var point_coord = null;
-var line_spat_ref = first_geo.spatialReference.wkid;
-
-if (Count(first_shape['paths'][0][0]) >= 3 && IsEmpty(point_geo.Z)) {
-    point_coord = [point_geo.X, point_geo.Y];
-    interpolate_z = true
-} else if (Count(first_shape['paths'][0][0]) >= 3 && IsEmpty(point_geo.Z) == false) {
-    point_coord = [point_geo.X, point_geo.Y, point_geo.Z];
-} else {
-    point_coord = [point_geo.X, point_geo.Y];
-}
-// Loop through lines to split
-for (var line_feature in intersecting_lines) {
-    var line_geo = Geometry(line_feature);
-    var line_shape = Dictionary(Text(line_geo));
+function cut_line_at_point(line_geometry, point_geometry) {
+    var point_coord = null;
+    var interpolate_z = false;
+    // Check if the line has already been converted to a dict
+    var line_shape = null;
+    if (TypeOf(line_geometry) == 'Dictionary') {
+        line_shape = line_geometry;
+    } else {
+        line_shape = Dictionary(Text(line_geometry));
+    }
+    // Get the Z info and determine if Zs should be return/interpolated in lines
+    // TODO: Handle M's
+    if (Count(line_shape['paths'][0][0]) >= 3 && IsEmpty(point_geometry.Z)) {
+        point_coord = [point_geometry.X, point_geometry.Y];
+        interpolate_z = true
+    } else if (Count(line_shape['paths'][0][0]) >= 3 && IsEmpty(point_geometry.Z) == false) {
+        point_coord = [point_geometry.X, point_geometry.Y, point_geometry.Z];
+    } else {
+        point_coord = [point_geometry.X, point_geometry.Y];
+    }
 
     // If the point is at the start or end, skip splitting line
-    if (compare_coordinate(point_geo, line_shape['paths'][0][0]) || compare_coordinate(point_geo, line_shape['paths'][-1][-1])) {
+    if (compare_coordinate(point_geometry, line_shape['paths'][0][0]) || compare_coordinate(point_geometry, line_shape['paths'][-1][-1])) {
         continue;
     }
     var split_found = false;
@@ -126,7 +160,7 @@ for (var line_feature in intersecting_lines) {
             }
             // Add the coordinate to both features if the split is on the from
             // NOTE, as this is on a known vertex, no Z interpolation should be needed
-            if (compare_coordinate(point_geo, current_path[j])) {
+            if (compare_coordinate(point_geometry, current_path[j])) {
                 new_path_1[Count(new_path_1)] = point_coord;
                 new_path_2[Count(new_path_2)] = point_coord;
                 split_found = true;
@@ -138,14 +172,14 @@ for (var line_feature in intersecting_lines) {
                 continue;
             }
             // If the To is the last coordinate and matches the point, continue
-            if (compare_coordinate(point_geo, current_path[j + 1])) {
+            if (compare_coordinate(point_geometry, current_path[j + 1])) {
                 new_path_1[Count(new_path_1)] = current_path[j];
                 continue;
             }
             // Check to see if point is between vertexs
             var from_coord = current_path[j];
             var to_coord = current_path[j + 1];
-            //TODO: Interpolate Z values if present based on perctange split occurs
+            //TODO: Interpolate Z values if present based on percentage split occurs
             //TODO: reevaluate distance to line function, do we need to build in a fuzzy tolerance, could construct
             // a line and use intersect function
             if (dist_to_line(from_coord, to_coord, point_coord) < .01) {
@@ -168,18 +202,48 @@ for (var line_feature in intersecting_lines) {
             new_shape_2[Count(new_shape_2)] = new_path_2;
         }
     }
-    // If a split was not found, do not modify the feature
-    if (Count(new_shape_2) == 0) {
-        continue;
-    }
-    // Convert feature to dictionary to get all its attributes
-    var line_att = Dictionary(Text(line_feature))['attributes'];
+    return [new_shape_1, new_shape_2];
+}
 
-    // Get the length of the new lings
-    var polyline_1 = Polyline({"paths": new_shape_1, "spatialReference": {"wkid": line_spat_ref}});
-    var polyline_2 = Polyline({"paths": new_shape_2, "spatialReference": {"wkid": line_spat_ref}});
+var intersecting_lines = Intersects(line_fs, $feature);
+// If no features were found, return the original value
+if (IsEmpty(intersecting_lines) || Count(intersecting_lines) == 0) {
+    return field_value;
+}
+var point_geometry = Geometry($feature);
+
+var update_features = [];
+var new_features = [];
+
+var new_geoms = [];
+// Loop through lines to split
+
+for (var line_feature in intersecting_lines) {
+    var polyline_1 = null;
+    var polyline_2 = null;
+    if (use_cutter) {
+        new_geoms = cut_line_at_point_cutter(line_feature, point_geometry)
+        // If a split was not found, do not modify the feature
+        if (Count(new_geoms) != 2) {
+            continue;
+        }
+        polyline_1 = new_geoms[0]
+        polyline_2 = new_geoms[1]
+    } else {
+        new_geoms = cut_line_at_point(Geometry(line_feature), point_geometry)
+        // If a split was not found, do not modify the feature
+        if (Count(new_geoms) != 2) {
+            continue;
+        }
+        var line_spat_ref = Geometry(line_feature).spatialReference.wkid;
+        polyline_1 = Polyline({"paths": new_geoms[0], "spatialReference": {"wkid": line_spat_ref}});
+        polyline_2 = Polyline({"paths": new_geoms[1], "spatialReference": {"wkid": line_spat_ref}});
+    }
     var polyline_1_length = Length(polyline_1);
     var polyline_2_length = Length(polyline_2);
+
+    // Convert feature to dictionary to get all its attributes
+    var line_att = Dictionary(Text(line_feature))['attributes'];
 
     // List of keys to remove from new feature, existing features change only requires global id
     var keys = ['SHAPE_LENGTH', 'GLOBALID', 'OBJECTID'];
@@ -211,11 +275,11 @@ for (var line_feature in intersecting_lines) {
 var results = {'result': field_value};
 // Only include edit info when a split was required
 if (Count(update_features) > 0 && Count(new_features)) {
-    results['edit'] = {
+    results['edit'] = [{
         'className': line_class_name,
         'updates': update_features,
         'adds': new_features
-    }
+    }]
 
 }
 return results;
