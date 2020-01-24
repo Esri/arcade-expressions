@@ -76,7 +76,8 @@ function cut_line_at_point_cutter(line_feature, point_geometry) {
     var search = Extent(Buffer(point_geometry, .1, "meter"));
     var geo = Geometry(line_feature);
     var segment = Clip(geo, search)["paths"][0];
-
+    
+    // Rotate logic - https://stackoverflow.com/questions/45701615/how-can-i-rotate-a-line-segment-around-its-center-by-90-degrees
     // Start and end points of the line
     var x1 = segment[0]['x']
     var y1 = segment[0]['y']
