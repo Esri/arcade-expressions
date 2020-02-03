@@ -30,7 +30,7 @@ More information on the field schema can be found below.
 ## Operating Hours Expression
 
 ```js
-//Specify the Field with operating hours
+//Specify the field with operating hours
 var field = $feature.operhours
 
 //Specify any holidays when location is not open [Month, Day]
@@ -46,13 +46,19 @@ var variableHolidays = [[-1,5,1],[1,9,1],[4,11,4],[3,1,1]];
 //Specify the number of following days to return in the display
 var tot_days = 7
 
+//Specify if the date display is static (always starts on a specific day)
+var static = "False" //or "True"
+
+//Specify the 3 letter day of the week to start on. Only applies when Static is true
+var start_day = "Mon" //or "Tue", "Wed" etc.
+
 //Specify if the values are returned in Military or standard time
 var time_type="Standard" //"Military"
 
 //Specify if AM/PM will be shown. Only applies with Standard Time
 var AM_PM = "False" // "True"
 
-//Specify if the current status of will be shown 
+//Specify if the current status of will be shown. Only applies if Static is False
 var show_status = "True" // "False"
 
 //Specify text to show if open. Only applies when current status is shown
@@ -66,7 +72,7 @@ var holiday_text= "Holiday Hours May Apply"
 
 /*DO NOT CHANGE ANYTHING BELOW THIS LINE
 -------------------------------------------------------------------------*/
-
+var start
 
 // The following 3 functions split day ranges into seperate days and assigns time
 
@@ -290,109 +296,203 @@ function Final(){
     var schedule = reorder(Day_Splitter(DayTime(replace(field," ",""))))    
     var final_text
     
-    for(var counter=0; counter<tot_days; counter++) {
-        var day_num = weekday(today())
-        var fixed_day  = day_num + counter
-        if(fixed_day >= 7){
-            fixed_day = fixed_day - 7
-        }
-        
-        var o_time
-        var c_time
-        var o_period
-        var c_period
-        if(time_type == "Military"){
-            
-            o_time = schedule[fixed_day][1]
-            if(count(o_time)==4){
-                o_time= 0 +o_time
-            }else if(o_time=="Closed"){
-                o_time="Closed"
-            }
-
-            if(o_time == "Closed"){
-                c_time = " "
-            }else{
-                c_time = schedule[fixed_day][2]
-                if(count(c_time)==4){
-                 c_time= 0 +c_time
-                }else {
-                  c_time= c_time
-                  }
-            }
-
-        } else{
-            o_time = schedule[fixed_day][1]
-            if(o_time!= "Closed"){
-                c_time = schedule[fixed_day][2]
-            }else{
-                c_time=" "
+    if (static == "False"){
+        for(var counter=0; counter<tot_days; counter++) {
+            var day_num = weekday(today())
+            var fixed_day  = day_num + counter
+            if(fixed_day >= 7){
+                fixed_day = fixed_day - 7
             }
             
-            if(o_time!="Closed"){
-                if (AM_PM == "True" ){
-                    if(left(o_time,2)>12){
-                        o_period = " PM"
-                    } else if(left(o_time,2)<12){
-                        o_period = " AM"
-                    }else if(o_time=="Closed"){
-                        o_period = " "
-                    }
-                    
-                    if(left(c_time,2)>12){
-                        c_period = " PM"
-                    } else if(left(c_time,2)<12){
-                        c_period = " AM"
-                    }else if(c_time==""){
-                        c_period = " "
-                    }
+            var o_time
+            var c_time
+            var o_period
+            var c_period
+            if(time_type == "Military"){
+                
+                o_time = schedule[fixed_day][1]
+                if(count(o_time)==4){
+                    o_time= 0 +o_time
+                }else if(o_time=="Closed"){
+                    o_time="Closed"
                 }
-            }
-            if(o_time !="Closed"){
-                if(left(o_time,2)>12){
-                    o_time= (left(o_time,2)- 12)+ right(o_time,3)
-                }else if(mid(o_time,1,1)==":"){
-                    o_time= "  " + o_time
+    
+                if(o_time == "Closed"){
+                    c_time = " "
+                }else{
+                    c_time = schedule[fixed_day][2]
+                    if(count(c_time)==4){
+                     c_time= 0 +c_time
+                    }else {
+                      c_time= c_time
+                      }
+                }
+    
+            } else{
+                o_time = schedule[fixed_day][1]
+                if(o_time!= "Closed"){
+                    c_time = schedule[fixed_day][2]
+                }else{
+                    c_time=" "
                 }
                 
-                c_time = schedule[fixed_day][2]
-                if(left(c_time,2)>12){
-                    c_time= (left(c_time,2)- 12)+ right(c_time,3)
-                }else if(mid(c_time,1,1)==":"){
-                    c_time= "  " + c_time
+                if(o_time!="Closed"){
+                    if (AM_PM == "True" ){
+                        if(left(o_time,2)>12){
+                            o_period = " PM"
+                        } else if(left(o_time,2)<12){
+                            o_period = " AM"
+                        }else if(o_time=="Closed"){
+                            o_period = " "
+                        }
+                        
+                        if(left(c_time,2)>12){
+                            c_period = " PM"
+                        } else if(left(c_time,2)<12){
+                            c_period = " AM"
+                        }else if(c_time==""){
+                            c_period = " "
+                        }
+                    }
+                }
+                if(o_time !="Closed"){
+                    if(left(o_time,2)>12){
+                        o_time= (left(o_time,2)- 12)+ right(o_time,3)
+                    }else if(mid(o_time,1,1)==":"){
+                        o_time= "  " + o_time
+                    }
+                    
+                    c_time = schedule[fixed_day][2]
+                    if(left(c_time,2)>12){
+                        c_time= (left(c_time,2)- 12)+ right(c_time,3)
+                    }else if(mid(c_time,1,1)==":"){
+                        c_time= "  " + c_time
+                    }
+                }
+            }
+            
+            
+            if (show_status == "True"){
+                if (counter== 0){
+                    if(o_time != "Closed"){
+                        final_text = o_time + o_period+" - "+c_time + c_period +"   "+Open(field)+TextFormatting.NewLine
+                    }else{
+                        final_text = o_time + o_period+"   "+Open(field)+TextFormatting.NewLine
+                    }
+                }else{
+                    if(o_time != "Closed"){
+                        final_text += o_time+ o_period+" - "+c_time+ c_period +TextFormatting.NewLine
+                    }else{
+                        final_text += o_time+ o_period+TextFormatting.NewLine
+                    }
+                }
+            }else{
+                if (counter== 0){
+                    if(o_time != "Closed"){
+                        final_text = o_time + o_period+" - "+c_time + c_period +TextFormatting.NewLine
+                    }else{
+                        final_text = o_time + o_period+TextFormatting.NewLine
+                    }
+                }else{
+                    if(o_time != "Closed"){
+                        final_text += o_time+ o_period+" - "+c_time+ c_period +TextFormatting.NewLine
+                    }else{
+                        final_text += o_time+ o_period+TextFormatting.NewLine
+                    }
                 }
             }
         }
-        
-        
-        if (show_status == "True"){
-            if (counter== 0){
-                if(o_time != "Closed"){
-                    final_text = o_time + o_period+" - "+c_time + c_period +"   "+Open(field)+TextFormatting.NewLine
-                }else{
-                    final_text = o_time + o_period+"   "+Open(field)+TextFormatting.NewLine
+    }else{
+        var date_ = decode(start_day,"Sun",5,"Mon",6,"Tue",7,"Wed",8,"Thu",9,"Fri",10,"Sat",11,today())
+        start = date(2020,0,date_)
+        for(var counter=0; counter<tot_days; counter++) {
+            var day_num = weekday(start)
+            var fixed_day  = day_num + counter
+            if(fixed_day >= 7){
+                fixed_day = fixed_day - 7
+            }
+            var o_time
+            var c_time
+            var o_period
+            var c_period
+            if(time_type == "Military"){
+                
+                o_time = schedule[fixed_day][1]
+                if(count(o_time)==4){
+                    o_time= 0 +o_time
+                }else if(o_time=="Closed"){
+                    o_time="Closed"
                 }
-            }else{
-                if(o_time != "Closed"){
-                    final_text += o_time+ o_period+" - "+c_time+ c_period +TextFormatting.NewLine
+    
+                if(o_time == "Closed"){
+                    c_time = " "
                 }else{
-                    final_text += o_time+ o_period+TextFormatting.NewLine
+                    c_time = schedule[fixed_day][2]
+                    if(count(c_time)==4){
+                     c_time= 0 +c_time
+                    }else {
+                      c_time= c_time
+                      }
+                }
+    
+            } else{
+                o_time = schedule[fixed_day][1]
+                if(o_time!= "Closed"){
+                    c_time = schedule[fixed_day][2]
+                }else{
+                    c_time=" "
+                }
+                
+                if(o_time!="Closed"){
+                    if (AM_PM == "True" ){
+                        if(left(o_time,2)>12){
+                            o_period = " PM"
+                        } else if(left(o_time,2)<12){
+                            o_period = " AM"
+                        }else if(o_time=="Closed"){
+                            o_period = " "
+                        }
+                        
+                        if(left(c_time,2)>12){
+                            c_period = " PM"
+                        } else if(left(c_time,2)<12){
+                            c_period = " AM"
+                        }else if(c_time==""){
+                            c_period = " "
+                        }
+                    }
+                }
+                if(o_time !="Closed"){
+                    if(left(o_time,2)>12){
+                        o_time= (left(o_time,2)- 12)+ right(o_time,3)
+                    }else if(mid(o_time,1,1)==":"){
+                        o_time= "  " + o_time
+                    }
+                    
+                    c_time = schedule[fixed_day][2]
+                    if(left(c_time,2)>12){
+                        c_time= (left(c_time,2)- 12)+ right(c_time,3)
+                    }else if(mid(c_time,1,1)==":"){
+                        c_time= "  " + c_time
+                    }
                 }
             }
-        }else{
+            
+            
             if (counter== 0){
                 if(o_time != "Closed"){
-                    final_text = o_time + o_period+" - "+c_time + c_period +TextFormatting.NewLine
+                    final_text = o_time + o_period+" - "+c_time +TextFormatting.NewLine
                 }else{
                     final_text = o_time + o_period+TextFormatting.NewLine
                 }
             }else{
                 if(o_time != "Closed"){
-                    final_text += o_time+ o_period+" - "+c_time+ c_period +TextFormatting.NewLine
+                    final_text += o_time+ o_period+" - "+c_time+TextFormatting.NewLine
                 }else{
                     final_text += o_time+ o_period+TextFormatting.NewLine
+                    }
                 }
-            }
+            
         }
     }
     return final_text
@@ -401,7 +501,6 @@ function Final(){
 
 final()
 
-//Open(field)
 ```
 
 ## Days of the week
@@ -414,8 +513,14 @@ var tot_days = 7
 //9 will show the full day name for each day of the week.
 var day_length = 9
 
-//Display Date with Day of the week
-var display_date = "False" //or "False"
+//Specify if the date display is static (always starts on a specific day)
+var static = "Flase" //or "True"
+
+//Specify the 3 letter day of the week to start on. Only applies when Static is true
+var start_day = "Mon" //or "Tue", "Wed" etc.
+
+//Display Date with Day of the week. Only applies when static is False
+var display_date = "False" //or "True"
 
 //Month format. Only applies when display date is true
 var Month_display= "MMM" // or "MMM"
@@ -425,11 +530,22 @@ var full_display= "WMD" // Weekday, Month, Day
 
 /*DO NOT CHANGE ANYTHING BELOW THIS LINE
 -------------------------------------------------------------------------*/
+var start
+
+function start_date(){
+    if (static == "True"){
+        var date_ = decode(start_day,"Sun",5,"Mon",6,"Tue",7,"Wed",8,"Thu",9,"Fri",10,"Sat",11,today())
+        start = date(2020,0,date_)
+    } else{
+        start = today()
+    }
+}
 
 function Final(){
     var final_text
+    start_date()
     for(var counter=0; counter<tot_days; counter++) {
-        var new_day = DateAdd(today(), counter, 'days')    
+        var new_day = DateAdd(start, counter, 'days') 
         //get date parameters
         var w = left(text(new_day,"dddd"),day_length)
         var d = text(new_day,"DD")
@@ -461,14 +577,14 @@ Final()
 ```
 
 ## HTML Wrapper
-Note: "expression/expr1" and "expression/expr2" should be replaced with the expressions you generated. If these were not the first expressions created for the popup, some changes may be needed. 
+Note: "expression/expr0" and "expression/expr1" should be replaced with the expressions you generated. If these were not the first expressions created for the popup, some changes may be needed. 
 
 ```js
 <table style=" border-collapse: separate; border-spacing: 0px 0px; table-layout: fixed; margin: 0px -1px;">
 	<tbody>
         <tr>
-			<td style="white-space: pre-wrap;text-transform: full-width;padding:10px">{expression/expr1}</td>
 			<td style="white-space: pre-wrap;text-transform: full-width;padding:10px">{expression/expr0}</td>
+			<td style="white-space: pre-wrap;text-transform: full-width;padding:10px">{expression/expr1}</td>
 		</tr>
 	</tbody>
 </table>
