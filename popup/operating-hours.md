@@ -30,7 +30,7 @@ More information on the field schema can be found below.
 ## Operating Hours Expression
 
 ```js
-//Specify the field with operating hours
+//Specify the Field with operating hours
 var field = $feature.operhours
 
 //Specify any holidays when location is not open [Month, Day]
@@ -52,8 +52,8 @@ var static = "False" //or "True"
 //Specify the 3 letter day of the week to start on. Only applies when Static is true
 var start_day = "Mon" //or "Tue", "Wed" etc.
 
-//Specify if the values are returned in Military or standard time
-var time_type="Standard" //"Military"
+//Specify if the values are returned in 24-hour clock or standard time
+var time_type="Standard" //"24"
 
 //Specify if AM/PM will be shown. Only applies with Standard Time
 var AM_PM = "False" // "True"
@@ -308,7 +308,7 @@ function Final(){
             var c_time
             var o_period
             var c_period
-            if(time_type == "Military"){
+            if(time_type == "24"){
                 
                 o_time = schedule[fixed_day][1]
                 if(count(o_time)==4){
@@ -338,17 +338,17 @@ function Final(){
                 
                 if(o_time!="Closed"){
                     if (AM_PM == "True" ){
-                        if(left(o_time,2)>12){
+                        if(split(o_time,":",1)[0]>12){
                             o_period = " PM"
-                        } else if(left(o_time,2)<12){
+                        } else if(split(o_time,":",1)[0]<12){
                             o_period = " AM"
                         }else if(o_time=="Closed"){
                             o_period = " "
                         }
                         
-                        if(left(c_time,2)>12){
+                        if(split(c_time,":",1)[0]>12){
                             c_period = " PM"
-                        } else if(left(c_time,2)<12){
+                        } else if(split(c_time,":",1)[0]<12){
                             c_period = " AM"
                         }else if(c_time==""){
                             c_period = " "
@@ -415,7 +415,7 @@ function Final(){
             var c_time
             var o_period
             var c_period
-            if(time_type == "Military"){
+            if(time_type == "24"){
                 
                 o_time = schedule[fixed_day][1]
                 if(count(o_time)==4){
