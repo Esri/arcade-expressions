@@ -43,6 +43,9 @@ These are holidays that don't fall on the same date every year, i.e. Memorial Da
 [4,11,4] corresponds to Thanksgiving -> 4th occurrence in November of a Thursday*/
 var variableHolidays = [[-1,5,1],[1,9,1],[4,11,4],[3,1,1]]; 
 
+//Specify if only the status will be shown. If True, all following settings are ignored
+var status_only = "False" // or "True"
+
 //Specify the number of following days to return in the display
 var tot_days = 7
 
@@ -371,8 +374,9 @@ function Final(){
                 }
             }
             
-            
-            if (show_status == "True"){
+            if (status_only =="True"){
+                final_text = Open(field)+TextFormatting.NewLine
+            }else if (show_status == "True"){
                 if (counter== 0){
                     if(o_time != "Closed"){
                         final_text = o_time + o_period+" - "+c_time + c_period +"   "+Open(field)+TextFormatting.NewLine
