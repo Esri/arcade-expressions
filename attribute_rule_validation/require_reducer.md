@@ -9,14 +9,15 @@ A water main with diamater of 6" connected to a water main with a diameter of 4"
 ## Workflow
 
 Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this rule on a feature class and optionally on a subtype in that feature class.  Use the following values when defining the rule, the other options are not required or depend on your situation.
-  
+  - **Rule Name** Validate Reducer
   - **Rule Type:** Validation
-  - **Triggering Events:** 
-
+  - **Error Number:** 
+  - **Error Message:** Pipe Diameter Validation
+  - **Severity:** 4
 ## Expression Template
 
 ```js
-// This rule will evaluates connected lines and if the diamter is different, require a reducer fitting.
+// This rule will evaluates connected lines and if the diameter is different, require a reducer fitting.
 
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation
@@ -27,6 +28,7 @@ var source_diameter = $feature.diameter;
 var reducer_codes = [49, 50, 51];
 var line_feature_set = FeatureSetByName($datastore, 'WaterLine', ['globalID', diameter_field], false);
 var junction_feature_set = FeatureSetByName($datastore, 'WaterJunction', ['globalID', 'assettype'], false);
+var device_feature_set = FeatureSetByName($datastore, 'WaterDevice', ['globalID', 'assettype'], false);
 var line_requires_reducer_msg = "Lines requires reducer";
 var line_does_not_need_reducer_msg = "Lines connects to another line via a reducer but diameter does not change";
 
@@ -50,6 +52,11 @@ function check_snapped_features(geom, source_diameter) {
     var intersection_lines = Intersects(line_feature_set, geom);
     if (Count(intersection_lines) == 0) {
         return null
+    }
+    // Any device is a valid diameter change
+    var intersection_device = Intersects(device_feature_set, geom);
+    if (Count(intersection_device) >= 1) {
+       return null;
     }
     // Get the fittings, if there is no fitting, there still may be a diameter error
     var fitting_is_reducer = false;
