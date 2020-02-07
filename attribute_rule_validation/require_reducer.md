@@ -140,7 +140,7 @@ if (IsEmpty(result) == false) {
 }
 if (Count(results) > 0) {
     return {
-        "errorMessage": Concatenate(results, '\n')
+        "errorMessage": Concatenate(results, TextFormatting.NewLine)
     };
 }
 return true;
