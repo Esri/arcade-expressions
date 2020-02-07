@@ -43,7 +43,7 @@ These are holidays that don't fall on the same date every year, i.e. Memorial Da
 [4,11,4] corresponds to Thanksgiving -> 4th occurrence in November of a Thursday*/
 var variableHolidays = [[-1,5,1],[1,9,1],[4,11,4],[3,1,1]]; 
 
-//Specify if only the status will be shown. If True, all following settings are ignored
+//Specifies if only the status will be shown. If True, all following settings are ignored
 var status_only = "False" // or "True"
 
 //Specify the number of following days to return in the display
@@ -56,13 +56,13 @@ var static = "False" //or "True"
 var start_day = "Mon" //or "Tue", "Wed" etc.
 
 //Specify if the values are returned in 24-hour clock or standard time
-var time_type="Standard" //"24"
+var time_type="Standard" // or "24"
 
 //Specify if AM/PM will be shown. Only applies with Standard Time
-var AM_PM = "False" // "True"
+var AM_PM = "False" // or "True"
 
 //Specify if the current status of will be shown. Only applies if Static is False
-var show_status = "True" // "False"
+var show_status = "False" // or "False"
 
 //Specify text to show if open. Only applies when current status is shown
 var open_text= "Open Now"
@@ -298,7 +298,7 @@ function Open (times){
 function Final(){
     var schedule = reorder(Day_Splitter(DayTime(replace(field," ",""))))    
     var final_text
-    
+    console(schedule)
     if (static == "False"){
         for(var counter=0; counter<tot_days; counter++) {
             var day_num = weekday(today())
@@ -359,10 +359,10 @@ function Final(){
                     }
                 }
                 if(o_time !="Closed"){
-                    if(left(o_time,2)>12){
-                        o_time= (left(o_time,2)- 12)+ right(o_time,3)
-                    }else if(mid(o_time,1,1)==":"){
-                        o_time= "  " + o_time
+                    if(split(o_time,":",1)[0]>12){
+                        o_time = (split(o_time,":",1)[0]- 12)+":"+split(o_time,":")[1]
+                    }else {
+                        o_time= number(split(o_time,":",1)[0])+":"+split(o_time,":")[1]
                     }
                     
                     c_time = schedule[fixed_day][2]
@@ -449,17 +449,17 @@ function Final(){
                 
                 if(o_time!="Closed"){
                     if (AM_PM == "True" ){
-                        if(left(o_time,2)>12){
+                        if(split(o_time,":",1)[0]>12){
                             o_period = " PM"
-                        } else if(left(o_time,2)<12){
+                        } else if(split(o_time,":",1)[0]<12){
                             o_period = " AM"
                         }else if(o_time=="Closed"){
                             o_period = " "
                         }
                         
-                        if(left(c_time,2)>12){
+                        if(split(c_time,":",1)[0]>12){
                             c_period = " PM"
-                        } else if(left(c_time,2)<12){
+                        } else if(split(c_time,":",1)[0]<12){
                             c_period = " AM"
                         }else if(c_time==""){
                             c_period = " "
@@ -504,6 +504,7 @@ function Final(){
 
 
 final()
+
 
 ```
 
