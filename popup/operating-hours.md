@@ -519,7 +519,7 @@ var tot_days = 7
 var day_length = 9
 
 //Specify if the date display is static (always starts on a specific day)
-var static = "Flase" //or "True"
+var static = "False" //or "True"
 
 //Specify the 3 letter day of the week to start on. Only applies when Static is true
 var start_day = "Mon" //or "Tue", "Wed" etc.
