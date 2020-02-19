@@ -12,18 +12,18 @@ This is designed specifically for the popup profile. These sets of expressions c
 
 Copy and paste the expressions below to the Arcade editor in ArcGIS Online, the relevant location in ArcGIS Pro, or the relevant location in a custom application. 
 
-To configure the script to your layers, you must replace the field variable to the name of the field containing the operating house. Then, modify the additional variables in each expression to specify holidays and modify the display of the results. 
+To configure the script to your layers, you must replace the field variable to the name of the field containing the operating hours. Then, modify the additional variables in each expression to specify holidays and modify the display of the results. 
 
 The schema used is based on the standardized Schema for Operating Hours: https://schema.org/openingHours#Pharmacy-gen-202 . 
 
-With this format, there are a few things to keep in mind. Days of the week are two letter abbreviations (Mo, Tu, We, etc.) and all time use a 24 hour clock. So, if a location is open form 9-5 every day of the week, the operating hours field will look like this: “Mo-Su (9:00-17:00)”. To tweak this to say closed on weekends, simply add a semicolon and the new times like this: “Mo-Fr (9:00-17:00); Sa-Su (Closed)”.
+With this format, there are a few things to keep in mind. Days of the week are two letter abbreviations (Mo, Tu, We, etc.) and all time use a 24 hour clock. So, if a location is open form 9-5 every day of the week, the operating hours field will look like this: “Mo-Su (09:00-17:00)”. To tweak this to say closed on weekends, simply add a semicolon and the new times like this: “Mo-Fr (09:00-17:00); Sa-Su (Closed)”.
 
 More information on the field schema can be found below. 
 
 - All times are stored as 24 hours without a leading 0
 - All days are abbreviated to two letters, with the first letter capitalized
 - All times are in parenthesis
-- When separating  groups of operating hours, use a semicolon to denote the groups
+- When separating groups of operating hours, use a semicolon to denote the groups
 - When a location is open 24 hours a day, use “24 Hours”
 - When a location is closed on a specific day, use “Closed”
 
@@ -597,4 +597,4 @@ Note: "expression/expr0" and "expression/expr1" should be replaced with the expr
 
 ## Output
 
-Depending on the settings used, several different output designes are possible. Overall, however, the final output will show the operating hours of a location, and if desired, if the location is currently open or closed. 
+Depending on the settings used, several different output designs are possible. Overall, however, the final output will show the operating hours of a location, and if desired, if the location is currently open or closed. 
