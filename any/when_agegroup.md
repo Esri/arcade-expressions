@@ -1,6 +1,6 @@
 # when_agegroup
 
-This expression assigns a value of a certain age group based on the value of the column "age".
+This expression assigns a value of a certain age group based on the value of a number column.
 
 ## Use cases
 
