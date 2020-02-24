@@ -21,4 +21,4 @@ When(
 
 In the above expression we only had two categories ('Under 15' and '16-25') but you can add as many categories as needed.
 
-You need to always have a default value at the end of eexpression (in our example - 'NA') or you will recieve an error.
+You need to always have a default value at the end of expression (in our example - 'NA') or you will recieve an error.
