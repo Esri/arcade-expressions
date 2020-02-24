@@ -17,22 +17,23 @@ Create an expression to identify parent networks
 
 
 ```js
-function init_feature_sets() {
-    //  Create links to the required layers
-    // The subnetwork table is always 500002, alt you could use Subnetworks
-    subnetwork_table = FeatureSetByName($datastore, '500002', ['subnetworkname', 'globalid',
-        'featureglobalid', 'isdirty', 'tierrank', 'tiername'], false);
-    if (IsEmpty(subnetwork_table) == true) {
-        return "Subnetwork table not found"
-    }
-    // The device class is the only class that can be controllers, use its map name or layer ID
-    // In the example the ElectricDevice is layer ID 100
-    device_table = FeatureSetByName($datastore, '100', ['subnetworkname', 'globalid'], false);
-    if (IsEmpty(device_table) == true) {
-        return "Device table not found"
-    }
-    return null;
-}
+// This script will traverse the subnetwork table to find all neighboring and parent subnetworks
+
+// ***************************************
+// This section has the functions and variables that need to be adjusted based on your implementation
+
+// The subnetwork table in a feature service is always layer id 500002 or named Subnetworks
+// The subnetwork table in a FGDB UN is based on the DSID, it will be something like UN_5_Subnetwork
+var subnetwork_fields = ['subnetworkname', 'globalid', 'featureglobalid', 'isdirty', 'tierrank', 'tiername'];
+var subnetwork_table = FeatureSetByName($datastore, 'UN_5_Subnetworks', subnetwork_fields, false);
+
+// The device class is the only class that can be controllers, use its map name or layer ID
+// For services this is the name in the feature service or the layer ID
+// In a FGDB, use the name of the feature class in the GDB
+var device_table = FeatureSetByName($datastore, 'ElectricDevice', ['subnetworkname', 'globalid'], false);
+
+// ************* End Section *****************
+
 
 function get_parents(current_subnetwork) {
     // Filter the subnetwork table to get the controllers for the subnetwork the feature is on
@@ -154,19 +155,17 @@ function create_result() {
 var controller_guid = [];
 var controller_features = [];
 var subnetwork_rows = [];
-var subnetwork_table;
-var device_table;
 
-// Init the feature sets, if a message is returned, exist and return the message
-var init_results = init_feature_sets();
-if (IsEmpty(init_results) == false) {
-    return init_results
+if (IsEmpty(subnetwork_table) == true) {
+    return "Subnetwork table not found"
+}
+if (IsEmpty(device_table) == true) {
+    return "Device table not found"
 }
 
 // Call Get Parents to get parent Subnetworks
 get_parents($feature.subnetworkname);
 return create_result();
-
 
 ```
 

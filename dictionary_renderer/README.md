@@ -1,24 +1,14 @@
-# Attribute Rule Calculation expressions
+# Dictionary Renderer expressions
 
-This folder contains Attribute Rule expression templates and functions that may be used in the [alculation-attribute-rules profile](https://pro.arcgis.com/en/pro-app/help/data/geodatabases/overview/calculation-attribute-rules.htm).
+This folder contains Arcade expression templates and functions that may be used in the [dictionary renderer profile](https://developers.arcgis.com/arcade/guide/profiles/#dictionary).
 
 ## General workflow
 
 Each expression lives in a Markdown file, which contains a general description of the expression, its use case, a depiction of the result, the code to copy, and an example of an executable form of the expression along with its output. It may also include a link to a web map demonstrating the expression in action.
 
-> Note that expressions living in this folder don't have to be exclusively used in the calculation profile. They can likely be used in different profiles, though they were originally designed for the calculation profile.
+> Note that expressions living in this folder don't have to be exclusively used in the visualization profile. They can likely be used in different profiles, though they were originally designed for the visualization profile.
 
 See the list below for shared expressions.
-
-- [Calc Slope of Line](./CalcSlopeOfLine.md)
-- [Calculate Top Elevation](./CalculateTopElevation.md)
-- [Copy Start or End Z of a line to a field](./CopyStartEndZtoField.md)
-- [Copy a Value from an Intersecting Feature](./CopyValueIntersectingFeature.md)
-- [Generate Unique ID](./GenerateID.md)
-- [Return Value Base On Criteria](./ReturnValueBaseOnCriteria.md)
-- [Rotate Feature by Intersected Line](./RotateFeatureByIntersectedLine.md)
-- [Update Associated Features](./UpdateAssociatedFeatures.md)
-- [Update Parent Features](./UpdateParentFeature.md)
 
 
 ## Resources

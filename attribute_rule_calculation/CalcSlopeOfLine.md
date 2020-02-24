@@ -22,11 +22,19 @@ if (IsEmpty($feature.UPELEV) || IsEmpty($feature.DOWNELEV))
 {
   return $feature.slope;
 }
+if (IsEmpty(Geometry($feature)) || Length(Geometry($feature)) == 0)
+{
+  return $feature.slope;
+}
 return ABS(($feature.UPELEV - $feature.DOWNELEV)/Length(Geometry($feature)));
 ```
 
 This Arcade expression will calculates the slope of the line based on start and end vertex Z values
 ```js
+if (IsEmpty(Geometry($feature)) || Length(Geometry($feature)) == 0)
+{
+  return $feature.slope;
+}
 // get the paths of the line
 var paths = Geometry($feature)['paths'];
 
