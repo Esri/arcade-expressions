@@ -39,6 +39,18 @@ var end_feature_AT = 1;
 
 
 // ************* End Section *****************
+function offset_point(pnt, i, sr, delta) {
+    var theta = i / 20 * PI;
+    var delta = 1 + delta * theta;
+    var new_point = {
+        "x": pnt['x'] + delta * Cos(theta),
+        "y": pnt['y'] + delta * Sin(theta),
+        "z": pnt['z'] + i,
+        "spatialReference": sr
+    };
+    return Point(new_point)
+}
+
 function is_even(value) {
     return (Number(value) % 2) == 0;
 }
@@ -87,7 +99,7 @@ if (rule_type == "cable") {
     }
 
     num_childs = get_tube_count(fiber_count, cable_design);
-    
+
     if (IsEmpty(num_childs)) {
         return {'errorMessage': 'Tube count not be calculated based on the design and fiber count'};
     }
@@ -105,6 +117,7 @@ if (rule_type == "cable") {
 }
 // Get the start and end vertex of the line
 var vertices = Geometry($feature)['paths'][0];
+var sr = Geometry($feature).spatialReference;
 var start_point = vertices[0];
 var end_point = vertices[-1];
 
@@ -113,6 +126,7 @@ var line_adds = [];
 var junction_adds = [];
 
 for (var j = 0; j < num_childs; j++) {
+
     attributes = {
         'AssetGroup': contained_features_AG,
         'AssetType': contained_features_AT,
@@ -132,10 +146,19 @@ for (var j = 0; j < num_childs; j++) {
         attributes = {
             'AssetGroup': end_feature_AG,
             'AssetType': end_feature_AT,
+            'Tube': identifier,
+            'Strand': j + 1,
+            //'ContainerGUID': ''//TODO search for a splice closure at the STart or End
             'IsSpatial': 0,
         };
-        junction_adds[Count(junction_adds)] = {'attributes': attributes, 'geometry': Point(start_point)};
-        junction_adds[Count(junction_adds)] = {'attributes': attributes, 'geometry': Point(end_point)};
+        junction_adds[Count(junction_adds)] = {
+            'attributes': attributes,
+            'geometry': offset_point(start_point, j + 1, sr, identifier)
+        };
+        junction_adds[Count(junction_adds)] = {
+            'attributes': attributes,
+            'geometry': offset_point(end_point, j + 1, sr, identifier)
+        };
     }
 }
 var edit_payload = [{'className': 'Lines', 'adds': line_adds}];
@@ -145,5 +168,6 @@ if (Count(junction_adds) > 0) {
 return {
     "result": identifier,
     "edit": edit_payload
-}
+};
+
 ```
