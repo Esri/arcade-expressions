@@ -46,6 +46,39 @@ var device_container_sql = 'AssetGroup = 1';
 // ************* End Section *****************
 
 // ************ Not used at this time**************
+function create_perp_line_old(location, line_geo, dist, length_line) {
+    //Get the fist point of the line
+    var line_vertices = line_geo['paths'][0];
+    var line_start_point = line_vertices[0];
+
+    //Buffer the point and clip the line
+    var search = Extent(Buffer(location, dist));
+    var segment = Clip(line_geo, search);
+    var segment_vertices = segment['paths'][0];
+    var segment_start_point = segment_vertices[0];
+
+    //Offset the clipped segment positive and negative
+    var offset_a = offset(segment, length_line);
+    var offset_b = offset(segment, -length_line);
+
+    var offset_a_vertices = offset_a['paths'][0];
+    var offset_b_vertices = offset_b['paths'][0];
+    var polyline_json;
+    if (Round(segment_start_point['x'], 2) == Round(line_start_point['x'], 2) &&
+        Round(segment_start_point['y'], 2) == Round(line_start_point['y'], 2)) {
+        polyline_json = {
+            "paths": [[offset_a_vertices[-1], offset_b_vertices[-1]]],
+            "spatialReference": line_geo.spatialReference
+        };
+    } else {
+        polyline_json = {
+            "paths": [[offset_a_vertices[0], offset_b_vertices[0]]],
+            "spatialReference": line_geo.spatialReference
+        };
+    }
+    return Polyline(polyline_json);
+}
+
 function offset_point(pnt, i, sr, delta) {
     var angle = 0.1 * i;
     var new_x = pnt['x'] + (angle) * Cos(angle);
@@ -97,31 +130,21 @@ function create_perp_line(location, line_geo, dist, length_line) {
     var line_start_point = line_vertices[0];
 
     //Buffer the point and clip the line
-    var search = Extent(Buffer(location, dist));
+    var search = Extent(Buffer(location, length_line));
     var segment = Clip(line_geo, search);
     var segment_vertices = segment['paths'][0];
     var segment_start_point = segment_vertices[0];
+    segment = Rotate(segment, 90);
+    var offset_dist = iif(length_line / 2 > dist, length_line / 2 - dist, -(dist - length_line / 2));
 
-    //Offset the clipped segment positive and negative
-    var offset_a = offset(segment, length_line);
-    var offset_b = offset(segment, -length_line);
-
-    var offset_a_vertices = offset_a['paths'][0];
-    var offset_b_vertices = offset_b['paths'][0];
-    var polyline_json;
     if (Round(segment_start_point['x'], 2) == Round(line_start_point['x'], 2) &&
         Round(segment_start_point['y'], 2) == Round(line_start_point['y'], 2)) {
-        polyline_json = {
-            "paths": [[offset_a_vertices[-1], offset_b_vertices[-1]]],
-            "spatialReference": line_geo.spatialReference
-        };
+        segment = offset(segment, -offset_dist);
     } else {
-        polyline_json = {
-            "paths": [[offset_a_vertices[0], offset_b_vertices[0]]],
-            "spatialReference": line_geo.spatialReference
-        };
+        segment = offset(segment, offset_dist);
+
     }
-    return Polyline(polyline_json);
+    return segment;
 }
 
 function is_even(value) {
@@ -210,8 +233,19 @@ if (container_device != null && IsEmpty(container_device) == false) {
 }
 
 if (create_end_junctions) {
+    var end_line = create_perp_line(end_point, geo, identifier * .1, 2 + identifier * .1);
+    end_line = adjust_z(end_line, identifier);
+    end_line = densify(end_line, (length(end_line) / num_childs))['paths'][0];
+    var vertex_cnt = count(end_line);
 
-    var start_line = create_perp_line(start_point, geo, identifier * .1, 5);
+    var new_end = [];
+    for (var v = 0; v < count(end_line); v++) {
+        if (v == 0 || v == vertex_cnt - 1 || v % (vertex_cnt / num_childs) < 1) {
+            new_end[Count(new_end)] = end_line[v]
+        }
+    }
+    end_line = new_end;
+    var start_line = create_perp_line(start_point, geo, identifier * .1, 2 + identifier * .1);
     start_line = adjust_z(start_line, identifier);
     start_line = densify(start_line, (length(start_line) / num_childs))['paths'][0];
     var vertex_cnt = count(start_line);
@@ -224,19 +258,8 @@ if (create_end_junctions) {
     }
     start_line = new_start;
 
-    var end_line = create_perp_line(end_point, geo, identifier * .1, 5);
-    end_line = adjust_z(end_line, identifier);
-    end_line = densify(end_line, (length(end_line) / num_childs))['paths'][0];
-    var vertex_cnt = count(end_line);
 
-    var new_end = [];
-    for (var v = 0; v < count(end_line); v++) {
-        if (v == 0 || v == vertex_cnt - 1 || v % (vertex_cnt / num_childs) < 1) {
-            new_end[Count(new_end)] = end_line[v]
-        }
-    }
-    end_line = new_end;
-    
+
 
 }
 var attributes = {};
