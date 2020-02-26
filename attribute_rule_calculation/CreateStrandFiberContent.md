@@ -25,30 +25,103 @@ This Arcade expression creates content in a line and optionally end points [Exam
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation
 var identifier = $feature.Identifier;
-var rule_type = "tube"; //cable or tube
+if (IsEmpty(identifier)) {
+    return {'errorMessage': 'Identifier is required'};
+}
+var rule_type = "create_strands"; //create_tubes or create_strands
 var create_end_junctions = true;
 
-var line_fs = FeatureSetByName($datastore, "Lines", ["GlobalID"], false);
+//var line_fs = FeatureSetByName($datastore, "Lines", ["GlobalID"], false);
 var contained_features_AG = 4;
 var contained_features_AT = 4;
 
 // If Create End Junctions is true, define the class and AG/AT of those below
-var device_fs = FeatureSetByName($datastore, "Junctions", ["GlobalID"], false);
+//var junction_fs = FeatureSetByName($datastore, "Junctions", ["GlobalID"], false);
 var end_feature_AG = 1;
 var end_feature_AT = 1;
 
+var devices_fs = FeatureSetByName($datastore, "Devices", ["globalid", "assetgroup", 'assettype'], false);
+var device_container_sql = 'AssetGroup = 1';
 
 // ************* End Section *****************
+
+// ************ Not used at this time**************
 function offset_point(pnt, i, sr, delta) {
-    var theta = i / 20 * PI;
-    var delta = 1 + delta * theta;
-    var new_point = {
-        "x": pnt['x'] + delta * Cos(theta),
-        "y": pnt['y'] + delta * Sin(theta),
-        "z": pnt['z'] + i,
-        "spatialReference": sr
-    };
+    var angle = 0.1 * i;
+    var new_x = pnt['x'] + (angle) * Cos(angle);
+    var new_y = pnt['y'] + (angle) * Sin(angle);
+    return Point({'x': new_x, 'y': new_y, 'z': i, "spatialReference": sr});
+    //var theta = i / 20 * PI;
+    //var delta =  delta * theta;
+    // var new_point = {
+    //     "x": pnt['x'] + delta * Cos(theta),
+    //     "y": pnt['y'] + delta * Sin(theta),
+    //     "z": pnt['z'] + i,
+    //     "spatialReference": sr
+    // };
     return Point(new_point)
+}
+
+function moved_point_on_line(location, line_geo, dist) {
+    var search = Extent(Buffer(location, dist));
+    var segment = Clip(line_geo, search)["paths"][0];
+    var vertices = line_geo['paths'][0];
+    var start_point = vertices[0];
+    if (Round(segment[0]['x'], 2) == Round(start_point['x'], 2) &&
+        Round(segment[0]['y'], 2) == Round(start_point['y'], 2)) {
+        return segment[-1]
+    }
+    return segment[0]
+}
+
+// ************* End Section *****************
+
+function adjust_z(line_geo, z_value) {
+    var line_shape = Dictionary(Text(line_geo));
+    var new_paths = [];
+    for (var i in line_shape['paths']) {
+        var current_path = line_shape['paths'][i];
+        var new_path = [];
+        for (var j in current_path) {
+            new_path[Count(new_path)] = [current_path[j][0], current_path[j][1], z_value];
+        }
+        new_paths[count(new_paths)] = new_path
+    }
+    line_shape['paths'] = new_paths;
+    return Polyline(line_shape)
+}
+
+function create_perp_line(location, line_geo, dist, length_line) {
+    //Get the fist point of the line
+    var line_vertices = line_geo['paths'][0];
+    var line_start_point = line_vertices[0];
+
+    //Buffer the point and clip the line
+    var search = Extent(Buffer(location, dist));
+    var segment = Clip(line_geo, search);
+    var segment_vertices = segment['paths'][0];
+    var segment_start_point = segment_vertices[0];
+
+    //Offset the clipped segment positive and negative
+    var offset_a = offset(segment, length_line);
+    var offset_b = offset(segment, -length_line);
+
+    var offset_a_vertices = offset_a['paths'][0];
+    var offset_b_vertices = offset_b['paths'][0];
+    var polyline_json;
+    if (Round(segment_start_point['x'], 2) == Round(line_start_point['x'], 2) &&
+        Round(segment_start_point['y'], 2) == Round(line_start_point['y'], 2)) {
+        polyline_json = {
+            "paths": [[offset_a_vertices[-1], offset_b_vertices[-1]]],
+            "spatialReference": line_geo.spatialReference
+        };
+    } else {
+        polyline_json = {
+            "paths": [[offset_a_vertices[0], offset_b_vertices[0]]],
+            "spatialReference": line_geo.spatialReference
+        };
+    }
+    return Polyline(polyline_json);
 }
 
 function is_even(value) {
@@ -112,15 +185,60 @@ if (rule_type == "cable") {
                 'Strands Per Tube:' + content_val_to_set
         };
     }
-} else if (rule_type == "tube") {
+} else if (rule_type == "create_strands") {
     num_childs = $feature.ContentCount;
 }
 // Get the start and end vertex of the line
-var vertices = Geometry($feature)['paths'][0];
-var sr = Geometry($feature).spatialReference;
+var geo = Geometry($feature);
+var vertices = geo['paths'][0];
+var sr = geo.spatialReference;
 var start_point = vertices[0];
 var end_point = vertices[-1];
 
+var container_device = First(Intersects(devices_fs, Point(start_point)));
+
+var start_container_guid = null;
+var end_container_guid = null;
+
+var container_device = First(Intersects(devices_fs, Point(start_point)));
+if (container_device != null && IsEmpty(container_device) == false) {
+    start_container_guid = container_device.globalid
+}
+var container_device = First(Intersects(devices_fs, Point(end_point)));
+if (container_device != null && IsEmpty(container_device) == false) {
+    end_container_guid = container_device.globalid
+}
+
+if (create_end_junctions) {
+
+    var start_line = create_perp_line(start_point, geo, identifier * .1, 5);
+    start_line = adjust_z(start_line, identifier);
+    start_line = densify(start_line, (length(start_line) / num_childs))['paths'][0];
+    var vertex_cnt = count(start_line);
+
+    var new_start = [];
+    for (var v = 0; v < count(start_line); v++) {
+        if (v == 0 || v == vertex_cnt - 1 || v % (vertex_cnt / num_childs) < 1) {
+            new_start[Count(new_start)] = start_line[v]
+        }
+    }
+    start_line = new_start;
+
+    var end_line = create_perp_line(end_point, geo, identifier * .1, 5);
+    end_line = adjust_z(end_line, identifier);
+    end_line = densify(end_line, (length(end_line) / num_childs))['paths'][0];
+    var vertex_cnt = count(end_line);
+
+    var new_end = [];
+    for (var v = 0; v < count(end_line); v++) {
+        if (v == 0 || v == vertex_cnt - 1 || v % (vertex_cnt / num_childs) < 1) {
+            new_end[Count(new_end)] = end_line[v]
+        }
+    }
+    end_line = new_end;
+    
+
+}
 var attributes = {};
 var line_adds = [];
 var junction_adds = [];
@@ -136,30 +254,46 @@ for (var j = 0; j < num_childs; j++) {
     if (IsEmpty(content_val_to_set) == false) {
         attributes['ContentCount'] = content_val_to_set
     }
-    line_adds[Count(line_adds)] = {
-        'attributes': attributes,
-        'geometry': Geometry($feature),
-        //'associationType': 'content'
-    };
+
+    var line_shape = Dictionary(Text(Geometry($feature)));
 
     if (create_end_junctions) {
-        attributes = {
+        var start_attributes = {
             'AssetGroup': end_feature_AG,
             'AssetType': end_feature_AT,
             'Tube': identifier,
             'Strand': j + 1,
-            //'ContainerGUID': ''//TODO search for a splice closure at the STart or End
+            'ContainerGUID': start_container_guid,
             'IsSpatial': 0,
         };
+
         junction_adds[Count(junction_adds)] = {
-            'attributes': attributes,
-            'geometry': offset_point(start_point, j + 1, sr, identifier)
+            'attributes': start_attributes,
+            'geometry': start_line[j]
         };
+        var end_attributes = {
+            'AssetGroup': end_feature_AG,
+            'AssetType': end_feature_AT,
+            'Tube': identifier,
+            'Strand': j + 1,
+            'ContainerGUID': end_container_guid,
+            'IsSpatial': 0,
+        };
+
         junction_adds[Count(junction_adds)] = {
-            'attributes': attributes,
-            'geometry': offset_point(end_point, j + 1, sr, identifier)
+            'attributes': end_attributes,
+            'geometry': end_line[j]
         };
+        line_shape['paths'][0][0] = start_line[j];
+        line_shape['paths'][0][-1] = end_line[j];
+
     }
+
+    line_adds[Count(line_adds)] = {
+        'attributes': attributes,
+        'geometry': Polyline(line_shape)
+        //'associationType': 'content'
+    };
 }
 var edit_payload = [{'className': 'Lines', 'adds': line_adds}];
 if (Count(junction_adds) > 0) {
