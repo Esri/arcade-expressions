@@ -20,28 +20,47 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 This Arcade expression creates content in a line and optionally end points [Example](./CreateStrandFiberContent.zip)
 
 ```js
-// This rule will generate contained spatial/non spatail features
+// This rule will generate contained spatial/non spatial features
 
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation
 var identifier = $feature.Identifier;
-if (IsEmpty(identifier)) {
-    return {'errorMessage': 'Identifier is required'};
-}
-var rule_type = "create_strands"; //create_tubes or create_strands
-var create_end_junctions = true;
+var device_class = 'CommunicationsDevice';
+var line_class = 'CommunicationsLine';
+var rule_type = "create_tubes"; //create_tubes or create_strands
 
-//var line_fs = FeatureSetByName($datastore, "Lines", ["GlobalID"], false);
-var contained_features_AG = 4;
-var contained_features_AT = 4;
-
+var create_end_junctions;
+var contained_features_AG;
+var contained_features_AT;
 // If Create End Junctions is true, define the class and AG/AT of those below
-//var junction_fs = FeatureSetByName($datastore, "Junctions", ["GlobalID"], false);
-var end_feature_AG = 1;
-var end_feature_AT = 1;
+var end_feature_AG;
+var end_feature_AT;
+var use_device_as_container = false;
+var container_fs = null;
+var container_sql = null;
+var valid_asset_types = [];
+if (rule_type == 'create_tubes') {
+    valid_asset_types = [44];
+    contained_features_AG = 2;
+    contained_features_AT = 21;
+    create_end_junctions = false;
+} else {
+    valid_asset_types = [21];
+    create_end_junctions = true;
+    contained_features_AG = 9;
+    contained_features_AT = 163;
+    end_feature_AG = 8;
+    end_feature_AT = 66;
+    if (use_device_as_container) {
+        container_fs = FeatureSetByName($datastore, "CommunicationsDevice", ["globalid", "assetgroup", 'assettype'], false);
+        // Equipment:Patch Panel and Splice:Fiber
+        container_sql = '(AssetGroup = 7 and AssetType = 129) or (AssetGroup = 10 and AssetType = 33)';
+    } else {
+        container_fs = FeatureSetByName($datastore, "CommunicationsAssembly", ["globalid", "assetgroup", 'assettype'], false);
+        container_sql = '(AssetGroup = 1 and AssetType = 1)';
+    }
+}
 
-var devices_fs = FeatureSetByName($datastore, "Devices", ["globalid", "assetgroup", 'assettype'], false);
-var device_container_sql = 'AssetGroup = 1';
 
 // ************* End Section *****************
 
@@ -183,9 +202,17 @@ function get_tube_count(fiber_count, design) {
     return null;
 }
 
+if (indexof(valid_asset_types, $feature.assettype) == -1) {
+    return identifier;
+
+}
+if (IsEmpty(identifier) && rule_type == "create_strands") {
+    return {'errorMessage': 'Identifier is required'};
+}
+
 var num_childs = null;
 var content_val_to_set = null;
-if (rule_type == "cable") {
+if (rule_type == "create_tubes") {
 
     var fiber_count = $feature.ContentCount;
     var cable_design = $feature.CableDesign;
@@ -218,20 +245,19 @@ var sr = geo.spatialReference;
 var start_point = vertices[0];
 var end_point = vertices[-1];
 
-var container_device = First(Intersects(devices_fs, Point(start_point)));
 
 var start_container_guid = null;
 var end_container_guid = null;
-
-var container_device = First(Intersects(devices_fs, Point(start_point)));
-if (container_device != null && IsEmpty(container_device) == false) {
-    start_container_guid = container_device.globalid
+if (IsEmpty(container_fs) == false) {
+    var container_feat = First(Filter(Intersects(container_fs, Point(start_point)), container_sql));
+    if (container_feat != null && IsEmpty(container_feat) == false) {
+        start_container_guid = container_feat.globalid
+    }
+    container_feat = First(Filter(Intersects(container_fs, Point(end_point)), container_sql));
+    if (container_feat != null && IsEmpty(container_feat) == false) {
+        end_container_guid = container_feat.globalid
+    }
 }
-var container_device = First(Intersects(devices_fs, Point(end_point)));
-if (container_device != null && IsEmpty(container_device) == false) {
-    end_container_guid = container_device.globalid
-}
-
 if (create_end_junctions) {
     var end_line = create_perp_line(end_point, geo, identifier * .1, 2 + identifier * .1);
     end_line = adjust_z(end_line, identifier);
@@ -257,10 +283,6 @@ if (create_end_junctions) {
         }
     }
     start_line = new_start;
-
-
-
-
 }
 var attributes = {};
 var line_adds = [];
@@ -314,13 +336,13 @@ for (var j = 0; j < num_childs; j++) {
 
     line_adds[Count(line_adds)] = {
         'attributes': attributes,
-        'geometry': Polyline(line_shape)
-        //'associationType': 'content'
+        'geometry': Polyline(line_shape),
+        'associationType': 'content'
     };
 }
-var edit_payload = [{'className': 'Lines', 'adds': line_adds}];
+var edit_payload = [{'className': line_class, 'adds': line_adds}];
 if (Count(junction_adds) > 0) {
-    edit_payload[Count(edit_payload)] = {'className': 'Junctions', 'adds': junction_adds}
+    edit_payload[Count(edit_payload)] = {'className': device_class, 'adds': junction_adds}
 }
 return {
     "result": identifier,
