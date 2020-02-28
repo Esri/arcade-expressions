@@ -50,12 +50,12 @@ var feat_geo = Geometry($feature);
 var dist = null;
 var closest_row = null;
 for (var feat in filtered_features) {
+    var temp_dist = Distance(feat_geo, feat, search_unit);
     if (IsEmpty(closest_row)) {
         closest_row = feat;
-        dist = Distance(feat_geo, feat, search_unit);
+        dist = temp_dist
         continue;
-    }
-    var temp_dist = Distance(feat_geo, feat, search_unit);
+    } 
     if (temp_dist < dist) {
         closest_row = feat;
         dist = temp_dist;
