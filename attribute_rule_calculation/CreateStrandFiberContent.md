@@ -28,6 +28,8 @@ var identifier = $feature.Identifier;
 var device_class = 'CommunicationsDevice';
 var line_class = 'CommunicationsLine';
 var rule_type = "create_tubes"; //create_tubes or create_strands
+    var fiber_count = $feature.ContentCount;
+    var cable_design = $feature.CableDesign;
 
 var create_end_junctions;
 var contained_features_AG;
@@ -209,14 +211,12 @@ if (indexof(valid_asset_types, $feature.assettype) == -1) {
 if (IsEmpty(identifier) && rule_type == "create_strands") {
     return {'errorMessage': 'Identifier is required'};
 }
-
+if (IsEmpty(fiber_count) || fiber_count == 0) {
+    return {'errorMessage': 'A value is required for the content count field'};
+}
 var num_childs = null;
 var content_val_to_set = null;
 if (rule_type == "create_tubes") {
-
-    var fiber_count = $feature.ContentCount;
-    var cable_design = $feature.CableDesign;
-
     if (is_even(fiber_count) == false) {
         return {'errorMessage': 'Fiber count must be even'};
     }
@@ -236,7 +236,7 @@ if (rule_type == "create_tubes") {
         };
     }
 } else if (rule_type == "create_strands") {
-    num_childs = $feature.ContentCount;
+    num_childs = fiber_count;
 }
 // Get the start and end vertex of the line
 var geo = Geometry($feature);
