@@ -57,4 +57,4 @@ return SandbagsNeeded(finishedHeight,
 
 See [this web map](https://esriapps.maps.arcgis.com/home/webmap/viewer.html?webmap=60954daaebc84852ac74b3776a4d1ea5&extent=-90.2909,38.8442,-90.2355,38.8693) for examples of how to use this expression in ArcGIS Online.
 
-![Sandbag wall material estimation](../images/sandbag-estimate.png)
+![Sandbag wall material estimation](../images/sandbag-estimate.jpg)
