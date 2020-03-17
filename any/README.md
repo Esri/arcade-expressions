@@ -20,6 +20,8 @@ See the list below for shared expressions.
 * [Sandbag Wall Estimation - Sandbags](./sandbag-wall-estimation/sandbag-estimate.md)
 * [Sandbag Wall Estimation - Sand](./sandbag-wall-estimation/sand-estimate.md)
 * [Sandbag Wall Estimation - Sheeting](./sandbag-wall-estimation/sheeting-estimate.md)
+* [Relative Humidity](./weather-observation/relative-humidity.md)
+* [Heat Index](./weather-observation/heat-index.md)
 
 ## Resources
 
