@@ -129,7 +129,7 @@ function find_match(container_class, container_guid, compare_fields) {
     for (var i in compare_fields) {
         var value = $feature[compare_fields[i]];
         if (IsEmpty(value)) {
-            return [];
+            return [];get_associated_feature_ids
         }
         if (i == 0) {
             sql = compare_fields[i] + ' = ' + $feature[compare_fields[i]]
