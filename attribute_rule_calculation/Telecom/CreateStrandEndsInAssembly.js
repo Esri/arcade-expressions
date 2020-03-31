@@ -17,7 +17,7 @@ if (count(valid_asset_types) > 0 && indexof(valid_asset_types, $feature.assettyp
 
 var point_spacing = DefaultValue($feature.terminatorspacing, .1);
 var point_count = DefaultValue($feature.terminatorcount, 0);
-var sym_rotation = DefaultValue($feature.symbolrotation, 0);
+var sym_rotation = DefaultValue($feature.templaterotation, 0);
 var offset_distance = DefaultValue($feature.terminatoroffset, 0);
 
 

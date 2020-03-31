@@ -27,14 +27,14 @@ var device_fs = FeatureSetByName($datastore, "CommunicationsDevice", ["globalid"
 //Device,Asset Group=(1,2,5,6,7),Asset Type=1 acts as a pass-through
 var sql_snap_types = {
     'splitter': [
-        '(AssetGroup in (1,3,4,5,6,7) and AssetType in (4,6))',
-        '(AssetGroup in (1,3,4,5,6,7) and AssetType in (4,6))'],
+        '(AssetGroup in (1,2,3,5,6,7,10) and AssetType in (4,6))',
+        '(AssetGroup in (1,2,3,5,6,7,10) and AssetType in (4,6))'],
     'splice': [
-        '(AssetGroup in (1,3,4,5,6,7) and AssetType in (3,5))',
-        '(AssetGroup in (1,3,4,5,6,7) and AssetType in (3,5))'],
+        '(AssetGroup in (1,2,3,5,6,7,10) and AssetType in (3,5))',
+        '(AssetGroup in (1,2,3,5,6,7,10) and AssetType in (3,5))'],
     'pass-through': [
-        '(AssetGroup in (1,3,4,5,6,7) and AssetType in (1))',
-        '(AssetGroup in (1,3,4,5,6,7) and AssetType in (1))']
+        '(AssetGroup in (1,2,3,5,6,7,10) and AssetType in (1))',
+        '(AssetGroup in (1,2,3,5,6,7,10) and AssetType in (1))']
 };
 
 function get_features_switch_yard(class_name, fields, include_geometry) {
