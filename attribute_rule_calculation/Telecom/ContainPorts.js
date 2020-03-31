@@ -90,7 +90,7 @@ var edit_payload = [{
     'className': container_class,
     'updates': [{
         'globalID': $feature.containerGUID,
-        'associationType': 'container'
+        'associationType': 'structure'
     }]
 }];
 

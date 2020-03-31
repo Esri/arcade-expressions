@@ -173,7 +173,6 @@ for (var i in line_vertices) {
                 'attributes': attributes,
                 'geometry': line_vertices[i]
             };
-
             break;
         }
     }
