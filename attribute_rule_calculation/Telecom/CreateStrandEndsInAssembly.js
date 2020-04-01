@@ -1,8 +1,13 @@
-// This rule creates connection points in an assembly
+// Assigned To: CommunicationsAssembly
+// Name: Create Strand Ends in Terminators
+// Description: Rule generates strand end port devices inside Terminator Devices based on field on the feature
+// Subtypes: All
+// Field: TerminatorCount
+// Execute: Insert
 
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation
-var assigned_to_field = $feature.terminatorspacing;
+var assigned_to_field = $feature.TerminatorCount;
 // Instead of assigning the rule at the subtype, it is assigned to all subtypes and returns if not valid
 
 // Limit the rule to valid subtypes
@@ -12,7 +17,7 @@ if (count(valid_asset_groups) > 0 && indexof(valid_asset_groups, $feature.assetg
     return assigned_to_field;
 }
 if (count(valid_asset_types) > 0 && indexof(valid_asset_types, $feature.assettype) == -1) {
-    return valid_asset_types;
+    return assigned_to_field;
 }
 
 var point_spacing = DefaultValue($feature.terminatorspacing, .1);
@@ -24,11 +29,8 @@ var offset_distance = DefaultValue($feature.terminatoroffset, 0);
 var device_class = 'CommunicationsDevice';
 var port_ag = 8;
 var port_at = 144;
-// ************* End Section *****************
-if (point_count <= 0) {
-    return {'ErrorMessage': 'Port count is required'};
-}
 
+// ************* End Section *****************
 function offset_line(point_geo, point_spacing, point_count, offset_distance, line_rotation) {
 
     // Store the geometry of the point.  Offset the y and Z to get a vertical line that represents the upper coordinate
@@ -52,9 +54,17 @@ function offset_line(point_geo, point_spacing, point_count, offset_distance, lin
     return new_line['paths'][0];
 }
 
-var first_path = offset_line(point_geo, point_spacing, point_count, offset_distance, template_rotation);
+if (point_count <= 0) {
+    return {'ErrorMessage': 'Terminator count is required'};
+}
+var assemb_geo = Geometry($feature);
+var first_path = offset_line(assemb_geo, point_spacing, point_count, offset_distance, template_rotation);
 // Loop over the path and construct a point at each vertex and return as a strand end
 var new_strand_ends = [];
+
+var point_x;
+var point_y;
+var point_z;
 for (var i in first_path) {
 
     point_x = first_path[i].x;
@@ -65,7 +75,12 @@ for (var i in first_path) {
             'assetgroup': port_ag,
             'assettype': port_at
         },
-        'geometry': Point({"x": point_x, "y": point_y, "z": point_z, "spatialReference": {"wkid": wkid}}),
+        'geometry': Point({
+            "x": point_x,
+            "y": point_y,
+            "z": point_z,
+            "spatialReference": {"wkid": assemb_geo.spatialReference.wkid}
+        }),
         'associationType': 'content'
     };
 }

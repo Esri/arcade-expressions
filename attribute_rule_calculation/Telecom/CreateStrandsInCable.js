@@ -1,4 +1,9 @@
-// This rule will generate contained spatial/non spatial features
+// Assigned To: CommunicationsLine
+// Name: Create Strands in Cable
+// Description: Rule generates strands inside the cable based on the content count field
+// Subtypes: All
+// Field: Asset ID field
+// Execute: Insert
 
 // **************************************
 // This section has the functions and variables that need to be adjusted based on your implementation
@@ -6,7 +11,7 @@ var assigned_to_field = $feature.assetid;
 // Instead of assigning the rule at the subtype, it is assigned to all subtypes and returns if not valid
 
 // Limit the rule to valid subtypes
-var valid_asset_groups = [1, 3, 4, 5, 6, 7, 9];
+var valid_asset_groups = [1, 2, 3, 4, 5, 6, 7, 9];
 if (indexof(valid_asset_groups, $feature.assetgroup) == -1) {
     return assigned_to_field;
 }
@@ -16,8 +21,8 @@ var line_class = "CommunicationsLine";
 var device_class = "CommunicationsDevice";
 var fiber_count = $feature.ContentCount;
 var tube_count = $feature.TubeCount;
-var point_spacing = .1;
-var offset_distance = 0;
+var point_spacing = .5;
+var offset_distance = .1;
 var z_strand_level = -50;
 // The Asset Group and Type of the tubes in a cable
 // The Asset Group and Asset Type of the fiber strand
@@ -75,11 +80,11 @@ function angle_line_at_point(line_geo, point_on_line) {
     return Angle(segment[0], segment[-1])
 }
 
-function offset_line(point_geo, point_spacing, point_count, offset_distance, line_rotation) {
+function offset_line(point_geo, point_count, point_spacing, offset_distance, line_rotation) {
 
     var _point_count = point_count
     if (point_count == 1) {
-         _point_count = 3
+        _point_count = 3
 
     }
 
@@ -248,6 +253,7 @@ function get_line_ends(container_guid, container_type) {
     return open_port_mapping
 
 }
+
 function pop_empty(dict) {
     var new_dict = {};
     for (var k in dict) {
@@ -261,6 +267,7 @@ function pop_empty(dict) {
     }
     return new_dict
 }
+
 function points_snapped(point_a, point_b) {
     // Cant explain it, but need these checks to get past validation
     if (IsEmpty(point_a) || IsEmpty(point_b)) {
@@ -321,20 +328,19 @@ function point_to_array(point_geo) {
     return [point_geo.x, point_geo.y, point_geo.z, 0]
 }
 
-function splice_end_point(port_features, prep_line_offset, vertex_index, container_guid) {
+function splice_end_point(port_features, prep_line_offset, strand_id, tube_id, strand_per_tube, container_guid) {
     var end_point = null;
     var new_feature = null;
     var update_feature = null;
     var matching_strand_available = false;
     var open_port = null;
     // Find an open available port
-    var strand_id = Text(vertex_index + 1);
 
     // Search for a matching tube/strand
-    if (haskey(port_features, Text(identifier))) {
-        var avail_tube = port_features[Text(identifier)]
-        if (haskey(avail_tube, strand_id) == true) {
-            var ports_in_tubes = avail_tube[strand_id]
+    if (haskey(port_features, Text(tube_id))) {
+        var avail_tube = port_features[Text(tube_id)]
+        if (haskey(avail_tube, Text(strand_id)) == true) {
+            var ports_in_tubes = avail_tube[Text(strand_id)]
             for (var open_port_idx in ports_in_tubes) {
                 if (ports_in_tubes[open_port_idx]['available'] == true) {
                     open_port = ports_in_tubes[open_port_idx]
@@ -372,8 +378,8 @@ function splice_end_point(port_features, prep_line_offset, vertex_index, contain
     }
     if (!IsEmpty(open_port)) {
         var update_feature_attributes = {
-            'TubeB': identifier,
-            'StrandB': vertex_index + 1
+            'TubeB': tube_id,
+            'StrandB': strand_id
         };
         update_feature = {
             'globalid': open_port['globalid'],
@@ -384,17 +390,17 @@ function splice_end_point(port_features, prep_line_offset, vertex_index, contain
         var new_feature_attributes = {
             'AssetGroup': new_splice_feature_AG,
             'AssetType': new_splice_feature_AT,
-            'TubeA': identifier,
-            'StrandA': vertex_index + 1,
+            'TubeA': tube_id,
+            'StrandA': strand_id,
             'ContainerGUID': container_guid,
             'IsSpatial': 0,
         };
 
         new_feature = {
-            'geometry': prep_line_offset[vertex_index],
+            'geometry': prep_line_offset[strand_id + ((tube_id - 1) * strand_per_tube) - 1],
             'attributes': new_feature_attributes
         };
-        end_point = prep_line_offset[vertex_index];
+        end_point = prep_line_offset[strand_id + ((tube_id - 1) * strand_per_tube) - 1];
     }
     return [end_point, new_feature, update_feature]
 }
@@ -450,10 +456,10 @@ var to_port_features = get_line_ends(to_container_GUID, to_container_snap_type);
 // Generate offset lines to move strands to when no port is found
 var start_angle = angle_line_at_point(cable_geo, start_point);
 start_angle = (450 - start_angle) % 360;
-start_angle = start_angle + 90;
+//start_angle = start_angle + 90;
 var end_angle = angle_line_at_point(cable_geo, end_point);
 end_angle = (450 - end_angle) % 360;
-end_angle = end_angle + 90;
+//end_angle = end_angle + 90;
 
 var strand_start_point = Dictionary(Text(start_point))
 strand_start_point['z'] = z_strand_level
@@ -462,8 +468,8 @@ var strand_end_point = Dictionary(Text(end_point))
 strand_end_point['z'] = z_strand_level
 strand_end_point = pop_empty(strand_end_point)
 
-var from_offset_line = offset_line(Point(strand_start_point), point_spacing, fiber_count, offset_distance, start_angle);
-var to_offset_line = offset_line(Point(strand_end_point), point_spacing, fiber_count, offset_distance, end_angle);
+var from_offset_line = offset_line(Point(strand_start_point), fiber_count, point_spacing, offset_distance, start_angle);
+var to_offset_line = offset_line(Point(strand_end_point), fiber_count, point_spacing, offset_distance, end_angle);
 
 var attributes = {};
 var line_adds = [];
@@ -471,7 +477,8 @@ var junction_adds = [];
 var junction_updates = [];
 var cnt_from_open_ports = Count(from_port_features['openport']);
 var cnt_to_open_ports = Count(to_port_features['openport']);
-
+var cur_from_open_ports_idx = 0;
+var cur_to_open_ports_idx = 0;
 // Convert the shape to a dict for manipulation
 var line_json = Text(cable_geo);
 for (var tube_index = 1; tube_index <= tube_count; tube_index++) {
@@ -479,13 +486,12 @@ for (var tube_index = 1; tube_index <= tube_count; tube_index++) {
         var strand_shape = Dictionary(line_json);
         strand_shape = adjust_z(strand_shape, z_strand_level);
 
-        if (from_container_snap_type  == 'splice') {
-            var splice_from_info = splice_end_point(from_port_features, from_offset_line, j, from_container_GUID);
-
+        if (from_container_snap_type == 'splice') {
+            var splice_from_info = splice_end_point(from_port_features, from_offset_line, strand_index, tube_index, strand_per_tube, from_container_GUID);
             if (!IsEmpty(splice_from_info[0])) {
                 strand_shape['paths'][0][0] = point_to_array(splice_from_info[0]);
             } else {
-                strand_shape['paths'][0][0] = point_to_array(from_offset_line[strand_index * tube_index - 1]);
+                strand_shape['paths'][0][0] = point_to_array(from_offset_line[strand_index + ((tube_index - 1) * strand_per_tube) - 1]);
             }
             if (!IsEmpty(splice_from_info[1])) {
                 junction_adds[Count(junction_adds)] = splice_from_info[1];
@@ -494,17 +500,19 @@ for (var tube_index = 1; tube_index <= tube_count; tube_index++) {
                 junction_updates[Count(junction_updates)] = splice_from_info[2];
             }
 
-        } else if (from_container_snap_type  == 'splitter') {
+        } else if (from_container_snap_type == 'splitter') {
             if (cnt_from_open_ports > 0) {
                 strand_shape['paths'][0][0] = point_to_array(from_port_features['openport'][0]['geometry']);
             } else {
-                strand_shape['paths'][0][0] = point_to_array(from_offset_line[strand_index * tube_index - 1]);
+                //strand_shape['paths'][0][0] = point_to_array(from_offset_line[strand_index + ((tube_index - 1) * strand_per_tube) - 1]);
             }
-        } else if (from_container_snap_type  == 'pass-through') {
-            if (cnt_from_open_ports > j) {
-                strand_shape['paths'][0][0] = point_to_array(from_port_features['openport'][j]['geometry']);
+        } else if (from_container_snap_type == 'pass-through') {
+            if (cur_from_open_ports_idx > cnt_from_open_ports) {
+                strand_shape['paths'][0][0] = point_to_array(from_port_features['openport'][cur_from_open_ports_idx]['geometry']);
+                cur_from_open_ports_idx = +1
+
             } else {
-                strand_shape['paths'][0][0] = point_to_array(from_offset_line[strand_index * tube_index - 1]);
+                strand_shape['paths'][0][0] = point_to_array(from_offset_line[strand_index + ((tube_index - 1) * strand_per_tube) - 1]);
             }
         } else {
             // Dont move strand when not snapped to device
@@ -512,11 +520,11 @@ for (var tube_index = 1; tube_index <= tube_count; tube_index++) {
         }
 
         if (to_container_snap_type == 'splice') {
-            var splice_to_info = splice_end_point(to_port_features, to_offset_line, j, to_container_GUID);
+            var splice_to_info = splice_end_point(to_port_features, to_offset_line, strand_index, tube_index, strand_per_tube, to_container_GUID);
             if (!IsEmpty(splice_to_info[0])) {
                 strand_shape['paths'][0][-1] = point_to_array(splice_to_info[0]);
             } else {
-                strand_shape['paths'][0][-1] = point_to_array(to_offset_line[strand_index * tube_index - 1]);
+                strand_shape['paths'][0][-1] = point_to_array(to_offset_line[strand_index + ((tube_index - 1) * strand_per_tube) - 1]);
             }
             if (!IsEmpty(splice_to_info[1])) {
                 junction_adds[Count(junction_adds)] = splice_to_info[1];
@@ -528,19 +536,19 @@ for (var tube_index = 1; tube_index <= tube_count; tube_index++) {
             if (cnt_to_open_ports > 0) {
                 strand_shape['paths'][0][-1] = point_to_array(to_port_features['openport'][0]['geometry']);
             } else {
-                strand_shape['paths'][0][-1] = point_to_array(to_offset_line[strand_index * tube_index - 1]);
+                //strand_shape['paths'][0][-1] = point_to_array(to_offset_line[strand_index + ((tube_index - 1) * strand_per_tube) - 1]);
             }
         } else if (to_container_snap_type == 'pass-through') {
-            if (cnt_to_open_ports > j) {
-                strand_shape['paths'][0][-1] = point_to_array(to_port_features['openport'][j]['geometry']);
+            if (cur_to_open_ports_idx > cnt_to_open_ports) {
+                strand_shape['paths'][0][-1] = point_to_array(to_port_features['openport'][cur_to_open_ports_idx]['geometry']);
+                cur_to_open_ports_idx = +1
             } else {
-                strand_shape['paths'][0][-1] = point_to_array(to_offset_line[strand_index * tube_index - 1]);
+                strand_shape['paths'][0][-1] = point_to_array(to_offset_line[strand_index + ((tube_index - 1) * strand_per_tube) - 1]);
             }
         } else {
             // Dont move strand when not snapped to device
             // strand_shape['paths'][0][-1] = point_to_array(to_offset_line[strand_index * tube_index - 1]);
         }
-
 
         attributes = {
             'AssetGroup': strands_AG,

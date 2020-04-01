@@ -1,5 +1,9 @@
-// This rule will contain the added feature in a container
-
+// Assigned To: CommunicationsDevice
+// Name: Contain Splice Ports in Splice Enclosure
+// Description: Contain Splice Ports in Splice Enclosure using the ContainerGuid field
+// Subtypes: Port
+// Field: Asset ID field
+// Execute: Insert
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
@@ -12,20 +16,6 @@ if (use_device_as_container == true) {
     container_class = device_class;
 } else {
     container_class = "CommunicationsAssembly";
-}
-// Get Feature Switch yard, adjust the string literals to match your GDB feature class names
-function get_features_switch_yard(class_name, fields, include_geometry) {
-    var class_name = Split(class_name, '.')[-1];
-    var feature_set = null;
-
-    if (class_name == "CommunicationsDevice") {
-        feature_set = FeatureSetByName($datastore, "CommunicationsDevice", fields, include_geometry);
-    } else if (class_name == "CommunicationsAssembly") {
-        feature_set = FeatureSetByName($datastore, "CommunicationsAssembly", fields, include_geometry);
-    } else {
-        feature_set = FeatureSetByName($datastore, "CommunicationsDevice", fields, include_geometry);
-    }
-    return feature_set;
 }
 
 // ************* End Section *****************
@@ -41,56 +31,6 @@ var edit_payload = [{
     'updates': [{
         'globalID': $feature.containerGUID,
         'associationType': 'container'
-    }]
-}];
-
-return {"result": assigned_to_field, "edit": edit_payload};
-
-
-
-
-
-
-
-
-// This rule will contain the added feature in a container
-
-// ***************************************
-// This section has the functions and variables that need to be adjusted based on your implementation
-
-var assigned_to_field = $feature.assetid;
-var valid_asset_types = [1];
-
-var container_class = 'StructureJunction';
-
-// Get Feature Switch yard, adjust the string literals to match your GDB feature class names
-function get_features_switch_yard(class_name, fields, include_geometry) {
-    var class_name = Split(class_name, '.')[-1];
-    var feature_set = null;
-
-    if (class_name == "StructureJunction") {
-        feature_set = FeatureSetByName($datastore, "StructureJunction", fields, include_geometry);
-    } else if (class_name == "CommunicationsAssembly") {
-        feature_set = FeatureSetByName($datastore, "CommunicationsAssembly", fields, include_geometry);
-    } else {
-        feature_set = FeatureSetByName($datastore, "StructureJunction", fields, include_geometry);
-    }
-    return feature_set;
-}
-
-// ************* End Section *****************
-
-var container_guid = $feature.containerGUID;
-var asset_type = $feature.assettype;
-if (IsEmpty(container_guid) || (Count(valid_asset_types) > 0 && indexof(valid_asset_types, asset_type) == -1)) {
-    return assigned_to_field;
-}
-
-var edit_payload = [{
-    'className': container_class,
-    'updates': [{
-        'globalID': $feature.containerGUID,
-        'associationType': 'structure'
     }]
 }];
 
