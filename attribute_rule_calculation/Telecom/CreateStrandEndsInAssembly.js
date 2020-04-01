@@ -6,7 +6,7 @@ var assigned_to_field = $feature.terminatorspacing;
 // Instead of assigning the rule at the subtype, it is assigned to all subtypes and returns if not valid
 
 // Limit the rule to valid subtypes
-var valid_asset_groups = [1,2,3,5,6,7];
+var valid_asset_groups = [1, 2, 3, 5, 6, 7];
 var valid_asset_types = [1];
 if (count(valid_asset_groups) > 0 && indexof(valid_asset_groups, $feature.assetgroup) == -1) {
     return assigned_to_field;
@@ -17,7 +17,7 @@ if (count(valid_asset_types) > 0 && indexof(valid_asset_types, $feature.assettyp
 
 var point_spacing = DefaultValue($feature.terminatorspacing, .1);
 var point_count = DefaultValue($feature.terminatorcount, 0);
-var sym_rotation = DefaultValue($feature.templaterotation, 0);
+var template_rotation = DefaultValue($feature.templaterotation, 0);
 var offset_distance = DefaultValue($feature.terminatoroffset, 0);
 
 
@@ -29,27 +29,30 @@ if (point_count <= 0) {
     return {'ErrorMessage': 'Port count is required'};
 }
 
-var point_geo = Geometry($feature);
-var wkid = point_geo.spatialReference.wkid;
-// Store the geometry of the point.  Offset the y and Z to get a vertical line that represents the upper coordinate
-var point_y = point_geo.Y;
-point_y = point_y - (floor(point_count / 2) * point_spacing);
-var point_z = point_geo.Z;
-point_z = point_z - (floor(point_count / 2) * point_spacing);
-var point_x = point_geo.X;
+function offset_line(point_geo, point_spacing, point_count, offset_distance, line_rotation) {
 
-// Loop over the point count and add a vertex using the spacing
-var vertices = [];
-for (var i = 0; i < point_count; i++) {
-    vertices[i] = [point_x, point_y, point_z];
-    point_y = point_y + point_spacing;
-    point_z = point_z + point_spacing;
+    // Store the geometry of the point.  Offset the y and Z to get a vertical line that represents the upper coordinate
+    var point_y = point_geo.Y;
+    point_y = point_y - (floor(point_count / 2) * point_spacing);
+    var point_z = point_geo.Z;
+    point_z = point_z - (floor(point_count / 2) * point_spacing);
+    var point_x = point_geo.X;
+
+    // Loop over the point count and add a vertex using the spacing
+    var vertices = [];
+    for (var i = 0; i < point_count; i++) {
+        vertices[i] = [point_x, point_y, point_z];
+        point_y = point_y + point_spacing;
+        point_z = point_z + point_spacing;
+    }
+    // Create a new line, rotate it based on user field and offset to spread it from the placed point
+    var new_line = Polyline({"paths": [vertices], "spatialReference": {"wkid": point_geo.spatialReference.wkid}});
+    new_line = offset(rotate(new_line, 90 - line_rotation), offset_distance);
+    // Get the first path on the new line
+    return new_line['paths'][0];
 }
-// Create a new line, rotate it based on user field and offset to spread it from the placed point
-var new_line = Polyline({"paths": [vertices], "spatialReference": {"wkid": point_geo.spatialReference.wkid}});
-new_line = offset(rotate(new_line, 90 - sym_rotation), offset_distance);
-// Get the first path on the new line
-var first_path = new_line['paths'][0];
+
+var first_path = offset_line(point_geo, point_spacing, point_count, offset_distance, template_rotation);
 // Loop over the path and construct a point at each vertex and return as a strand end
 var new_strand_ends = [];
 for (var i in first_path) {
