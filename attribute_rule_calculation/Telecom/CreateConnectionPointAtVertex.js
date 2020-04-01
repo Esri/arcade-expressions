@@ -18,7 +18,8 @@ if (indexof(valid_asset_groups, $feature.assetgroup) == -1) {
 }
 
 var connection_point_AG = 1;
-var connection_point_AT = 1;
+var connection_point_AT_att = 1;
+var connection_point_AT_cont = 3;
 var connection_point_class = 'CommunicationsJunction';
 var filter_sql = "AssetGroup in (103, 104, 105, 110, 125) and AssetType in (81, 121, 201, 241, 361, 581, 582)";
 var attachment_assc = [81, 121, 201, 361];
@@ -61,11 +62,12 @@ for (var i in line_vertices) {
 
         if (dist < search_distance / 2) {
             used_structures[Count(used_structures)] = structure_feat.globalid;
+            var isContainment = IndexOf(containment_assc, structure_feat.AssetType) == -1
             var attributes = {
                 'AssetGroup': connection_point_AG,
-                'AssetType': connection_point_AT,
+                'AssetType': iif(isContainment, connection_point_AT_cont, connection_point_AT_att),
                 'ContainerGUID': structure_feat.globalid,
-                'containerType': iif(indexof(attachment_assc, structure_feat.AssetType) > -1, 'attachment', 'container')
+                'containerType': iif(isContainment, 'container', 'structure')//attached - content
             };
             new_connection_points[Count(new_connection_points)] = {
                 'attributes': attributes,
