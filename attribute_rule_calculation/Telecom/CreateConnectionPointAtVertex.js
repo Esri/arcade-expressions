@@ -2,7 +2,7 @@
 // Name: Create Connection Points at Vertex
 // Description: Rule generates connection points at a vertex when within a distance of a structure junction
 // Subtypes: All
-// Field: Asset ID field
+// Field: Assetid
 // Execute: Insert
 
 
@@ -50,30 +50,32 @@ if (closest_structure_count == 0) {
     return field_value
 }
 
-for (var i in line_vertices) {
-    for (var structure_feat in filtered_features) {
-        if (Count(used_structures) == closest_structure_count) {
-            break
-        }
-        if (indexof(used_structures, structure_feat.globalid) >= 0) {
-            continue
-        }
-        var dist = Distance(line_vertices[i], Geometry(structure_feat), search_unit);
+if (Count(line_vertices) < 2) {
+    for (var i = 1; i < Count(line_vertices) - 1; i++) {
+        for (var structure_feat in filtered_features) {
+            if (Count(used_structures) == closest_structure_count) {
+                break
+            }
+            if (indexof(used_structures, structure_feat.globalid) >= 0) {
+                continue
+            }
+            var dist = Distance(line_vertices[i], Geometry(structure_feat), search_unit);
 
-        if (dist < search_distance / 2) {
-            used_structures[Count(used_structures)] = structure_feat.globalid;
-            var isContainment = IndexOf(containment_assc, structure_feat.AssetType) == -1
-            var attributes = {
-                'AssetGroup': connection_point_AG,
-                'AssetType': iif(isContainment, connection_point_AT_cont, connection_point_AT_att),
-                'ContainerGUID': structure_feat.globalid,
-                'containerType': iif(isContainment, 'container', 'structure')//attached - content
-            };
-            new_connection_points[Count(new_connection_points)] = {
-                'attributes': attributes,
-                'geometry': line_vertices[i]
-            };
-            break;
+            if (dist < search_distance / 2) {
+                used_structures[Count(used_structures)] = structure_feat.globalid;
+                var isContainment = IndexOf(containment_assc, structure_feat.AssetType) == -1
+                var attributes = {
+                    'AssetGroup': connection_point_AG,
+                    'AssetType': iif(isContainment, connection_point_AT_cont, connection_point_AT_att),
+                    'ContainerGUID': structure_feat.globalid,
+                    'containerType': iif(isContainment, 'container', 'structure')//attached - content
+                };
+                new_connection_points[Count(new_connection_points)] = {
+                    'attributes': attributes,
+                    'geometry': line_vertices[i]
+                };
+                break;
+            }
         }
     }
 }

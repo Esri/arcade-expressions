@@ -2,7 +2,7 @@
 // Name: Create Strands in Cable
 // Description: Rule generates strands inside the cable based on the content count field
 // Subtypes: All
-// Field: Asset ID field
+// Field: Assetid
 // Execute: Insert
 
 // **************************************
@@ -23,7 +23,7 @@ var fiber_count = $feature.ContentCount;
 var tube_count = $feature.TubeCount;
 var point_spacing = .5;
 var offset_distance = .1;
-var z_strand_level = -50;
+var z_strand_level = -1000;
 // The Asset Group and Type of the tubes in a cable
 // The Asset Group and Asset Type of the fiber strand
 var strands_AG = 8;

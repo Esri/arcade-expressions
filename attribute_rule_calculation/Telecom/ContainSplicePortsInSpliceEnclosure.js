@@ -2,7 +2,7 @@
 // Name: Contain Splice Ports in Splice Enclosure
 // Description: Contain Splice Ports in Splice Enclosure using the ContainerGuid field
 // Subtypes: Port
-// Field: Asset ID field
+// Field: AssetID
 // Execute: Insert
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation
