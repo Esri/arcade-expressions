@@ -8,7 +8,7 @@
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation
 var assigned_to_field = $feature.assetid;
-var valid_asset_types = [1];
+var valid_asset_types = [1,2,3];
 var container_class = 'StructureJunction';
 // ************* End Section *****************
 
@@ -18,7 +18,15 @@ if (count(valid_asset_types) > 0 && indexof(valid_asset_types, $feature.assettyp
 }
 
 var container_guid = $feature.containerGUID;
+if (IsEmpty(container_guid)){
+      return assigned_to_field;
+}
+
 var associationType = $feature.containerType;
+if (IsEmpty(associationType)){
+      return assigned_to_field;
+}
+
 var edit_payload = [{
     'className': container_class,
     'updates': [{
