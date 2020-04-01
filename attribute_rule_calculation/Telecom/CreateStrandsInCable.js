@@ -479,8 +479,8 @@ for (var tube_index = 1; tube_index <= tube_count; tube_index++) {
         var strand_shape = Dictionary(line_json);
         strand_shape = adjust_z(strand_shape, z_strand_level);
 
-        if ($feature.fromsnap == 'splice') {
-            var splice_from_info = splice_end_point(from_port_features, from_offset_line, j, $feature.FromGUID);
+        if (from_container_snap_type  == 'splice') {
+            var splice_from_info = splice_end_point(from_port_features, from_offset_line, j, from_container_GUID);
 
             if (!IsEmpty(splice_from_info[0])) {
                 strand_shape['paths'][0][0] = point_to_array(splice_from_info[0]);
@@ -494,24 +494,25 @@ for (var tube_index = 1; tube_index <= tube_count; tube_index++) {
                 junction_updates[Count(junction_updates)] = splice_from_info[2];
             }
 
-        } else if ($feature.fromsnap == 'splitter') {
+        } else if (from_container_snap_type  == 'splitter') {
             if (cnt_from_open_ports > 0) {
                 strand_shape['paths'][0][0] = point_to_array(from_port_features['openport'][0]['geometry']);
             } else {
                 strand_shape['paths'][0][0] = point_to_array(from_offset_line[strand_index * tube_index - 1]);
             }
-        } else if ($feature.fromsnap == 'pass-through') {
+        } else if (from_container_snap_type  == 'pass-through') {
             if (cnt_from_open_ports > j) {
                 strand_shape['paths'][0][0] = point_to_array(from_port_features['openport'][j]['geometry']);
             } else {
                 strand_shape['paths'][0][0] = point_to_array(from_offset_line[strand_index * tube_index - 1]);
             }
         } else {
-            strand_shape['paths'][0][0] = point_to_array(from_offset_line[strand_index * tube_index - 1]);
+            // Dont move strand when not snapped to device
+            // strand_shape['paths'][0][0] = point_to_array(from_offset_line[strand_index * tube_index - 1]);
         }
 
-        if ($feature.tosnap == 'splice') {
-            var splice_to_info = splice_end_point(to_port_features, to_offset_line, j, $feature.ToGUID);
+        if (to_container_snap_type == 'splice') {
+            var splice_to_info = splice_end_point(to_port_features, to_offset_line, j, to_container_GUID);
             if (!IsEmpty(splice_to_info[0])) {
                 strand_shape['paths'][0][-1] = point_to_array(splice_to_info[0]);
             } else {
@@ -523,20 +524,21 @@ for (var tube_index = 1; tube_index <= tube_count; tube_index++) {
             if (!IsEmpty(splice_to_info[2])) {
                 junction_updates[Count(junction_updates)] = splice_to_info[2];
             }
-        } else if ($feature.tosnap == 'splitter') {
+        } else if (to_container_snap_type == 'splitter') {
             if (cnt_to_open_ports > 0) {
                 strand_shape['paths'][0][-1] = point_to_array(to_port_features['openport'][0]['geometry']);
             } else {
                 strand_shape['paths'][0][-1] = point_to_array(to_offset_line[strand_index * tube_index - 1]);
             }
-        } else if ($feature.tosnap == 'pass-through') {
+        } else if (to_container_snap_type == 'pass-through') {
             if (cnt_to_open_ports > j) {
                 strand_shape['paths'][0][-1] = point_to_array(to_port_features['openport'][j]['geometry']);
             } else {
                 strand_shape['paths'][0][-1] = point_to_array(to_offset_line[strand_index * tube_index - 1]);
             }
         } else {
-            strand_shape['paths'][0][-1] = point_to_array(to_offset_line[strand_index * tube_index - 1]);
+            // Dont move strand when not snapped to device
+            // strand_shape['paths'][0][-1] = point_to_array(to_offset_line[strand_index * tube_index - 1]);
         }
 
 
@@ -549,7 +551,7 @@ for (var tube_index = 1; tube_index <= tube_count; tube_index++) {
         };
         line_adds[Count(line_adds)] = {
             'attributes': attributes,
-            'geometry': strand_shape,
+            'geometry': Polyline(strand_shape),
             'associationType': 'content'
         };
     }
