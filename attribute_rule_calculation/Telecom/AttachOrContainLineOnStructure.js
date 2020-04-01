@@ -1,18 +1,18 @@
-// This rule will contain the added feature in a container
+// Assigned To: CommunicationsJunction
+// Name: Attach or Contain junction in structure
+// Description: Rule generates connection points at a vertex when within a distance of a structure junction
+// Subtypes: Connection Point
+// Field: AssetID
+// Execute: Insert
 
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation
-
 var assigned_to_field = $feature.assetid;
-var valid_asset_groups = [1, 2, 3, 5, 6, 7];
 var valid_asset_types = [1];
 var container_class = 'StructureJunction';
-
 // ************* End Section *****************
 
-if (count(valid_asset_groups) > 0 && indexof(valid_asset_groups, $feature.assetgroup) == -1) {
-    return assigned_to_field;
-}
+
 if (count(valid_asset_types) > 0 && indexof(valid_asset_types, $feature.assettype) == -1) {
     return assigned_to_field;
 }
@@ -22,7 +22,7 @@ var associationType = $feature.containerType;
 var edit_payload = [{
     'className': container_class,
     'updates': [{
-        'globalID': $feature.containerGUID,
+        'globalID': container_guid,
         'associationType': associationType
     }]
 }];

@@ -11,7 +11,7 @@ var assigned_to_field = $feature.assetid;
 // Instead of assigning the rule at the subtype, it is assigned to all subtypes and returns if not valid
 
 // Limit the rule to valid subtypes
-var valid_asset_groups = [1, 2, 3, 4, 5, 6, 7, 9];
+var valid_asset_groups = [1, 3, 4, 5, 6, 7, 9];
 if (indexof(valid_asset_groups, $feature.assetgroup) == -1) {
     return assigned_to_field;
 }
@@ -507,12 +507,12 @@ for (var tube_index = 1; tube_index <= tube_count; tube_index++) {
                 //strand_shape['paths'][0][0] = point_to_array(from_offset_line[strand_index + ((tube_index - 1) * strand_per_tube) - 1]);
             }
         } else if (from_container_snap_type == 'pass-through') {
-            if (cur_from_open_ports_idx > cnt_from_open_ports) {
+            if (cur_from_open_ports_idx < cnt_from_open_ports) {
                 strand_shape['paths'][0][0] = point_to_array(from_port_features['openport'][cur_from_open_ports_idx]['geometry']);
-                cur_from_open_ports_idx = +1
+                cur_from_open_ports_idx += 1
 
             } else {
-                strand_shape['paths'][0][0] = point_to_array(from_offset_line[strand_index + ((tube_index - 1) * strand_per_tube) - 1]);
+                //strand_shape['paths'][0][0] = point_to_array(from_offset_line[strand_index + ((tube_index - 1) * strand_per_tube) - 1]);
             }
         } else {
             // Dont move strand when not snapped to device
@@ -539,11 +539,11 @@ for (var tube_index = 1; tube_index <= tube_count; tube_index++) {
                 //strand_shape['paths'][0][-1] = point_to_array(to_offset_line[strand_index + ((tube_index - 1) * strand_per_tube) - 1]);
             }
         } else if (to_container_snap_type == 'pass-through') {
-            if (cur_to_open_ports_idx > cnt_to_open_ports) {
+            if (cur_to_open_ports_idx < cnt_to_open_ports) {
                 strand_shape['paths'][0][-1] = point_to_array(to_port_features['openport'][cur_to_open_ports_idx]['geometry']);
-                cur_to_open_ports_idx = +1
+                cur_to_open_ports_idx += 1
             } else {
-                strand_shape['paths'][0][-1] = point_to_array(to_offset_line[strand_index + ((tube_index - 1) * strand_per_tube) - 1]);
+                //strand_shape['paths'][0][-1] = point_to_array(to_offset_line[strand_index + ((tube_index - 1) * strand_per_tube) - 1]);
             }
         } else {
             // Dont move strand when not snapped to device
