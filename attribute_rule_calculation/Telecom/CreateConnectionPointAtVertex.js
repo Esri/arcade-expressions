@@ -64,7 +64,7 @@ for (var i in line_vertices) {
             var attributes = {
                 'AssetGroup': connection_point_AG,
                 'AssetType': connection_point_AT,
-                'ContainerGUID': structure_feat.globalid
+                'ContainerGUID': structure_feat.globalid,
                 'containerType': iif(indexof(attachment_assc, structure_feat.AssetType) > -1, 'attachment', 'container')
             };
             new_connection_points[Count(new_connection_points)] = {
