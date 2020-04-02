@@ -50,7 +50,7 @@ if (closest_structure_count == 0) {
     return field_value
 }
 
-if (Count(line_vertices) < 2) {
+if (Count(line_vertices) > 2) {
     for (var i = 1; i < Count(line_vertices) - 1; i++) {
         for (var structure_feat in filtered_features) {
             if (Count(used_structures) == closest_structure_count) {
@@ -80,7 +80,7 @@ if (Count(line_vertices) < 2) {
     }
 }
 // If not feature was found, exit
-if (IsEmpty(new_connection_points)) {
+if (IsEmpty(new_connection_points) || count(new_connection_points) == 0)  {
     return field_value;
 }
 
