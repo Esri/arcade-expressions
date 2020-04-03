@@ -10,11 +10,11 @@
 
 // This section has the functions and variables that need to be adjusted based on your implementation
 // The field the rule is assigned to
-var field_value = $feature.assetid;
+var assigned_to_value = $feature.assetid;
 // Limit the rule to valid subtypes
 var valid_asset_groups = [1, 3, 4, 5, 6, 7, 9];
 if (indexof(valid_asset_groups, $feature.assetgroup) == -1) {
-    return field_value;
+    return assigned_to_value;
 }
 
 var connection_point_AG = 1;
@@ -31,12 +31,12 @@ var valid_asset_types = [];
 
 // ************* End Section *****************
 if (Count(valid_asset_types) > 0 && indexof(valid_asset_types, $feature.assettype) == -1) {
-    return field_value;
+    return assigned_to_value;
 }
 // Buffer the features to find features within a certain distance
 var closest_features = Intersects(feature_set, Buffer(Geometry($feature), search_distance, search_unit));
 if (Count(closest_features) == 0) {
-    return field_value;
+    return assigned_to_value;
 }
 // Filter the closest results based on the sql to get assets of a certain type
 var filtered_features = Filter(closest_features, filter_sql);
@@ -47,10 +47,10 @@ var new_connection_points = [];
 var used_structures = [];
 var closest_structure_count = Count(filtered_features);
 if (closest_structure_count == 0) {
-    return field_value
+    return assigned_to_value
 }
 
-if (Count(line_vertices) < 2) {
+if (Count(line_vertices) > 2) {
     for (var i = 1; i < Count(line_vertices) - 1; i++) {
         for (var structure_feat in filtered_features) {
             if (Count(used_structures) == closest_structure_count) {
@@ -64,6 +64,10 @@ if (Count(line_vertices) < 2) {
             if (dist < search_distance / 2) {
                 used_structures[Count(used_structures)] = structure_feat.globalid;
                 var isContainment = IndexOf(containment_assc, structure_feat.AssetType) == -1
+                var isAttachment = IndexOf(attachment_assc, structure_feat.AssetType) == -1
+                if (isAttachment == false && isContainment == false) {
+                    continue
+                }
                 var attributes = {
                     'AssetGroup': connection_point_AG,
                     'AssetType': iif(isContainment, connection_point_AT_cont, connection_point_AT_att),
@@ -81,7 +85,7 @@ if (Count(line_vertices) < 2) {
 }
 // If not feature was found, exit
 if (IsEmpty(new_connection_points)) {
-    return field_value;
+    return assigned_to_value;
 }
 
 var edit_payload = [
@@ -89,6 +93,6 @@ var edit_payload = [
 ];
 
 return {
-    "result": field_value,
+    "result": assigned_to_value,
     "edit": edit_payload
 };

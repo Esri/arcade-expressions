@@ -481,6 +481,7 @@ var cur_from_open_ports_idx = 0;
 var cur_to_open_ports_idx = 0;
 // Convert the shape to a dict for manipulation
 var line_json = Text(cable_geo);
+
 for (var tube_index = 1; tube_index <= tube_count; tube_index++) {
     for (var strand_index = 1; strand_index <= strand_per_tube; strand_index++) {
         var strand_shape = Dictionary(line_json);
