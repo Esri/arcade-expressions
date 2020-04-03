@@ -10,11 +10,11 @@
 
 // This section has the functions and variables that need to be adjusted based on your implementation
 // The field the rule is assigned to
-var assigned_to_value = 'fg'//$feature.assetid;
+var assigned_to_value = $feature.assetid;
 // Limit the rule to valid subtypes
 var valid_asset_groups = [1, 3, 4, 5, 6, 7, 9];
 if (indexof(valid_asset_groups, $feature.assetgroup) == -1) {
-    return '1';//assigned_to_value;
+    return assigned_to_value;
 }
 
 var structure_Line_class = 'StructureLine';
@@ -58,7 +58,7 @@ function has_bit(num, test_value) {
 }
 
 if (Count(valid_asset_types) > 0 && indexof(valid_asset_types, $feature.assettype) == -1) {
-    return '2';//assigned_to_value;
+    return assigned_to_value;
 }
 // Buffer the features to find features within a certain distance
 var closest_features = Intersects(feature_set, Buffer(Geometry($feature), search_distance, search_unit));
@@ -69,7 +69,7 @@ var closest_features = Intersects(feature_set, Buffer(Geometry($feature), search
 var filtered_features = Filter(closest_features, filter_structure_lines_sql);
 var closest_structure_count = Count(filtered_features);
 if (closest_structure_count == 0) {
-    return '3';//assigned_to_value;
+    return assigned_to_value;
 }
 var line_geo = Geometry($feature);
 var line_vertices = line_geo['paths'][0];
@@ -79,15 +79,15 @@ for (var vert_idx = 0; vert_idx < vertex_count - 1; vert_idx++) {
 
     // Check to see if point is between vertexs
     var from_point = line_vertices[vert_idx];
-    var to_point = current_path[vert_idx + 1];
-    return to_point
+    var to_point = line_vertices[vert_idx + 1];
+
     var segment = Polyline({
         'paths': [[[from_point.X, from_point.y], [to_point.X, to_point.Y]]],
         "spatialReference": {"wkid": line_geo.spatialReference.wkid}
     });
 
     var mid_point = Centroid(segment);
-    for (struct_feat in filtered_features) {
+    for (var struct_feat in filtered_features) {
         // If there is already content, skip it
         if (has_bit(struct_feat['ASSOCIATIONSTATUS'], 1) && indexof(restrict_to_one_content, struct_feat['AssetType']) >= 0) {
             continue
@@ -96,12 +96,13 @@ for (var vert_idx = 0; vert_idx < vertex_count - 1; vert_idx++) {
             structure_containers[Count(structure_containers)] = {
                 'globalID': struct_feat.globalid,
                 'associationType': 'container'
-            }
+            };
+            break;
         }
     }
 }
-if (count(structure_containers) == 0){
-    return '4';//assigned_to_value;
+if (count(structure_containers) == 0) {
+    return assigned_to_value;
 }
 var edit_payload = [
     {

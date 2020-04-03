@@ -5,8 +5,8 @@ var valid_asset_types = [81];
 
 var assigned_to_value = $feature.assetid;
 var line_class = "StructureLine";
-var duct_count = $feature.ContentCount;
-
+var duct_high = $feature.ductshigh;
+var duct_wide = $feature.ductswide;
 // The Asset Group and Asset Type of the duct
 var duct_AG = 101;
 var duct_AT = 41;
@@ -35,7 +35,10 @@ function adjust_z(line_dict, z_value) {
 if (indexof(valid_asset_types, $feature.assettype) == -1) {
     return assigned_to_value;
 }
-
+if (IsEmpty(duct_high) || duct_high == 0 || IsEmpty(duct_wide) || duct_wide == 0 ){
+    return assigned_to_value;
+}
+var duct_count = duct_high * duct_wide;
 // Require a value for duct count
 if (IsEmpty(duct_count) || duct_count == 0) {
     return {'errorMessage': 'A value is required for the content count field'};
