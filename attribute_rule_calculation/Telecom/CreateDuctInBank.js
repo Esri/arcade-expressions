@@ -1,4 +1,10 @@
-// This rule will generate contained spatial/non spatial features
+// Assigned To: StructureLine
+// Name: Create ducts in duct bank
+// Description: Rule generates ducts inside duct banks based on the ductshigh and ductswide fields
+// Subtypes: Wire Duct Bank
+// Field: Assetid
+// Execute: Insert
+
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation
 var valid_asset_types = [81];
