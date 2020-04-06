@@ -60,7 +60,7 @@ for (var j = 0; j < duct_count; j++) {
     attributes = {
         'AssetGroup': duct_AG,
         'AssetType': duct_AT,
-        'ductindex': j + 1//,
+        'ductid': j + 1//,
         //'IsSpatial': 0
 
     };
