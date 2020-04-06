@@ -25,7 +25,7 @@ var filter_sql = "AssetGroup in (103, 104, 105, 110, 125) and AssetType in (81, 
 var attachment_assc = [81, 121, 201, 361];
 var containment_assc = [241, 581, 582];
 var feature_set = FeatureSetByName($datastore, 'StructureJunction', ["OBJECTID", "GLOBALID", "AssetGroup", "AssetType"], true);
-var search_distance = 75;
+var search_distance = DefaultValue($feature.searchdistance, 75);
 var search_unit = 9002;
 var valid_asset_types = [];
 

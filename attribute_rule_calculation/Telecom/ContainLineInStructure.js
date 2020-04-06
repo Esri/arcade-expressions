@@ -21,7 +21,7 @@ var structure_Line_class = 'StructureLine';
 var filter_structure_lines_sql = "AssetGroup in (101, 103, 104) and AssetType in (41, 101, 125, 127)";
 var restrict_to_one_content = ['41'];
 var feature_set = FeatureSetByName($datastore, 'StructureLine', ["OBJECTID", "GLOBALID", "ASSOCIATIONSTATUS", "AssetGroup", "AssetType"], true);
-var search_distance = 80;
+var search_distance = DefaultValue($feature.searchdistance, 75);
 var search_unit = 9002;
 var valid_asset_types = [];
 
