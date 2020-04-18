@@ -11,8 +11,8 @@ var valid_asset_types = [81];
 
 var assigned_to_value = $feature.assetid;
 var line_class = "StructureLine";
-var duct_high = $feature.ductshigh;
-var duct_wide = $feature.ductswide;
+var duct_high = $feature.ductcounthigh;
+var duct_wide = $feature.ductcountwide;
 // The Asset Group and Asset Type of the duct
 var duct_AG = 101;
 var duct_AT = 41;

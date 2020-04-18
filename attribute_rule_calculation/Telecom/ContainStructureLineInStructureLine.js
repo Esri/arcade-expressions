@@ -1,6 +1,7 @@
-// Assigned To: CommunicationsLine
-// Name: Contain a Line in Structure Line
-// Description: Rule searches for structure line containers with a certain distance to contain teh cable in it.
+// Assigned To: StructureLine
+// Name: Contain a Structure Line in Structure Line
+// Description: Rule searches for structure line containers with a certain distance to contain the structure in it.
+//              This supports adding a conduit or duct bank in a trench or tunnel and a lashing guy in a Aerial Span.
 // Subtypes: All
 // Field: Assetid
 // Execute: Insert
@@ -12,18 +13,29 @@
 // The field the rule is assigned to
 var assigned_to_value = $feature.assetid;
 // Limit the rule to valid subtypes
-var valid_asset_groups = [1, 3, 4, 5, 6, 7, 9];
+var valid_asset_groups = [102, 103, 109];
 if (indexof(valid_asset_groups, $feature.assetgroup) == -1) {
+    return assigned_to_value;
+}
+var valid_asset_types = [81, 121, 127];
+if (Count(valid_asset_types) > 0 && indexof(valid_asset_types, $feature.assettype) == -1) {
     return assigned_to_value;
 }
 
 var structure_Line_class = 'StructureLine';
-var filter_structure_lines_sql = "AssetGroup in (101, 103, 104) and AssetType in (41, 101, 125, 127)";
-var restrict_to_one_content = ['41'];
+var filter_structure_lines_sql = "AssetGroup in (103, 104, 112) and AssetType in (101, 125, 221)";
+// Set the container asset types that can only contain one child item
+var restrict_to_one_content = [];
+// Create a list of what items can be in what parent containers
+var child_to_parent = {
+    '121': [101, 221],
+    '127': [125],
+    '81': [101]
+};
 var feature_set = FeatureSetByName($datastore, 'StructureLine', ["OBJECTID", "GLOBALID", "ASSOCIATIONSTATUS", "AssetGroup", "AssetType"], true);
 var search_distance = DefaultValue($feature.searchdistance, 75);
 var search_unit = 9002;
-var valid_asset_types = [];
+
 
 // ************* End Section *****************
 // Function to check if a bit is in an int value
@@ -57,9 +69,7 @@ function has_bit(num, test_value) {
 
 }
 
-if (Count(valid_asset_types) > 0 && indexof(valid_asset_types, $feature.assettype) == -1) {
-    return assigned_to_value;
-}
+
 // Buffer the features to find features within a certain distance
 var closest_features = Intersects(feature_set, Buffer(Geometry($feature), search_distance, search_unit));
 //if (Count(closest_features) == 0) {
@@ -74,7 +84,7 @@ if (closest_structure_count == 0) {
 var line_geo = Geometry($feature);
 var line_vertices = line_geo['paths'][0];
 var vertex_count = Count(line_vertices);
-var structure_containers = []
+var structure_containers = [];
 for (var vert_idx = 0; vert_idx < vertex_count - 1; vert_idx++) {
 
     // Check to see if point is between vertexs
@@ -88,9 +98,13 @@ for (var vert_idx = 0; vert_idx < vertex_count - 1; vert_idx++) {
 
     var mid_point = Centroid(segment);
     for (var struct_feat in filtered_features) {
-        // If there is already content, skip it
+        // Check to see if the container is valid for the type
+        if (IndexOf(child_to_parent[Text($feature.assettype)], struct_feat['AssetType']) == -1) {
+            continue;
+        }
+        // If there is already content, and it is restricted to one item, skip it
         if (has_bit(struct_feat['ASSOCIATIONSTATUS'], 1) && indexof(restrict_to_one_content, struct_feat['AssetType']) >= 0) {
-            continue
+            continue;
         }
         if (Distance(struct_feat, mid_point, search_unit) < search_distance / 2) {
             structure_containers[Count(structure_containers)] = {
