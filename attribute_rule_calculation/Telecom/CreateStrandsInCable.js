@@ -30,7 +30,7 @@ var strands_AG = 8;
 var strands_AT = 163;
 var strand_sql = 'AssetGroup = ' + strands_AG + ' AND  AssetType = ' + strands_AT;
 
-var new_splice_feature_AG = 8;
+var new_splice_feature_AG = 12;
 var new_splice_feature_AT = 143;
 //Device,Asset Group=3,Asset Type=1 acts as a splitter
 //Device,Asset Group=(1,2,3,5,6,7),Asset Type=3 acts as a splice
@@ -48,7 +48,7 @@ var cable_snap_types = {
 };
 
 var strand_snap_types = {
-    'splitter': 'AssetGroup = 8 AND (AssetType = 142 OR AssetType = 141)', // Port: Splitter Out
+    'splitter': 'AssetGroup = 13 AND (AssetType = 165 OR AssetType = 166)', // Splitter: Fiber Out
     'splice': 'AssetGroup = ' + new_splice_feature_AG + ' AND AssetType = ' + new_splice_feature_AT, // Port: Splice
     'pass-through': 'AssetGroup = 8 AND AssetType = 144' // Port: Strand Termination
 };
@@ -133,7 +133,7 @@ function is_even(value) {
 function get_snapped_container_info(point_geo) {
     var container_GUID = null;
     var snap_type = null;
-    var device_fs = get_features_switch_yard('CommunicationsDevice', ["globalid", "assetgroup", 'assettype'], false)
+    var device_fs = get_features_switch_yard("CommunicationsDevice", ["globalid", "assetgroup", 'assettype'], false)
     var snapped_feats = Intersects(device_fs, Point(point_geo));
     for (var st in cable_snap_types) {
         var snapped_feat = First(Filter(snapped_feats, cable_snap_types[st][0]));
@@ -481,7 +481,6 @@ var cur_from_open_ports_idx = 0;
 var cur_to_open_ports_idx = 0;
 // Convert the shape to a dict for manipulation
 var line_json = Text(cable_geo);
-
 for (var tube_index = 1; tube_index <= tube_count; tube_index++) {
     for (var strand_index = 1; strand_index <= strand_per_tube; strand_index++) {
         var strand_shape = Dictionary(line_json);

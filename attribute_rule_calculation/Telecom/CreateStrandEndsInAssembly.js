@@ -26,7 +26,7 @@ var template_rotation = DefaultValue($feature.templaterotation, 0);
 var offset_distance = DefaultValue($feature.terminatoroffset, 0);
 
 
-var device_class = 'CommunicationsDevice';
+var device_class = "CommunicationsDevice";
 var port_ag = 8;
 var port_at = 144;
 

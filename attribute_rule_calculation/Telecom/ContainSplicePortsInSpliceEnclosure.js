@@ -1,7 +1,7 @@
 // Assigned To: CommunicationsDevice
 // Name: Contain Splice Ports in Splice Enclosure
 // Description: Contain Splice Ports in Splice Enclosure using the ContainerGuid field
-// Subtypes: Port
+// Subtypes: Splice
 // Field: AssetID
 // Execute: Insert
 // ***************************************
