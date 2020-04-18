@@ -18,16 +18,39 @@ if (indexof(valid_asset_groups, $feature.assetgroup) == -1) {
 }
 
 var structure_Line_class = 'StructureLine';
-var filter_structure_lines_sql = "AssetGroup in (101, 103, 104) and AssetType in (41, 101, 125, 127)";
-var restrict_to_one_content = ['41'];
+// A cable can be in a duct, aerial span, lashing guy, conduit, tunnel
+var filter_structure_lines_sql = "AssetGroup in (101, 103, 104, 109, 112) and AssetType in (41, 101, 125, 127, 121, 221)";
+// Set the container asset types that can only contain one child item, a duct and conduit can only have one cable
+var restrict_to_one_content = [41, 121];
+// List the asset types that a cable should be contained in first, this is conduit, duct and lashing guy.
+var contain_cable_in_first = [41, 121, 127];
 var feature_set = FeatureSetByName($datastore, 'StructureLine', ["OBJECTID", "GLOBALID", "ASSOCIATIONSTATUS", "AssetGroup", "AssetType"], true);
 var search_distance = DefaultValue($feature.searchdistance, 75);
 var search_unit = 9002;
 var valid_asset_types = [];
 
 // ************* End Section *****************
-// Function to check if a bit is in an int value
+function sortCandidates(a, b) {
+    if (indexof(contain_cable_in_first, a['at']) == -1 && indexof(contain_cable_in_first, b['at']) == -1) {
+        if (a['distance'] < b['distance'])
+            return -1;
+        if (a['distance'] > b['distance'])
+            return 1;
+        return 0
+    } else if (indexof(contain_cable_in_first, a['at']) > -1 && indexof(contain_cable_in_first, b['at']) > -1) {
+        if (a['distance'] < b['distance'])
+            return -1;
+        if (a['distance'] > b['distance'])
+            return 1;
+        return 0;
+    } else if (indexof(contain_cable_in_first, a['at']) > -1) {
 
+        return -1;
+    }
+    return 1;
+}
+
+// Function to check if a bit is in an int value
 function has_bit(num, test_value) {
     // num = number to test if it contains a bit
     // test_value = the bit value to test for
@@ -39,20 +62,21 @@ function has_bit(num, test_value) {
     for (var i = 0; i < 64; i++) {
         // equivalent to test_value >> 1
         var test_value = Floor(test_value / 2);
-        bit_pos++
+        bit_pos++;
         if (test_value == 0)
             break;
     }
     // now that we know the bit position, we shift the bits of
     // num until we get to the bit we care about
+    var num
     for (var i = 1; i <= bit_pos; i++) {
-        var num = Floor(num / 2);
+        num = Floor(num / 2);
     }
 
     if (num % 2 == 0) {
-        return false
+        return false;
     } else {
-        return true
+        return true;
     }
 
 }
@@ -74,9 +98,11 @@ if (closest_structure_count == 0) {
 var line_geo = Geometry($feature);
 var line_vertices = line_geo['paths'][0];
 var vertex_count = Count(line_vertices);
-var structure_containers = []
-for (var vert_idx = 0; vert_idx < vertex_count - 1; vert_idx++) {
 
+var structure_containers = [];
+var added_to = [];
+for (var vert_idx = 0; vert_idx < vertex_count - 1; vert_idx++) {
+    var structure_candidates = [];
     // Check to see if point is between vertexs
     var from_point = line_vertices[vert_idx];
     var to_point = line_vertices[vert_idx + 1];
@@ -92,18 +118,37 @@ for (var vert_idx = 0; vert_idx < vertex_count - 1; vert_idx++) {
         if (has_bit(struct_feat['ASSOCIATIONSTATUS'], 1) && indexof(restrict_to_one_content, struct_feat['AssetType']) >= 0) {
             continue
         }
-        if (Distance(struct_feat, mid_point, search_unit) < search_distance / 2) {
-            structure_containers[Count(structure_containers)] = {
-                'globalID': struct_feat.globalid,
-                'associationType': 'container'
-            };
-            break;
+        var dist = Distance(struct_feat, mid_point, search_unit);
+        if (dist < search_distance / 2) {
+            structure_candidates[Count(structure_candidates)] = {
+                'at': struct_feat['AssetType'],
+                'globalid': struct_feat.globalid,
+                'distance': dist
+            }
         }
     }
+    if (count(structure_candidates) == 0) {
+        continue
+    }
+    // Sort the candidates by what the cable should be in first and by distance
+    var sorted_candidates = Sort(structure_candidates, sortCandidates);
+    var parent_globalid = sorted_candidates[0]['globalid'];
+    // If the parent has already been added as a container, dont add it more than once
+    if (IndexOf(added_to, parent_globalid) > -1) {
+        continue;
+    }
+    structure_containers[Count(structure_containers)] = {
+        'globalID': parent_globalid,
+        'associationType': 'container'
+    };
+    added_to[Count(added_to)] = parent_globalid;
+
 }
+
 if (count(structure_containers) == 0) {
     return assigned_to_value;
 }
+
 var edit_payload = [
     {
         'className': structure_Line_class,

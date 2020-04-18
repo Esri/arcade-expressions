@@ -85,6 +85,7 @@ var line_geo = Geometry($feature);
 var line_vertices = line_geo['paths'][0];
 var vertex_count = Count(line_vertices);
 var structure_containers = [];
+var added_to = [];
 for (var vert_idx = 0; vert_idx < vertex_count - 1; vert_idx++) {
 
     // Check to see if point is between vertexs
@@ -107,8 +108,15 @@ for (var vert_idx = 0; vert_idx < vertex_count - 1; vert_idx++) {
             continue;
         }
         if (Distance(struct_feat, mid_point, search_unit) < search_distance / 2) {
+            var parent_globalid = struct_feat.globalid;
+            // If the parent has already been added as a container, dont add it more than once
+            if (IndexOf(added_to, parent_globalid) > -1) {
+                continue;
+            }
+
+            added_to[Count(added_to)] = parent_globalid;
             structure_containers[Count(structure_containers)] = {
-                'globalID': struct_feat.globalid,
+                'globalID': parent_globalid,
                 'associationType': 'container'
             };
             break;
