@@ -9,7 +9,6 @@
 
 var assigned_to_field = $feature.assetid;
 var valid_asset_types = [364];
-var use_device_as_container = false;
 var container_class  = "StructureJunction";
 
 // ************* End Section *****************
