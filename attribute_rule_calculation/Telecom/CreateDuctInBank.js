@@ -5,11 +5,6 @@
 // Field: Assetid
 // Execute: Insert
 
-// TODO:
-// Get end points, like splce, but check to ensure the duct count is greater or equal the duct bank duct count
-// Create Knock out port, inside the knockouts
-//   This will require a rule on knocks ports to be contained in the knockout
-//   Set containerguid
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation
 var valid_asset_types = [81];
