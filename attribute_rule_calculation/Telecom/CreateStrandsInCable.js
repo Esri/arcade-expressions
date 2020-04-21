@@ -23,7 +23,7 @@ var fiber_count = $feature.ContentCount;
 var tube_count = $feature.TubeCount;
 var point_spacing = .5;
 var offset_distance = .1;
-var z_strand_level = -1000;
+var z_level = -1000;
 // The Asset Group and Type of the tubes in a cable
 // The Asset Group and Asset Type of the fiber strand
 var strands_AG = 8;
@@ -154,7 +154,7 @@ function get_snapped_container_info(point_geo) {
     return [container_GUID, snap_type]
 }
 
-function intersects_at_end_points(fs, point_geo) {
+function intersects_at_to_points(fs, point_geo) {
     var snapped_edges = 0;
     var intersection = Intersects(fs, point_geo);
     if (Count(intersection) > 0) {
@@ -187,7 +187,7 @@ function get_line_ends(container_guid, container_type) {
             if (container_type == 'splice') {
                 for (var port_feat in port_features) {
                     var port_geo = Geometry(port_feat);
-                    var edge_at_ends_cnt = intersects_at_end_points(line_fs, port_geo);
+                    var edge_at_ends_cnt = intersects_at_to_points(line_fs, port_geo);
 
                     if (edge_at_ends_cnt == 0) {
                         open_port_mapping['openport'][Count(open_port_mapping['openport'])] = {
@@ -221,7 +221,7 @@ function get_line_ends(container_guid, container_type) {
                 for (var port_feat in port_features) {
                     // Intersect the existing strands to find a port without a strand connected to it
                     var port_geo = Geometry(port_feat);
-                    if (intersects_at_end_points(line_fs, port_geo) == 0) {
+                    if (intersects_at_to_points(line_fs, port_geo) == 0) {
                         scale_to_all_strands = {
                             'geometry': port_geo,    //[new_geo.x, new_geo.y, new_geo.z, null];
                             'globalid': port_feat.globalid,
@@ -238,7 +238,7 @@ function get_line_ends(container_guid, container_type) {
                 for (var port_feat in port_features) {
                     // Intersect the existing strands to find a port without a strand connected to it
                     var port_geo = Geometry(port_feat);
-                    if (intersects_at_end_points(line_fs, port_geo) == 0) {
+                    if (intersects_at_to_points(line_fs, port_geo) == 0) {
                         open_port_mapping['openport'][Count(open_port_mapping['openport'])] = {
                             'geometry': port_geo,    //[new_geo.x, new_geo.y, new_geo.z, null];
                             'globalid': port_feat.globalid,
@@ -328,8 +328,8 @@ function point_to_array(point_geo) {
     return [point_geo.x, point_geo.y, point_geo.z, 0]
 }
 
-function splice_end_point(port_features, prep_line_offset, strand_id, tube_id, strand_per_tube, container_guid) {
-    var end_point = null;
+function splice_to_point(port_features, prep_line_offset, strand_id, tube_id, strand_per_tube, container_guid) {
+    var to_point = null;
     var new_feature = null;
     var update_feature = null;
     var matching_strand_available = false;
@@ -385,7 +385,7 @@ function splice_end_point(port_features, prep_line_offset, strand_id, tube_id, s
             'globalid': open_port['globalid'],
             'attributes': update_feature_attributes
         };
-        end_point = open_port['geometry'];
+        to_point = open_port['geometry'];
     } else {
         var new_feature_attributes = {
             'AssetGroup': new_splice_feature_AG,
@@ -400,9 +400,9 @@ function splice_end_point(port_features, prep_line_offset, strand_id, tube_id, s
             'geometry': prep_line_offset[strand_id + ((tube_id - 1) * strand_per_tube) - 1],
             'attributes': new_feature_attributes
         };
-        end_point = prep_line_offset[strand_id + ((tube_id - 1) * strand_per_tube) - 1];
+        to_point = prep_line_offset[strand_id + ((tube_id - 1) * strand_per_tube) - 1];
     }
-    return [end_point, new_feature, update_feature]
+    return [to_point, new_feature, update_feature]
 }
 
 // Validation
@@ -436,16 +436,16 @@ if (strand_per_tube > 1 && strand_per_tube % 1 != 0) {
 }
 
 // Get the start and end vertex of the line
-var cable_geo = Geometry($feature);
-var vertices = cable_geo['paths'][0];
-var start_point = vertices[0];
-var end_point = vertices[-1];
+var assigned_line_geo = Geometry($feature);
+var vertices = assigned_line_geo['paths'][0];
+var from_point = vertices[0];
+var to_point = vertices[-1];
 
 // Get the snapped container.  This could be the assembly containing the device
-var snapped_container_info = get_snapped_container_info(Point(start_point));
+var snapped_container_info = get_snapped_container_info(Point(from_point));
 var from_container_GUID = snapped_container_info[0];
 var from_container_snap_type = snapped_container_info[1];
-snapped_container_info = get_snapped_container_info(Point(end_point));
+snapped_container_info = get_snapped_container_info(Point(to_point));
 var to_container_GUID = snapped_container_info[0];
 var to_container_snap_type = snapped_container_info[1];
 
@@ -454,22 +454,22 @@ var from_port_features = get_line_ends(from_container_GUID, from_container_snap_
 var to_port_features = get_line_ends(to_container_GUID, to_container_snap_type);
 
 // Generate offset lines to move strands to when no port is found
-var start_angle = angle_line_at_point(cable_geo, start_point);
+var start_angle = angle_line_at_point(assigned_line_geo, from_point);
 start_angle = (450 - start_angle) % 360;
 //start_angle = start_angle + 90;
-var end_angle = angle_line_at_point(cable_geo, end_point);
+var end_angle = angle_line_at_point(assigned_line_geo, to_point);
 end_angle = (450 - end_angle) % 360;
 //end_angle = end_angle + 90;
 
-var strand_start_point = Dictionary(Text(start_point))
-strand_start_point['z'] = z_strand_level
-strand_start_point = pop_empty(strand_start_point)
-var strand_end_point = Dictionary(Text(end_point))
-strand_end_point['z'] = z_strand_level
-strand_end_point = pop_empty(strand_end_point)
+var contained_line_from_point = Dictionary(Text(from_point))
+contained_line_from_point['z'] = z_level
+contained_line_from_point = pop_empty(contained_line_from_point)
+var contained_line_to_point = Dictionary(Text(to_point))
+contained_line_to_point['z'] = z_level
+contained_line_to_point = pop_empty(contained_line_to_point)
 
-var from_offset_line = offset_line(Point(strand_start_point), fiber_count, point_spacing, offset_distance, start_angle);
-var to_offset_line = offset_line(Point(strand_end_point), fiber_count, point_spacing, offset_distance, end_angle);
+var from_offset_line = offset_line(Point(contained_line_from_point), fiber_count, point_spacing, offset_distance, start_angle);
+var to_offset_line = offset_line(Point(contained_line_to_point), fiber_count, point_spacing, offset_distance, end_angle);
 
 var attributes = {};
 var line_adds = [];
@@ -480,14 +480,14 @@ var cnt_to_open_ports = Count(to_port_features['openport']);
 var cur_from_open_ports_idx = 0;
 var cur_to_open_ports_idx = 0;
 // Convert the shape to a dict for manipulation
-var line_json = Text(cable_geo);
+var line_json = Text(assigned_line_geo);
 for (var tube_index = 1; tube_index <= tube_count; tube_index++) {
     for (var strand_index = 1; strand_index <= strand_per_tube; strand_index++) {
         var strand_shape = Dictionary(line_json);
-        strand_shape = adjust_z(strand_shape, z_strand_level);
+        strand_shape = adjust_z(strand_shape, z_level);
 
         if (from_container_snap_type == 'splice') {
-            var splice_from_info = splice_end_point(from_port_features, from_offset_line, strand_index, tube_index, strand_per_tube, from_container_GUID);
+            var splice_from_info = splice_to_point(from_port_features, from_offset_line, strand_index, tube_index, strand_per_tube, from_container_GUID);
             if (!IsEmpty(splice_from_info[0])) {
                 strand_shape['paths'][0][0] = point_to_array(splice_from_info[0]);
             } else {
@@ -520,7 +520,7 @@ for (var tube_index = 1; tube_index <= tube_count; tube_index++) {
         }
 
         if (to_container_snap_type == 'splice') {
-            var splice_to_info = splice_end_point(to_port_features, to_offset_line, strand_index, tube_index, strand_per_tube, to_container_GUID);
+            var splice_to_info = splice_to_point(to_port_features, to_offset_line, strand_index, tube_index, strand_per_tube, to_container_GUID);
             if (!IsEmpty(splice_to_info[0])) {
                 strand_shape['paths'][0][-1] = point_to_array(splice_to_info[0]);
             } else {
