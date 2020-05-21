@@ -1,6 +1,6 @@
-// Assigned To: Device
-// Name: Cathodic Protection Traceability for UPDM Devices
-// Description: Set traceability flag for device assets
+// Assigned To: PipelineJunction
+// Name: Cathodic Protection Traceability for Pipeline Junctions
+// Description: Set traceability flag for junction assets
 // Subtypes: All
 // Field: cptraceability
 // Execute: Insert, Update
@@ -13,16 +13,16 @@
 var assigned_to_field = $feature.cptraceability;
 var cp_override = $feature.cpoverride;
 var cp_bondedinsulated = $feature.bondedinsulated;
-var cp_material = $feature.material;
+var cp_material = $feature.assettype;
 
-var valid_asset_groups = [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 18, 19, 20, 50, 51, 52];
-var asset_groups_always_traceability = [50, 51, 52];
-var asset_groups_never_traceability = [];
+var valid_asset_groups = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 23, 24, 30, 50, 51];
+var asset_groups_always_traceability = [50];
+var asset_groups_never_traceability = [51];
 var traceable = 1; // Also used for Bonded
 var not_traceable = 2; // Also used for Insulated
 // The material field and list of material types and that are conductive
-var conductive_materials = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'S', 'R', 'Q', 'P', 'O', 'N', 'M'];
-var non_conductive_materials = [];
+var conductive_materials = [1, 41, 81, 161, 201, 241, 242, 321, 341, 481];
+var non_conductive_materials = [2, 42, 82, 202, 243, 244, 401, 441, 482, 941];
 
 // ************* End Section *****************
 

@@ -1,5 +1,5 @@
-// Assigned To: Device
-// Name: Generate IDs for PipelineDevice
+// Assigned To: PipelineDevice
+// Name: Generate IDs for Pipeline Device
 // Description: Generate IDs for PipelineDevice using database sequences
 // Subtypes: All
 // Field: assetid

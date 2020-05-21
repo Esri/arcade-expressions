@@ -1,6 +1,6 @@
-// Assigned To: Lines
-// Name: Cathodic Protection Traceability for UPDM Lines
-// Description: Set traceability flag for lines assets
+// Assigned To: PipelineDevice
+// Name: Cathodic Protection Traceability for Pipeline Devices
+// Description: Set traceability flag for device assets
 // Subtypes: All
 // Field: cptraceability
 // Execute: Insert, Update
@@ -13,16 +13,16 @@
 var assigned_to_field = $feature.cptraceability;
 var cp_override = $feature.cpoverride;
 var cp_bondedinsulated = $feature.bondedinsulated;
-var cp_material = $feature.assettype;
+var cp_material = $feature.material;
 
-var valid_asset_groups = [1, 2, 3, 4, 5, 6, 7, 15, 50, 51, 52];
+var valid_asset_groups = [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13, 18, 19, 20, 50, 51, 52];
 var asset_groups_always_traceability = [50, 51, 52];
 var asset_groups_never_traceability = [];
 var traceable = 1; // Also used for Bonded
 var not_traceable = 2; // Also used for Insulated
 // The material field and list of material types and that are conductive
-var conductive_materials = [1, 2, 3, 5, 6, 11, 12];
-var non_conductive_materials = [4, 7, 8, 9, 10];
+var conductive_materials = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'S', 'R', 'Q', 'P', 'O', 'N', 'M'];
+var non_conductive_materials = [];
 
 // ************* End Section *****************
 
