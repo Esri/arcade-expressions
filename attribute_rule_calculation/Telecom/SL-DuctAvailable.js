@@ -7,11 +7,14 @@
 
 
 // ***************************************
-var assigned_to_field = $feature.ductavialable;
+var assigned_to_field = $feature.ductavailable;
 var assigned_to_class = "StructureLine"
 var duct_sql = "AssetGroup = 101 and AssetType = 41"
 var updates_payload = [];
 var edit_payload = [];
+
+var association_status = $feature.ASSOCIATIONSTATUS;
+var orig_association_status = $originalFeature.ASSOCIATIONSTATUS;
 
 // Get Feature Switch yard, adjust the string literals to match your GDB feature class names
 function get_features_switch_yard(class_name, fields, include_geometry) {
@@ -53,9 +56,6 @@ function has_bit(num, test_value) {
         return true
     }
 }
-
-var association_status = $feature.ASSOCIATIONSTATUS;
-var orig_association_status = $origfeature.ASSOCIATIONSTATUS;
 
 //Association Status did not change, return original value
 if (association_status == orig_association_status) {
@@ -127,6 +127,13 @@ if (!IsEmpty(container_row)) {
 
 }
 
+edit_payload = [{'className':"StructureLine",
+                  'updates':[{
+                              'globalID': container_row.globalid,
+                              'attributes':{'maximumcapacity':max_cap,
+                                            'usedcapacity': used_cap,
+                                            'availablecapacity': avail_cap
+                                           }}]}]
 return {
     "result": assigned_to_field,
     "edit": edit_payload
