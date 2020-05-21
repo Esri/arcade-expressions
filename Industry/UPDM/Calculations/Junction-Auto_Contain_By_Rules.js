@@ -11,18 +11,6 @@ var assigned_to_field = $feature.ASSOCIATIONSTATUS;
 var search_distance = 40; //DefaultValue($feature.searchdistance, 75);
 var search_unit = 9002;
 
-// ************* End User Variables Section ************
-
-// *************       Functions            *************
-
-function sortCandidates(a, b) {
-    if (a['distance'] < b['distance'])
-        return -1;
-    if (a['distance'] > b['distance'])
-        return 1;
-    return 0;
-}
-
 function class_id_to_name(id) {
     if (id == 3 || id == '3') {
         return 'StructureJunction';
@@ -67,6 +55,19 @@ function get_features_switch_yard(class_name, fields, include_geometry) {
     }
     return feature_set;
 }
+
+// ************* End User Variables Section ************
+
+// *************       Functions            *************
+
+function sortCandidates(a, b) {
+    if (a['distance'] < b['distance'])
+        return -1;
+    if (a['distance'] > b['distance'])
+        return 1;
+    return 0;
+}
+
 
 function build_containers_info() {
     var rule_fields = ['OBJECTID', 'RULETYPE', 'FROMNETWORKSOURCEID', 'FROMASSETGROUP', 'FROMASSETTYPE', 'FROMTERMINALID', 'TONETWORKSOURCEID', 'TOASSETGROUP', 'TOASSETTYPE', 'TOTERMINALID', 'VIANETWORKSOURCEID', 'VIAASSETGROUP', 'VIAASSETTYPE', 'VIATERMINALID', 'CREATIONDATE', 'GLOBALID']
