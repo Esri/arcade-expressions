@@ -1,4 +1,5 @@
-// Assigned To: PipelineLines
+// Assigned To: PipelineLine
+// Type: Calculation
 // Name: Cathodic Protection Traceability for Pipeline Lines
 // Description: Set traceability flag for lines assets
 // Subtypes: All

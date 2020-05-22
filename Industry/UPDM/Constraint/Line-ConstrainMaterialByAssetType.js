@@ -3,7 +3,7 @@
 // Name: Limit Material By Asset Type for Pipeline Lines
 // Description: Limit values combinations using the fields ASSETGROUP, assettype, material
 // Subtypes: All
-// Error: 5601
+// Error Number: 5601
 // Error Message: Incompatible types for ASSETGROUP, assettype, material
 // Execute: Insert, Update
 

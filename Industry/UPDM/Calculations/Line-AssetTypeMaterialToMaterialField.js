@@ -1,4 +1,5 @@
 // Assigned To: PipelineLine
+// Type: Calculation
 // Name: Calculate Material from Asset Type for Pipeline Lione
 // Description: Converts the Asset Type codes to Material codes.
 // Subtypes: All

@@ -1,9 +1,11 @@
 // Assigned To: PipelineDevice
+// Type: Calculation
 // Name: Auto Contain Pipeline Devices
 // Description: Uses the rule table to contain feature in a container within a search distance
 // Subtypes: All
 // Field: ASSOCIATIONSTATUS
 // Execute: Insert, Update
+// Exclude From Client: True
 
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation

@@ -1,4 +1,5 @@
 // Assigned To: PipelineJunction
+// Type: Calculation
 // Name: Cathodic Protection Traceability for Pipeline Junctions
 // Description: Set traceability flag for junction assets
 // Subtypes: All

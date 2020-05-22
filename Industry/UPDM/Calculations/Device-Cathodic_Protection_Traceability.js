@@ -1,4 +1,5 @@
 // Assigned To: PipelineDevice
+// Type: Calculation
 // Name: Cathodic Protection Traceability for Pipeline Devices
 // Description: Set traceability flag for device assets
 // Subtypes: All

@@ -1,9 +1,11 @@
 // Assigned To: PipelineDevice
+// Type: Calculation
 // Name: Generate IDs for Pipeline Device
 // Description: Generate IDs for PipelineDevice using database sequences
 // Subtypes: All
 // Field: assetid
 // Execute: Insert
+// Exclude From Client: True
 
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation
