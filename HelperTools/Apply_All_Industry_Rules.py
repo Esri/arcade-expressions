@@ -47,6 +47,7 @@ for path in industry_folder.rglob('*.js'):
             kwargs[comments_to_parameter[param]] = [det.strip().upper() for det in details.split(',')]
         elif param in ('Description', 'Name', 'Error Number', 'Error Message', 'Field'):
             kwargs[comments_to_parameter[param]] = details
+    f.seek(0, 0)
     kwargs['script_expression'] = f.read()
     if 'type' not in kwargs:
         print(f'Type is missing from {path}')
