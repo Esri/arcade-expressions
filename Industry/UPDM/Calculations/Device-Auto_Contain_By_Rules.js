@@ -3,57 +3,56 @@
 // Name: Auto Contain Pipeline Devices
 // Description: Uses the rule table to contain feature in a container within a search distance
 // Subtypes: All
-// Field: ASSOCIATIONSTATUS
+// Field: assetid
 // Execute: Insert, Update
 // Exclude From Client: True
 
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
-var assigned_to_field = $feature.ASSOCIATIONSTATUS;
+var assigned_to_field = $feature.assetid;
 var search_distance = 40; //DefaultValue($feature.searchdistance, 75);
 var search_unit = 9002;
-
 function class_id_to_name(id) {
-    if (id == 3 || id == '3') {
-        return 'StructureJunction';
-    } else if (id == 4 || id == '4') {
-        return 'StructureLine';
-    } else if (id == 5 || id == '5') {
-        return 'StructureBoundary';
-    } else if (id == 6 || id == '6') {
-        return 'PipelineDevice';
-    } else if (id == 7 || id == '7') {
-        return 'PipelineLine';
-    } else if (id == 8 || id == '8') {
-        return 'PipelineAssembly';
-    } else if (id == 9 || id == '9') {
-        return 'PipelineJunction';
+    if (id == 3 || id == "3") {
+        return "StructureJunction";
+    } else if (id == 4 || id == "4") {
+        return "StructureLine";
+    } else if (id == 5 || id == "5") {
+        return "StructureBoundary";
+    } else if (id == 6 || id == "6") {
+        return "PipelineDevice";
+    } else if (id == 7 || id == "7") {
+        return "PipelineLine";
+    } else if (id == 8 || id == "8") {
+        return "PipelineAssembly";
+    } else if (id == 9 || id == "9") {
+        return "PipelineJunction";
     } else {
         return id;
     }
 }
 
 function get_features_switch_yard(class_name, fields, include_geometry) {
-    var class_name = Split(class_name, '.')[-1];
+    var class_name = Split(class_name, ".")[-1];
     var feature_set = null;
-    if (class_name == 'PipelineDevice') {
-        feature_set = FeatureSetByName($datastore, 'PipelineDevice', fields, include_geometry);
-    } else if (class_name == 'PipelineJunction') {
-        feature_set = FeatureSetByName($datastore, 'PipelineJunction', fields, include_geometry);
-    } else if (class_name == 'PipelineAssembly') {
-        feature_set = FeatureSetByName($datastore, 'PipelineAssembly', fields, include_geometry);
-    } else if (class_name == 'PipelineLine') {
-        feature_set = FeatureSetByName($datastore, 'PipelineLine', fields, include_geometry);
-    } else if (class_name == 'StructureJunction') {
-        feature_set = FeatureSetByName($datastore, 'StructureJunction', fields, include_geometry);
-    } else if (class_name == 'StructureLine') {
-        feature_set = FeatureSetByName($datastore, 'StructureLine', fields, include_geometry);
-    } else if (class_name == 'StructureBoundary') {
-        feature_set = FeatureSetByName($datastore, 'StructureBoundary', fields, include_geometry);
-    } else if (class_name == 'Rules') {
-        feature_set = FeatureSetByName($datastore, 'UN_5_Rules', fields, false);
+    if (class_name == "PipelineDevice") {
+        feature_set = FeatureSetByName($datastore, "PipelineDevice", fields, include_geometry);
+    } else if (class_name == "PipelineJunction") {
+        feature_set = FeatureSetByName($datastore, "PipelineJunction", fields, include_geometry);
+    } else if (class_name == "PipelineAssembly") {
+        feature_set = FeatureSetByName($datastore, "PipelineAssembly", fields, include_geometry);
+    } else if (class_name == "PipelineLine") {
+        feature_set = FeatureSetByName($datastore, "PipelineLine", fields, include_geometry);
+    } else if (class_name == "StructureJunction") {
+        feature_set = FeatureSetByName($datastore, "StructureJunction", fields, include_geometry);
+    } else if (class_name == "StructureLine") {
+        feature_set = FeatureSetByName($datastore, "StructureLine", fields, include_geometry);
+    } else if (class_name == "StructureBoundary") {
+        feature_set = FeatureSetByName($datastore, "StructureBoundary", fields, include_geometry);
+    } else if (class_name == "Rules") {
+        feature_set = FeatureSetByName($datastore, "UN_5_Rules", fields, false);
     } else {
-        feature_set = FeatureSetByName($datastore, 'StructureBoundary', fields, include_geometry);
+        feature_set = FeatureSetByName($datastore, "StructureBoundary", fields, include_geometry);
     }
     return feature_set;
 }

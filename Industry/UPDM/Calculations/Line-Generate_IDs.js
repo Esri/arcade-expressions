@@ -21,8 +21,8 @@ var id_formats = {
     },
     '15': {
         'join_char': '-',
-        'prefix': 'Prssr-Snsr-Ln',
-        'sequence': 'Line_Prssr_Snsr_Ln_15_seq',
+        'prefix': 'Prssr-Snsr-Pp',
+        'sequence': 'Line_Prssr_Snsr_Pp_15_seq',
         'suffix': ''
     },
     '2': {
