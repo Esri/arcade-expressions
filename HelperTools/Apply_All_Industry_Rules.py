@@ -190,13 +190,13 @@ else:
     rules_df = rules_df[~rules_df['name'].isin(ar_names)]
     rules_df = rules_df.append(all_args, ignore_index=True)
     arcpy.TruncateTable_management(os.path.join(workspace, 'B_AttributeRules'))
+    rules_df.loc[rules_df['is_editable'].isnull(), 'is_editable'] = 1
     with arcpy.da.InsertCursor(os.path.join(workspace, 'B_AttributeRules'), list(rules_df)) as cursor:
         df_to_cursor(rules_df, cursor)
 
     if all_seq:
         print(f"Removing sequences with the same name in Asset Package")
         seq_df = seq_df[~seq_df['seq_name'].isin([seq['seq_name'] for seq in all_seq])]
-
         seq_df = seq_df.append(all_seq, ignore_index=True)
         seq_df.loc[seq_df['current_value'].isnull(), 'current_value'] = 1
         arcpy.TruncateTable_management(os.path.join(workspace, 'B_DatabaseSequence'))
