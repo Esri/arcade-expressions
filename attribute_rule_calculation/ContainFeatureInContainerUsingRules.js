@@ -27,7 +27,7 @@ function class_id_to_name(id) {
     } else if (id == 9 || id == '9') {
         return 'PipelineJunction';
     } else {
-        return id;
+        return Text(id);
     }
 }
 
@@ -84,6 +84,9 @@ function build_containers_info() {
     var container_class_types = {};
     for (var container_row in containers_rows) {
         var class_name = class_id_to_name(container_row['FROMNETWORKSOURCEID']);
+        if (class_name == Text(container_row['FROMNETWORKSOURCEID'])) {
+            return {'errorMessage': 'Unable to translate Class ID to Class, attribute rules needs updating'};
+        }
         if (HasKey(container_class_types, class_name) == false) {
             container_class_types[class_name] = {};
         }
@@ -178,6 +181,11 @@ if (has_bit(assigned_to_field, 4) || has_bit(assigned_to_field, 16)) {
 var container_info = build_containers_info();
 if (IsEmpty(container_info)) {
     return assigned_to_field;
+}
+if (TypeOf(container_info) == 'Dictionary') {
+    if (HasKey(container_info, 'ErrorMessage')) {
+        return container_info;
+    }
 }
 var sql_by_class = build_sql(container_info, $feature.globalid);
 var search_shape = Buffer(Geometry($feature), search_distance, search_unit);

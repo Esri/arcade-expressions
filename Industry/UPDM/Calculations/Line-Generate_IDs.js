@@ -87,8 +87,8 @@ function remove_empty(arr) {
     var new_arr = [];
     var j = 0;
     for (var i = 0; i < Count(arr); i++) {
-        if (!IsEmpty(arr[i]) && arr[i] != '') {
-            new_arr[j++] = arr[i];
+        if (!IsEmpty(arr[i]) && Text(arr[i]) != '') {
+            new_arr[j++] = Text(arr[i]);
         }
     }
     return new_arr;
