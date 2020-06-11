@@ -17,126 +17,127 @@ var assigned_to_field = $feature.assetid;
 function get_id(selector_value) {
     var id_format = {}
     var seq_val = null;
-    if (Text(selector_value) == '1') {
+    var selector_value_txt = Text(selector_value);
+    if (selector_value_txt == '1') {
             id_format = {
                 'prefix': "Excss-Flw-Vlv",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Device_Excss_Flw_Vlv_1_seq');
-        }else if (Text(selector_value) == '10') {
+        }else if (selector_value_txt == '10') {
             id_format = {
                 'prefix': "Cmprssr",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Device_Cmprssr_10_seq');
-        }else if (Text(selector_value) == '11') {
+        }else if (selector_value_txt == '11') {
             id_format = {
                 'prefix': "Wllhd-Src-Flng",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Device_Wllhd_Src_Flng_11_seq');
-        }else if (Text(selector_value) == '12') {
+        }else if (selector_value_txt == '12') {
             id_format = {
                 'prefix': "Cntrllbl-T",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Device_Cntrllbl_T_12_seq');
-        }else if (Text(selector_value) == '13') {
+        }else if (selector_value_txt == '13') {
             id_format = {
                 'prefix': "Shrt-Stp",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Device_Shrt_Stp_13_seq');
-        }else if (Text(selector_value) == '18') {
+        }else if (selector_value_txt == '18') {
             id_format = {
                 'prefix': "Pmp",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Device_Pmp_18_seq');
-        }else if (Text(selector_value) == '19') {
+        }else if (selector_value_txt == '19') {
             id_format = {
                 'prefix': "Rgltr",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Device_Rgltr_19_seq');
-        }else if (Text(selector_value) == '2') {
+        }else if (selector_value_txt == '2') {
             id_format = {
                 'prefix': "Mtr",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Device_Mtr_2_seq');
-        }else if (Text(selector_value) == '20') {
+        }else if (selector_value_txt == '20') {
             id_format = {
                 'prefix': "Scrbbr",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Device_Scrbbr_20_seq');
-        }else if (Text(selector_value) == '3') {
+        }else if (selector_value_txt == '3') {
             id_format = {
                 'prefix': "Cntrllbl-Vlv",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Device_Cntrllbl_Vlv_3_seq');
-        }else if (Text(selector_value) == '4') {
+        }else if (selector_value_txt == '4') {
             id_format = {
                 'prefix': "Flw-Vlv",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Device_Flw_Vlv_4_seq');
-        }else if (Text(selector_value) == '5') {
+        }else if (selector_value_txt == '5') {
             id_format = {
                 'prefix': "Rlf-Vlv",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Device_Rlf_Vlv_5_seq');
-        }else if (Text(selector_value) == '50') {
+        }else if (selector_value_txt == '50') {
             id_format = {
                 'prefix': "And",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Device_And_50_seq');
-        }else if (Text(selector_value) == '51') {
+        }else if (selector_value_txt == '51') {
             id_format = {
                 'prefix': "Rctfr",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Device_Rctfr_51_seq');
-        }else if (Text(selector_value) == '52') {
+        }else if (selector_value_txt == '52') {
             id_format = {
                 'prefix': "Tst-Pnt",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Device_Tst_Pnt_52_seq');
-        }else if (Text(selector_value) == '6') {
+        }else if (selector_value_txt == '6') {
             id_format = {
                 'prefix': "Strnr",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Device_Strnr_6_seq');
-        }else if (Text(selector_value) == '8') {
+        }else if (selector_value_txt == '8') {
             id_format = {
                 'prefix': "Prssr-Mntrng-Dvc",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Device_Prssr_Mntrng_Dvc_8_seq');
-        }else if (Text(selector_value) == '9') {
+        }else if (selector_value_txt == '9') {
             id_format = {
                 'prefix': "Lmp",
                 'join_char': '-',

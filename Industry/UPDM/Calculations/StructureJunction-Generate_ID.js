@@ -16,56 +16,57 @@ var assigned_to_field = $feature.assetid;
 function get_id(selector_value) {
     var id_format = {}
     var seq_val = null;
-    if (Text(selector_value) == '1') {
+    var selector_value_txt = Text(selector_value);
+    if (selector_value_txt == '1') {
             id_format = {
                 'prefix': "Ppln-Mfflr",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('StructureJunction_Ppln_Mfflr_1_seq');
-        }else if (Text(selector_value) == '2') {
+        }else if (selector_value_txt == '2') {
             id_format = {
                 'prefix': "Ppln-Anchr",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('StructureJunction_Ppln_Anchr_2_seq');
-        }else if (Text(selector_value) == '3') {
+        }else if (selector_value_txt == '3') {
             id_format = {
                 'prefix': "Ppln-Pp-Spprt",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('StructureJunction_Ppln_Pp_Spprt_3_seq');
-        }else if (Text(selector_value) == '4') {
+        }else if (selector_value_txt == '4') {
             id_format = {
                 'prefix': "Ppln-Pp-Hngr",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('StructureJunction_Ppln_Pp_Hngr_4_seq');
-        }else if (Text(selector_value) == '5') {
+        }else if (selector_value_txt == '5') {
             id_format = {
                 'prefix': "Ppln-End-Cnnctn",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('StructureJunction_Ppln_End_Cnnctn_5_seq');
-        }else if (Text(selector_value) == '501') {
+        }else if (selector_value_txt == '501') {
             id_format = {
                 'prefix': "Pp-Accss-Pnt",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('StructureJunction_Pp_Accss_Pnt_501_seq');
-        }else if (Text(selector_value) == '7') {
+        }else if (selector_value_txt == '7') {
             id_format = {
                 'prefix': "Ppln-Vlv-Bx",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('StructureJunction_Ppln_Vlv_Bx_7_seq');
-        }else if (Text(selector_value) == '8') {
+        }else if (selector_value_txt == '8') {
             id_format = {
                 'prefix': "Ppln-Slv",
                 'join_char': '-',

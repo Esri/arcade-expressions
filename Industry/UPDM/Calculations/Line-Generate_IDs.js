@@ -17,77 +17,78 @@ var assigned_to_field = $feature.assetid;
 function get_id(selector_value) {
     var id_format = {}
     var seq_val = null;
-    if (Text(selector_value) == '1') {
+    var selector_value_txt = Text(selector_value);
+    if (selector_value_txt == '1') {
             id_format = {
                 'prefix': "Srvc-Pp",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Line_Srvc_Pp_1_seq');
-        }else if (Text(selector_value) == '15') {
+        }else if (selector_value_txt == '15') {
             id_format = {
                 'prefix': "Prssr-Snsr-Pp",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Line_Prssr_Snsr_Pp_15_seq');
-        }else if (Text(selector_value) == '2') {
+        }else if (selector_value_txt == '2') {
             id_format = {
                 'prefix': "Dstrbtn-Pp",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Line_Dstrbtn_Pp_2_seq');
-        }else if (Text(selector_value) == '3') {
+        }else if (selector_value_txt == '3') {
             id_format = {
                 'prefix': "Trnsmssn-Pp",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Line_Trnsmssn_Pp_3_seq');
-        }else if (Text(selector_value) == '4') {
+        }else if (selector_value_txt == '4') {
             id_format = {
                 'prefix': "Gthrng-Pp",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Line_Gthrng_Pp_4_seq');
-        }else if (Text(selector_value) == '5') {
+        }else if (selector_value_txt == '5') {
             id_format = {
                 'prefix': "Sttn-Pp",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Line_Sttn_Pp_5_seq');
-        }else if (Text(selector_value) == '50') {
+        }else if (selector_value_txt == '50') {
             id_format = {
                 'prefix': "Bndng-Ln",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Line_Bndng_Ln_50_seq');
-        }else if (Text(selector_value) == '51') {
+        }else if (selector_value_txt == '51') {
             id_format = {
                 'prefix': "Tst-Ld-Wr",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Line_Tst_Ld_Wr_51_seq');
-        }else if (Text(selector_value) == '52') {
+        }else if (selector_value_txt == '52') {
             id_format = {
                 'prefix': "Rctfr-Cbl",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Line_Rctfr_Cbl_52_seq');
-        }else if (Text(selector_value) == '6') {
+        }else if (selector_value_txt == '6') {
             id_format = {
                 'prefix': "Cstmr-Pp",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('Line_Cstmr_Pp_6_seq');
-        }else if (Text(selector_value) == '7') {
+        }else if (selector_value_txt == '7') {
             id_format = {
                 'prefix': "Rsr-Pp",
                 'join_char': '-',

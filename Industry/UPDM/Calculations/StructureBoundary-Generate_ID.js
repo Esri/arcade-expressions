@@ -17,21 +17,22 @@ var assigned_to_field = $feature.assetid;
 function get_id(selector_value) {
     var id_format = {}
     var seq_val = null;
-    if (Text(selector_value) == '1') {
+    var selector_value_txt = Text(selector_value);
+    if (selector_value_txt == '1') {
             id_format = {
                 'prefix': "Ppln-Sttn-Strctr",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('StructureBoundary_Ppln_Sttn_Strctr_1_seq');
-        }else if (Text(selector_value) == '2') {
+        }else if (selector_value_txt == '2') {
             id_format = {
                 'prefix': "Ppln-Vlt-Bndry",
                 'join_char': '-',
                 'suffix': ''
             }
             seq_val = NextSequenceValue('StructureBoundary_Ppln_Vlt_Bndry_2_seq');
-        }else if (Text(selector_value) == '3') {
+        }else if (selector_value_txt == '3') {
             id_format = {
                 'prefix': "Ppln-Prcssng-Fclty",
                 'join_char': '-',

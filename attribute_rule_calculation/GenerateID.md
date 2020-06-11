@@ -54,7 +54,8 @@ var assigned_to_field = $feature.assetid;
 function get_id(selector_value) {
     var id_format = {}
     var seq_val = null;
-    if (Text(selector_value) == '1') {
+    var selector_value_txt = Text(selector_value);  
+    if (selector_value_txt == '1') {
         id_format = {
             'prefix': "ABC",
             'join_char': '-',

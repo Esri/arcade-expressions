@@ -16,70 +16,71 @@ var assigned_to_field = $feature.assetid;
 function get_id(selector_value) {
     var id_format = {}
     var seq_val = null;
-    if (Text(selector_value) == '1') {
+    var selector_value_txt = Text(selector_value);
+    if (selector_value_txt == '1') {
         id_format = {
             'prefix': "Cmprssr-Sttn",
             'join_char': '-',
             'suffix': ''
         }
         seq_val = NextSequenceValue('Assembly_Cmprssr_Sttn_1_seq');
-    } else if (Text(selector_value) == '10') {
+    } else if (selector_value_txt == '10') {
         id_format = {
             'prefix': "Vlv-Assmbly",
             'join_char': '-',
             'suffix': ''
         }
         seq_val = NextSequenceValue('Assembly_Vlv_Assmbly_10_seq');
-    } else if (Text(selector_value) == '2') {
+    } else if (selector_value_txt == '2') {
         id_format = {
             'prefix': "Mtr-Sttng",
             'join_char': '-',
             'suffix': ''
         }
         seq_val = NextSequenceValue('Assembly_Mtr_Sttng_2_seq');
-    } else if (Text(selector_value) == '3') {
+    } else if (selector_value_txt == '3') {
         id_format = {
             'prefix': "Rgltr-Sttn",
             'join_char': '-',
             'suffix': ''
         }
         seq_val = NextSequenceValue('Assembly_Rgltr_Sttn_3_seq');
-    } else if (Text(selector_value) == '4') {
+    } else if (selector_value_txt == '4') {
         id_format = {
             'prefix': "Rrl-Tp",
             'join_char': '-',
             'suffix': ''
         }
         seq_val = NextSequenceValue('Assembly_Rrl_Tp_4_seq');
-    } else if (Text(selector_value) == '5') {
+    } else if (selector_value_txt == '5') {
         id_format = {
             'prefix': "Twn-Brdr-Sttn",
             'join_char': '-',
             'suffix': ''
         }
         seq_val = NextSequenceValue('Assembly_Twn_Brdr_Sttn_5_seq');
-    } else if (Text(selector_value) == '6') {
+    } else if (selector_value_txt == '6') {
         id_format = {
             'prefix': "Wllhd",
             'join_char': '-',
             'suffix': ''
         }
         seq_val = NextSequenceValue('Assembly_Wllhd_6_seq');
-    } else if (Text(selector_value) == '7') {
+    } else if (selector_value_txt == '7') {
         id_format = {
             'prefix': "Pggng-Strctr",
             'join_char': '-',
             'suffix': ''
         }
         seq_val = NextSequenceValue('Assembly_Pggng_Strctr_7_seq');
-    } else if (Text(selector_value) == '8') {
+    } else if (selector_value_txt == '8') {
         id_format = {
             'prefix': "Fttng-Assmbly",
             'join_char': '-',
             'suffix': ''
         }
         seq_val = NextSequenceValue('Assembly_Fttng_Assmbly_8_seq');
-    } else if (Text(selector_value) == '9') {
+    } else if (selector_value_txt == '9') {
         id_format = {
             'prefix': "Pmp-Sttn",
             'join_char': '-',

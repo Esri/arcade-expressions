@@ -10,6 +10,7 @@
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 var assigned_to_field = $feature.assetid;
+var association_status = $feature.associationstatus;
 var search_distance = 40; //DefaultValue($feature.searchdistance, 75);
 var search_unit = 9002;
 
@@ -58,9 +59,40 @@ function get_features_switch_yard(class_name, fields, include_geometry) {
     return feature_set;
 }
 
+function is_edit_from_subnetwork() {
+    if ($feature.systemsubnetworkname != $originalfeature.systemsubnetworkname) {
+        return true;
+    }
+    if ($feature.pressuresubnetworkname != $originalfeature.pressuresubnetworkname) {
+        return true;
+    }
+    if ($feature.isolationsubnetworkname != $originalfeature.isolationsubnetworkname) {
+        return true;
+    }
+    if ($feature.cpsubnetworkname != $originalfeature.cpsubnetworkname) {
+        return true;
+    }
+    return false;
+}
+
 // ************* End User Variables Section ************
 
 // *************       Functions            *************
+
+
+function geometry_change() {
+    if (IsEmpty($originalfeature)) {
+        return true;
+    }
+    if (IsEmpty(Geometry($originalfeature))) {
+        return true;
+    }
+    return !Equals(Geometry($feature), Geometry($originalfeature));
+}
+
+function is_insert() {
+    return IsEmpty(Geometry($originalfeature))
+}
 
 function sortCandidates(a, b) {
     if (a['distance'] < b['distance'])
@@ -174,9 +206,16 @@ function has_bit(num, test_value) {
 }
 
 // ************* End Functions Section *****************
-
+// in FGDB, update subnetwork triggers an update operations, exit
+if (is_edit_from_subnetwork()) {
+    return assigned_to_field;
+}
+// If the geometry did not change on an update, return
+if (!is_insert() && !geometry_change()) {
+    return assigned_to_field;
+}
 // If the feature is already content, return
-if (has_bit(assigned_to_field, 4) || has_bit(assigned_to_field, 16)) {
+if (has_bit(association_status, 4) || has_bit(association_status, 16)) {
     return assigned_to_field;
 }
 
