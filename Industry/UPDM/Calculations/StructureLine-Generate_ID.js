@@ -11,16 +11,28 @@
 
 var assigned_to_field = $feature.assetid;
 
-// Define the leading text, the trailing text and the delimiter for the ID, this dict is keyed by Asset Group as text
-var id_formats = {
-    '1': {
-        'join_char': '-',
-        'prefix': 'Ppln-Csng',
-        'sequence': 'StructureLine_Ppln_Csng_1_seq',
-        'suffix': ''
+// Define the leading text, the trailing text and the delimiter for the ID, this function requires the keyed passed in
+// NextSequenceValue requires a string literal for copy and paste, although it supports a variable, it is recommended
+// to not use one
+function get_id(selector_value) {
+    var id_format = {}
+    var seq_val = null;
+    if (Text(selector_value) == '1') {
+            id_format = {
+                'prefix': "Ppln-Csng",
+                'join_char': '-',
+                'suffix': ''
+            }
+            seq_val = NextSequenceValue('StructureLine_Ppln_Csng_1_seq');
+        }else {
+        return null;
     }
-};
-// ************* End Section *****************
+    var id_parts = remove_empty([id_format['prefix'], seq_val, id_format['suffix']])
+    return Concatenate(id_parts, id_format['join_char'])
+}
+
+// ************* End Section ****************
+
 // Functions
 function remove_empty(arr) {
     var new_arr = [];
@@ -32,17 +44,3 @@ function remove_empty(arr) {
     }
     return new_arr;
 }
-
-// End Functions
-
-if (IsEmpty(assigned_to_field) == false && assigned_to_field != '') {
-    return assigned_to_field
-}
-if (TypeOf(id_formats) != 'Dictionary' || HasKey(id_formats, Text($feature.assetgroup)) == false) {
-    return assigned_to_field;
-}
-
-var id_format = id_formats[Text($feature.assetgroup)];
-// Remove any empty values
-var id_parts = remove_empty([id_format['prefix'], NextSequenceValue(id_format['sequence']), id_format['suffix']])
-return Concatenate(id_parts, id_format['join_char'])

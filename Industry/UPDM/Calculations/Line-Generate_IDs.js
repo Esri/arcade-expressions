@@ -11,84 +11,104 @@
 
 var assigned_to_field = $feature.assetid;
 
-// Define the leading text, the trailing text and the delimiter for the ID, this dict is keyed by Asset Group as text
-var id_formats = {
-    '1': {
-        'join_char': '-',
-        'prefix': 'Srvc-Pp',
-        'sequence': 'Line_Srvc_Pp_1_seq',
-        'suffix': ''
-    },
-    '15': {
-        'join_char': '-',
-        'prefix': 'Prssr-Snsr-Pp',
-        'sequence': 'Line_Prssr_Snsr_Pp_15_seq',
-        'suffix': ''
-    },
-    '2': {
-        'join_char': '-',
-        'prefix': 'Dstrbtn-Pp',
-        'sequence': 'Line_Dstrbtn_Pp_2_seq',
-        'suffix': ''
-    },
-    '3': {
-        'join_char': '-',
-        'prefix': 'Trnsmssn-Pp',
-        'sequence': 'Line_Trnsmssn_Pp_3_seq',
-        'suffix': ''
-    },
-    '4': {
-        'join_char': '-',
-        'prefix': 'Gthrng-Pp',
-        'sequence': 'Line_Gthrng_Pp_4_seq',
-        'suffix': ''
-    },
-    '5': {
-        'join_char': '-',
-        'prefix': 'Sttn-Pp',
-        'sequence': 'Line_Sttn_Pp_5_seq',
-        'suffix': ''
-    },
-    '50': {
-        'join_char': '-',
-        'prefix': 'Bndng-Ln',
-        'sequence': 'Line_Bndng_Ln_50_seq',
-        'suffix': ''
-    },
-    '51': {
-        'join_char': '-',
-        'prefix': 'Tst-Ld-Wr',
-        'sequence': 'Line_Tst_Ld_Wr_51_seq',
-        'suffix': ''
-    },
-    '52': {
-        'join_char': '-',
-        'prefix': 'Rctfr-Cbl',
-        'sequence': 'Line_Rctfr_Cbl_52_seq',
-        'suffix': ''
-    },
-    '6': {
-        'join_char': '-',
-        'prefix': 'Cstmr-Pp',
-        'sequence': 'Line_Cstmr_Pp_6_seq',
-        'suffix': ''
-    },
-    '7': {
-        'join_char': '-',
-        'prefix': 'Rsr-Pp',
-        'sequence': 'Line_Rsr_Pp_7_seq',
-        'suffix': ''
+// Define the leading text, the trailing text and the delimiter for the ID, this function requires the keyed passed in
+// NextSequenceValue requires a string literal for copy and paste, although it supports a variable, it is recommended
+// to not use one
+function get_id(selector_value) {
+    var id_format = {}
+    var seq_val = null;
+    if (Text(selector_value) == '1') {
+            id_format = {
+                'prefix': "Srvc-Pp",
+                'join_char': '-',
+                'suffix': ''
+            }
+            seq_val = NextSequenceValue('Line_Srvc_Pp_1_seq');
+        }else if (Text(selector_value) == '15') {
+            id_format = {
+                'prefix': "Prssr-Snsr-Pp",
+                'join_char': '-',
+                'suffix': ''
+            }
+            seq_val = NextSequenceValue('Line_Prssr_Snsr_Pp_15_seq');
+        }else if (Text(selector_value) == '2') {
+            id_format = {
+                'prefix': "Dstrbtn-Pp",
+                'join_char': '-',
+                'suffix': ''
+            }
+            seq_val = NextSequenceValue('Line_Dstrbtn_Pp_2_seq');
+        }else if (Text(selector_value) == '3') {
+            id_format = {
+                'prefix': "Trnsmssn-Pp",
+                'join_char': '-',
+                'suffix': ''
+            }
+            seq_val = NextSequenceValue('Line_Trnsmssn_Pp_3_seq');
+        }else if (Text(selector_value) == '4') {
+            id_format = {
+                'prefix': "Gthrng-Pp",
+                'join_char': '-',
+                'suffix': ''
+            }
+            seq_val = NextSequenceValue('Line_Gthrng_Pp_4_seq');
+        }else if (Text(selector_value) == '5') {
+            id_format = {
+                'prefix': "Sttn-Pp",
+                'join_char': '-',
+                'suffix': ''
+            }
+            seq_val = NextSequenceValue('Line_Sttn_Pp_5_seq');
+        }else if (Text(selector_value) == '50') {
+            id_format = {
+                'prefix': "Bndng-Ln",
+                'join_char': '-',
+                'suffix': ''
+            }
+            seq_val = NextSequenceValue('Line_Bndng_Ln_50_seq');
+        }else if (Text(selector_value) == '51') {
+            id_format = {
+                'prefix': "Tst-Ld-Wr",
+                'join_char': '-',
+                'suffix': ''
+            }
+            seq_val = NextSequenceValue('Line_Tst_Ld_Wr_51_seq');
+        }else if (Text(selector_value) == '52') {
+            id_format = {
+                'prefix': "Rctfr-Cbl",
+                'join_char': '-',
+                'suffix': ''
+            }
+            seq_val = NextSequenceValue('Line_Rctfr_Cbl_52_seq');
+        }else if (Text(selector_value) == '6') {
+            id_format = {
+                'prefix': "Cstmr-Pp",
+                'join_char': '-',
+                'suffix': ''
+            }
+            seq_val = NextSequenceValue('Line_Cstmr_Pp_6_seq');
+        }else if (Text(selector_value) == '7') {
+            id_format = {
+                'prefix': "Rsr-Pp",
+                'join_char': '-',
+                'suffix': ''
+            }
+            seq_val = NextSequenceValue('Line_Rsr_Pp_7_seq');
+        }else {
+        return null;
     }
-};
-// ************* End Section *****************
+    var id_parts = remove_empty([id_format['prefix'], seq_val, id_format['suffix']])
+    return Concatenate(id_parts, id_format['join_char'])
+}
 
+// ************* End Section *****************
 // Functions
 function remove_empty(arr) {
     var new_arr = [];
     var j = 0;
     for (var i = 0; i < Count(arr); i++) {
         if (!IsEmpty(arr[i]) && Text(arr[i]) != '') {
-            new_arr[j++] = Text(arr[i]);
+            new_arr[j++] = arr[i];
         }
     }
     return new_arr;
@@ -99,11 +119,9 @@ function remove_empty(arr) {
 if (IsEmpty(assigned_to_field) == false && assigned_to_field != '') {
     return assigned_to_field
 }
-if (TypeOf(id_formats) != 'Dictionary' || HasKey(id_formats, Text($feature.assetgroup)) == false) {
+var new_id = get_id($feature.assetgroup)
+if (IsEmpty(new_id)) {
     return assigned_to_field;
 }
+return new_id
 
-var id_format = id_formats[Text($feature.assetgroup)];
-// Remove any empty values
-var id_parts = remove_empty([id_format['prefix'], NextSequenceValue(id_format['sequence']), id_format['suffix']])
-return Concatenate(id_parts, id_format['join_char'])

@@ -11,28 +11,42 @@
 
 var assigned_to_field = $feature.assetid;
 
-// Define the leading text, the trailing text and the delimiter for the ID, this dict is keyed by Asset Group as text
-var id_formats = {
-    '1': {
-        'join_char': '-',
-        'prefix': 'Ppln-Sttn-Strctr',
-        'sequence': 'StructureBoundary_Ppln_Sttn_Strctr_1_seq',
-        'suffix': ''
-    },
-    '2': {
-        'join_char': '-',
-        'prefix': 'Ppln-Vlt-Bndry',
-        'sequence': 'StructureBoundary_Ppln_Vlt_Bndry_2_seq',
-        'suffix': ''
-    },
-    '3': {
-        'join_char': '-',
-        'prefix': 'Ppln-Prcssng-Fclty',
-        'sequence': 'StructureBoundary_Ppln_Prcssng_Fclty_3_seq',
-        'suffix': ''
+// Define the leading text, the trailing text and the delimiter for the ID, this function requires the keyed passed in
+// NextSequenceValue requires a string literal for copy and paste, although it supports a variable, it is recommended
+// to not use one
+function get_id(selector_value) {
+    var id_format = {}
+    var seq_val = null;
+    if (Text(selector_value) == '1') {
+            id_format = {
+                'prefix': "Ppln-Sttn-Strctr",
+                'join_char': '-',
+                'suffix': ''
+            }
+            seq_val = NextSequenceValue('StructureBoundary_Ppln_Sttn_Strctr_1_seq');
+        }else if (Text(selector_value) == '2') {
+            id_format = {
+                'prefix': "Ppln-Vlt-Bndry",
+                'join_char': '-',
+                'suffix': ''
+            }
+            seq_val = NextSequenceValue('StructureBoundary_Ppln_Vlt_Bndry_2_seq');
+        }else if (Text(selector_value) == '3') {
+            id_format = {
+                'prefix': "Ppln-Prcssng-Fclty",
+                'join_char': '-',
+                'suffix': ''
+            }
+            seq_val = NextSequenceValue('StructureBoundary_Ppln_Prcssng_Fclty_3_seq');
+        }else {
+        return null;
     }
-};
+    var id_parts = remove_empty([id_format['prefix'], seq_val, id_format['suffix']])
+    return Concatenate(id_parts, id_format['join_char'])
+}
+
 // ************* End Section *****************
+
 // Functions
 function remove_empty(arr) {
     var new_arr = [];
@@ -50,11 +64,9 @@ function remove_empty(arr) {
 if (IsEmpty(assigned_to_field) == false && assigned_to_field != '') {
     return assigned_to_field
 }
-if (TypeOf(id_formats) != 'Dictionary' || HasKey(id_formats, Text($feature.assetgroup)) == false) {
+var new_id = get_id($feature.assetgroup)
+if (IsEmpty(new_id)) {
     return assigned_to_field;
 }
+return new_id
 
-var id_format = id_formats[Text($feature.assetgroup)];
-// Remove any empty values
-var id_parts = remove_empty([id_format['prefix'], NextSequenceValue(id_format['sequence']), id_format['suffix']])
-return Concatenate(id_parts, id_format['join_char'])
