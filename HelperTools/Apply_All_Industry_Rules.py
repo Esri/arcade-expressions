@@ -5,6 +5,7 @@ import pandas as pd
 import re
 
 workspace = r"C:\\temp\\GasPipelineEnterpriseDataManagement\\Gas and Pipeline Enterprise Data Management\\Databases\\UPDM_UtilityNetwork.gdb"
+#workspace = r"C:\temp\GasPipelineEnterpriseDataManagement\Gas and Pipeline Enterprise Data Management\Databases\UPDM_AssetPackage.gdb"
 # workspace = r"C:\temp\UPDM2019\UN\UPDM_UtilityNetwork.gdb"
 is_un = True
 
@@ -190,7 +191,7 @@ else:
     rules_df = rules_df[~rules_df['name'].isin(ar_names)]
     rules_df = rules_df.append(all_args, ignore_index=True)
     arcpy.TruncateTable_management(os.path.join(workspace, 'B_AttributeRules'))
-    rules_df.loc[(rules_df['is_editable'].isnull() & rules_df['type'] == 'CALCULATION'), 'is_editable'] = 1
+    rules_df.loc[((rules_df['is_editable'].isnull()) & (rules_df['type'] == 'CALCULATION')), 'is_editable'] = 1
     with arcpy.da.InsertCursor(os.path.join(workspace, 'B_AttributeRules'), list(rules_df)) as cursor:
         df_to_cursor(rules_df, cursor)
 

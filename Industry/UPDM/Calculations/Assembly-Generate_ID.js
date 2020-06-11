@@ -10,71 +10,91 @@
 // This section has the functions and variables that need to be adjusted based on your implementation
 
 var assigned_to_field = $feature.assetid;
-
-// Define the leading text, the trailing text and the delimiter for the ID, this dict is keyed by Asset Group as text
-var id_formats = {
-    '1': {
-        'join_char': '-',
-        'prefix': 'Cmprssr-Sttn',
-        'sequence': 'Assembly_Cmprssr_Sttn_1_seq',
-        'suffix': ''
-    },
-    '10': {
-        'join_char': '-',
-        'prefix': 'Vlv-Assmbly',
-        'sequence': 'Assembly_Vlv_Assmbly_10_seq',
-        'suffix': ''
-    },
-    '2': {
-        'join_char': '-',
-        'prefix': 'Mtr-Sttng',
-        'sequence': 'Assembly_Mtr_Sttng_2_seq',
-        'suffix': ''
-    },
-    '3': {
-        'join_char': '-',
-        'prefix': 'Rgltr-Sttn',
-        'sequence': 'Assembly_Rgltr_Sttn_3_seq',
-        'suffix': ''
-    },
-    '4': {
-        'join_char': '-',
-        'prefix': 'Rrl-Tp',
-        'sequence': 'Assembly_Rrl_Tp_4_seq',
-        'suffix': ''
-    },
-    '5': {
-        'join_char': '-',
-        'prefix': 'Twn-Brdr-Sttn',
-        'sequence': 'Assembly_Twn_Brdr_Sttn_5_seq',
-        'suffix': ''
-    },
-    '6': {
-        'join_char': '-',
-        'prefix': 'Wllhd',
-        'sequence': 'Assembly_Wllhd_6_seq',
-        'suffix': ''
-    },
-    '7': {
-        'join_char': '-',
-        'prefix': 'Pggng-Strctr',
-        'sequence': 'Assembly_Pggng_Strctr_7_seq',
-        'suffix': ''
-    },
-    '8': {
-        'join_char': '-',
-        'prefix': 'Fttng-Assmbly',
-        'sequence': 'Assembly_Fttng_Assmbly_8_seq',
-        'suffix': ''
-    },
-    '9': {
-        'join_char': '-',
-        'prefix': 'Pmp-Sttn',
-        'sequence': 'Assembly_Pmp_Sttn_9_seq',
-        'suffix': ''
+// Define the leading text, the trailing text and the delimiter for the ID, this function requires the keyed passed in
+// NextSequenceValue requires a string literal for copy and paste, although it supports a variable, it is recommended
+// to not use one
+function get_id(selector_value) {
+    var id_format = {}
+    var seq_val = null;
+    if (Text(selector_value) == '1') {
+        id_format = {
+            'prefix': "Cmprssr-Sttn",
+            'join_char': '-',
+            'suffix': ''
+        }
+        seq_val = NextSequenceValue('Assembly_Cmprssr_Sttn_1_seq');
+    } else if (Text(selector_value) == '10') {
+        id_format = {
+            'prefix': "Vlv-Assmbly",
+            'join_char': '-',
+            'suffix': ''
+        }
+        seq_val = NextSequenceValue('Assembly_Vlv_Assmbly_10_seq');
+    } else if (Text(selector_value) == '2') {
+        id_format = {
+            'prefix': "Mtr-Sttng",
+            'join_char': '-',
+            'suffix': ''
+        }
+        seq_val = NextSequenceValue('Assembly_Mtr_Sttng_2_seq');
+    } else if (Text(selector_value) == '3') {
+        id_format = {
+            'prefix': "Rgltr-Sttn",
+            'join_char': '-',
+            'suffix': ''
+        }
+        seq_val = NextSequenceValue('Assembly_Rgltr_Sttn_3_seq');
+    } else if (Text(selector_value) == '4') {
+        id_format = {
+            'prefix': "Rrl-Tp",
+            'join_char': '-',
+            'suffix': ''
+        }
+        seq_val = NextSequenceValue('Assembly_Rrl_Tp_4_seq');
+    } else if (Text(selector_value) == '5') {
+        id_format = {
+            'prefix': "Twn-Brdr-Sttn",
+            'join_char': '-',
+            'suffix': ''
+        }
+        seq_val = NextSequenceValue('Assembly_Twn_Brdr_Sttn_5_seq');
+    } else if (Text(selector_value) == '6') {
+        id_format = {
+            'prefix': "Wllhd",
+            'join_char': '-',
+            'suffix': ''
+        }
+        seq_val = NextSequenceValue('Assembly_Wllhd_6_seq');
+    } else if (Text(selector_value) == '7') {
+        id_format = {
+            'prefix': "Pggng-Strctr",
+            'join_char': '-',
+            'suffix': ''
+        }
+        seq_val = NextSequenceValue('Assembly_Pggng_Strctr_7_seq');
+    } else if (Text(selector_value) == '8') {
+        id_format = {
+            'prefix': "Fttng-Assmbly",
+            'join_char': '-',
+            'suffix': ''
+        }
+        seq_val = NextSequenceValue('Assembly_Fttng_Assmbly_8_seq');
+    } else if (Text(selector_value) == '9') {
+        id_format = {
+            'prefix': "Pmp-Sttn",
+            'join_char': '-',
+            'suffix': ''
+        }
+        seq_val = NextSequenceValue('Assembly_Pmp_Sttn_9_seq');
+    } else {
+        return null;
     }
-};
-// ************* End Section *****************
+    var id_parts = remove_empty([id_format['prefix'], seq_val, id_format['suffix']])
+    return Concatenate(id_parts, id_format['join_char'])
+}
+
+// ************* End Section ****************
+
 // Functions
 function remove_empty(arr) {
     var new_arr = [];
@@ -92,11 +112,9 @@ function remove_empty(arr) {
 if (IsEmpty(assigned_to_field) == false && assigned_to_field != '') {
     return assigned_to_field
 }
-if (TypeOf(id_formats) != 'Dictionary' || HasKey(id_formats, Text($feature.assetgroup)) == false) {
+var new_id = get_id($feature.assetgroup)
+if (IsEmpty(new_id)) {
     return assigned_to_field;
 }
+return new_id
 
-var id_format = id_formats[Text($feature.assetgroup)];
-// Remove any empty values
-var id_parts = remove_empty([id_format['prefix'], NextSequenceValue(id_format['sequence']), id_format['suffix']])
-return Concatenate(id_parts, id_format['join_char'])
