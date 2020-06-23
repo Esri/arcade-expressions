@@ -3,7 +3,7 @@
 // Description: Rule generates strands inside the cable based on the content count field
 // Subtypes: All
 // Field: Assetid
-// Execute: Insert
+// Trigger: Insert
 
 // **************************************
 // This section has the functions and variables that need to be adjusted based on your implementation

@@ -3,7 +3,7 @@
 // Description: Calculate length of line in specified units
 // Subtypes: All
 // Field: measuredlength
-// Execute: Insert, Update
+// Trigger: Insert, Update
 
 // ******************************************
 // This section has the functions and variables that need to be adjusted based on your implementation

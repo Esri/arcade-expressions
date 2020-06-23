@@ -3,7 +3,7 @@
 // Description: Rule generates connection points at a vertex when within a distance of a structure junction
 // Subtypes: All
 // Field: Assetid
-// Execute: Insert
+// Trigger: Insert
 
 
 // ***************************************

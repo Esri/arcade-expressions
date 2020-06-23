@@ -1,9 +1,10 @@
 // Assigned To: PipelineLine
-// Name: Calculate Material from Asset Type for Pipeline Lione
+// Type: Calculation
+// Name: Calculate Material from Asset Type for Pipeline Line
 // Description: Converts the Asset Type codes to Material codes.
 // Subtypes: All
-// Field: Material
-// Execute: Insert, Update
+// Field: material
+// Trigger: Insert, Update
 
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation
@@ -13,7 +14,7 @@
 var assigned_to_field = $feature.material;
 var asset_type = $feature.assettype;
 
-var valid_asset_groups = [1, 2, 3, 4, 5, 6, 7];
+var valid_asset_groups = [1, 2, 3, 4, 5, 6, 7, 15];
 
 var at_to_mat = {
     '2': 'O',

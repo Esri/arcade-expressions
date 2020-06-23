@@ -50,7 +50,7 @@ for df in view_cav(fc, desc.subtypeFieldName):
 // Subtypes: All
 // Error: 5601
 // Error Message: Incompatible types for {', '.join(list(df.columns))}
-// Execute: Insert, Update
+// Trigger: Insert, Update
 
 
 // ***************************************

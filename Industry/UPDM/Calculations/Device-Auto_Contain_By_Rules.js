@@ -1,19 +1,98 @@
 // Assigned To: PipelineDevice
+// Type: Calculation
 // Name: Auto Contain Pipeline Devices
 // Description: Uses the rule table to contain feature in a container within a search distance
 // Subtypes: All
-// Field: ASSOCIATIONSTATUS
-// Execute: Insert, Update
+// Field: assetid
+// Trigger: Insert, Update
+// Exclude From Client: True
 
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
-var assigned_to_field = $feature.ASSOCIATIONSTATUS;
+var assigned_to_field = $feature.assetid;
+var association_status = $feature.associationstatus;
 var search_distance = 40; //DefaultValue($feature.searchdistance, 75);
 var search_unit = 9002;
+
+function class_id_to_name(id) {
+    if (id == 3 || id == "3") {
+        return "StructureJunction";
+    } else if (id == 4 || id == "4") {
+        return "StructureLine";
+    } else if (id == 5 || id == "5") {
+        return "StructureBoundary";
+    } else if (id == 6 || id == "6") {
+        return "PipelineDevice";
+    } else if (id == 7 || id == "7") {
+        return "PipelineLine";
+    } else if (id == 8 || id == "8") {
+        return "PipelineAssembly";
+    } else if (id == 9 || id == "9") {
+        return "PipelineJunction";
+    } else {
+        return Text(id);
+    }
+}
+
+function get_features_switch_yard(class_name, fields, include_geometry) {
+    var class_name = Split(class_name, ".")[-1];
+    var feature_set = null;
+    if (class_name == "PipelineDevice") {
+        feature_set = FeatureSetByName($datastore, "PipelineDevice", fields, include_geometry);
+    } else if (class_name == "PipelineJunction") {
+        feature_set = FeatureSetByName($datastore, "PipelineJunction", fields, include_geometry);
+    } else if (class_name == "PipelineAssembly") {
+        feature_set = FeatureSetByName($datastore, "PipelineAssembly", fields, include_geometry);
+    } else if (class_name == "PipelineLine") {
+        feature_set = FeatureSetByName($datastore, "PipelineLine", fields, include_geometry);
+    } else if (class_name == "StructureJunction") {
+        feature_set = FeatureSetByName($datastore, "StructureJunction", fields, include_geometry);
+    } else if (class_name == "StructureLine") {
+        feature_set = FeatureSetByName($datastore, "StructureLine", fields, include_geometry);
+    } else if (class_name == "StructureBoundary") {
+        feature_set = FeatureSetByName($datastore, "StructureBoundary", fields, include_geometry);
+    } else if (class_name == "Rules") {
+        feature_set = FeatureSetByName($datastore, "UN_5_Rules", fields, false);
+    } else {
+        feature_set = FeatureSetByName($datastore, "StructureBoundary", fields, include_geometry);
+    }
+    return feature_set;
+}
+
+function is_edit_from_subnetwork() {
+    if ($feature.systemsubnetworkname != $originalfeature.systemsubnetworkname) {
+        return true;
+    }
+    if ($feature.pressuresubnetworkname != $originalfeature.pressuresubnetworkname) {
+        return true;
+    }
+    if ($feature.isolationsubnetworkname != $originalfeature.isolationsubnetworkname) {
+        return true;
+    }
+    if ($feature.cpsubnetworkname != $originalfeature.cpsubnetworkname) {
+        return true;
+    }
+    return false;
+}
 
 // ************* End User Variables Section ************
 
 // *************       Functions            *************
+
+
+function geometry_change() {
+    if (IsEmpty($originalfeature)) {
+        return true;
+    }
+    if (IsEmpty(Geometry($originalfeature))) {
+        return true;
+    }
+    return !Equals(Geometry($feature), Geometry($originalfeature));
+}
+
+function is_insert() {
+    return IsEmpty(Geometry($originalfeature))
+}
 
 function sortCandidates(a, b) {
     if (a['distance'] < b['distance'])
@@ -21,51 +100,6 @@ function sortCandidates(a, b) {
     if (a['distance'] > b['distance'])
         return 1;
     return 0;
-}
-
-function class_id_to_name(id) {
-    if (id == 3 || id == '3') {
-        return 'StructureJunction';
-    } else if (id == 4 || id == '4') {
-        return 'StructureLine';
-    } else if (id == 5 || id == '5') {
-        return 'StructureBoundary';
-    } else if (id == 6 || id == '6') {
-        return 'PipelineDevice';
-    } else if (id == 7 || id == '7') {
-        return 'PipelineLine';
-    } else if (id == 8 || id == '8') {
-        return 'PipelineAssembly';
-    } else if (id == 9 || id == '9') {
-        return 'PipelineJunction';
-    } else {
-        return id;
-    }
-}
-
-function get_features_switch_yard(class_name, fields, include_geometry) {
-    var class_name = Split(class_name, '.')[-1];
-    var feature_set = null;
-    if (class_name == 'PipelineDevice') {
-        feature_set = FeatureSetByName($datastore, 'PipelineDevice', fields, include_geometry);
-    } else if (class_name == 'PipelineJunction') {
-        feature_set = FeatureSetByName($datastore, 'PipelineJunction', fields, include_geometry);
-    } else if (class_name == 'PipelineAssembly') {
-        feature_set = FeatureSetByName($datastore, 'PipelineAssembly', fields, include_geometry);
-    } else if (class_name == 'PipelineLine') {
-        feature_set = FeatureSetByName($datastore, 'PipelineLine', fields, include_geometry);
-    } else if (class_name == 'StructureJunction') {
-        feature_set = FeatureSetByName($datastore, 'StructureJunction', fields, include_geometry);
-    } else if (class_name == 'StructureLine') {
-        feature_set = FeatureSetByName($datastore, 'StructureLine', fields, include_geometry);
-    } else if (class_name == 'StructureBoundary') {
-        feature_set = FeatureSetByName($datastore, 'StructureBoundary', fields, include_geometry);
-    } else if (class_name == 'Rules') {
-        feature_set = FeatureSetByName($datastore, 'UN_5_Rules', fields, false);
-    } else {
-        feature_set = FeatureSetByName($datastore, 'StructureBoundary', fields, include_geometry);
-    }
-    return feature_set;
 }
 
 function build_containers_info() {
@@ -84,6 +118,9 @@ function build_containers_info() {
     var container_class_types = {};
     for (var container_row in containers_rows) {
         var class_name = class_id_to_name(container_row['FROMNETWORKSOURCEID']);
+        if (class_name == Text(container_row['FROMNETWORKSOURCEID'])) {
+            return {'errorMessage': 'Unable to translate Class ID to Class, attribute rules needs updating'};
+        }
         if (HasKey(container_class_types, class_name) == false) {
             container_class_types[class_name] = {};
         }
@@ -169,15 +206,28 @@ function has_bit(num, test_value) {
 }
 
 // ************* End Functions Section *****************
-
+// in FGDB, update subnetwork triggers an update operations, exit
+if (is_edit_from_subnetwork()) {
+    return assigned_to_field;
+}
+// If the geometry did not change on an update, return
+if (!is_insert() && !geometry_change()) {
+    return assigned_to_field;
+}
 // If the feature is already content, return
-if (has_bit(assigned_to_field, 4) || has_bit(assigned_to_field, 16)) {
+if (has_bit(association_status, 4) || has_bit(association_status, 16)) {
     return assigned_to_field;
 }
 
 var container_info = build_containers_info();
 if (IsEmpty(container_info)) {
     return assigned_to_field;
+}
+if (TypeOf(container_info) == 'Dictionary') {
+    if (HasKey(container_info, 'ErrorMessage')) {
+        return container_info;
+    }
+
 }
 var sql_by_class = build_sql(container_info, $feature.globalid);
 var search_shape = Buffer(Geometry($feature), search_distance, search_unit);

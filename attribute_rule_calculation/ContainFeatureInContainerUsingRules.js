@@ -3,25 +3,14 @@
 // Description: Uses the rule table to contain feature in a container within a search distance
 // Subtypes: All
 // Field: ASSOCIATIONSTATUS
-// Execute: Insert, Update
+// Trigger: Insert, Update
 
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
-var assigned_to_field = $feature.ASSOCIATIONSTATUS;
+var assigned_to_field = $feature.somefield;
+var association_status = $feature.associationstatus;
 var search_distance = 200; //DefaultValue($feature.searchdistance, 75);
 var search_unit = 9002;
-
-// ************* End User Variables Section ************
-
-// *************       Functions            *************
-
-function sortCandidates(a, b) {
-    if (a['distance'] < b['distance'])
-        return -1;
-    if (a['distance'] > b['distance'])
-        return 1;
-    return 0;
-}
 
 function class_id_to_name(id) {
     if (id == 3 || id == '3') {
@@ -39,7 +28,7 @@ function class_id_to_name(id) {
     } else if (id == 9 || id == '9') {
         return 'PipelineJunction';
     } else {
-        return id;
+        return Text(id);
     }
 }
 
@@ -68,6 +57,45 @@ function get_features_switch_yard(class_name, fields, include_geometry) {
     return feature_set;
 }
 
+function is_edit_from_subnetwork() {
+    if ($feature.systemsubnetworkname != $originalfeature.systemsubnetworkname) {
+        return true;
+    }
+    if ($feature.pressuresubnetworkname != $originalfeature.pressuresubnetworkname) {
+        return true;
+    }
+    if ($feature.isolationsubnetworkname != $originalfeature.isolationsubnetworkname) {
+        return true;
+    }
+    if ($feature.cpsubnetworkname != $originalfeature.cpsubnetworkname) {
+        return true;
+    }
+    return false;
+}
+// ************* End User Variables Section ************
+
+// *************       Functions            *************
+function geometry_change() {
+    if (IsEmpty($originalfeature)) {
+        return true;
+    }
+    if (IsEmpty(Geometry($originalfeature))) {
+        return true;
+    }
+    return !Equals(Geometry($feature), Geometry($originalfeature));
+}
+
+function is_insert() {
+    return IsEmpty(Geometry($originalfeature))
+}
+function sortCandidates(a, b) {
+    if (a['distance'] < b['distance'])
+        return -1;
+    if (a['distance'] > b['distance'])
+        return 1;
+    return 0;
+}
+
 function build_containers_info() {
     var rule_fields = ['OBJECTID', 'RULETYPE', 'FROMNETWORKSOURCEID', 'FROMASSETGROUP', 'FROMASSETTYPE', 'FROMTERMINALID', 'TONETWORKSOURCEID', 'TOASSETGROUP', 'TOASSETTYPE', 'TOTERMINALID', 'VIANETWORKSOURCEID', 'VIAASSETGROUP', 'VIAASSETTYPE', 'VIATERMINALID', 'CREATIONDATE', 'GLOBALID']
     var rules_fs = get_features_switch_yard('Rules', rule_fields, false);
@@ -84,6 +112,9 @@ function build_containers_info() {
     var container_class_types = {};
     for (var container_row in containers_rows) {
         var class_name = class_id_to_name(container_row['FROMNETWORKSOURCEID']);
+        if (class_name == Text(container_row['FROMNETWORKSOURCEID'])) {
+            return {'errorMessage': 'Unable to translate Class ID to Class, attribute rules needs updating'};
+        }
         if (HasKey(container_class_types, class_name) == false) {
             container_class_types[class_name] = {};
         }
@@ -170,14 +201,26 @@ function has_bit(num, test_value) {
 
 // ************* End Functions Section *****************
 
-// If the feature is already content, return
-if (has_bit(assigned_to_field, 4) || has_bit(assigned_to_field, 16)) {
+// in FGDB, update subnetwork triggers an update operations, exit
+if (is_edit_from_subnetwork()) {
     return assigned_to_field;
 }
-
+// If the geometry did not change on an update, return
+if (!is_insert() && !geometry_change()){
+    return assigned_to_field;
+}
+// If the feature is already content, return
+if (has_bit(association_status, 4) || has_bit(association_status, 16)) {
+    return assigned_to_field;
+}
 var container_info = build_containers_info();
 if (IsEmpty(container_info)) {
     return assigned_to_field;
+}
+if (TypeOf(container_info) == 'Dictionary') {
+    if (HasKey(container_info, 'ErrorMessage')) {
+        return container_info;
+    }
 }
 var sql_by_class = build_sql(container_info, $feature.globalid);
 var search_shape = Buffer(Geometry($feature), search_distance, search_unit);

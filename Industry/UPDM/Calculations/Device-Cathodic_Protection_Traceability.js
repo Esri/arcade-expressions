@@ -1,9 +1,10 @@
 // Assigned To: PipelineDevice
+// Type: Calculation
 // Name: Cathodic Protection Traceability for Pipeline Devices
 // Description: Set traceability flag for device assets
 // Subtypes: All
 // Field: cptraceability
-// Execute: Insert, Update
+// Trigger: Insert, Update
 
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation
