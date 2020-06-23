@@ -4,7 +4,7 @@
 // Description: Uses the rule table to contain feature in a container within a search distance
 // Subtypes: All
 // Field: assetid
-// Execute: Insert, Update
+// Trigger: Insert, Update
 // Exclude From Client: True
 
 // *************       User Variables       *************

@@ -4,7 +4,7 @@
 // Description: This calculation attribute rule intersects a line layer and based on the number of intersected features, calculates the angle for the point
 // Subtypes: All
 // Field: symbolrotation
-// Execute: Insert, Update
+// Trigger: Insert, Update
 
 // *************       User Variables       *************
 

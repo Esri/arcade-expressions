@@ -4,7 +4,7 @@
 // Description: Converts the Asset Type codes to Material codes.
 // Subtypes: All
 // Field: material
-// Execute: Insert, Update
+// Trigger: Insert, Update
 
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation

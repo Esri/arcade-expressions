@@ -5,7 +5,7 @@
 // Subtypes: All
 // Error Number: 5601
 // Error Message: Incompatible types for ASSETGROUP, assettype, material
-// Execute: Insert, Update
+// Trigger: Insert, Update
 
 
 // ***************************************

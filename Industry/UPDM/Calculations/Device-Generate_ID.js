@@ -4,7 +4,7 @@
 // Description: Generate IDs for PipelineDevice using database sequences
 // Subtypes: All
 // Field: assetid
-// Execute: Insert
+// Trigger: Insert
 // Exclude From Client: True
 
 // ***************************************

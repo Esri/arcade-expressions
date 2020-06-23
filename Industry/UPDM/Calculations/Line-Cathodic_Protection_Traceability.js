@@ -4,7 +4,7 @@
 // Description: Set traceability flag for lines assets
 // Subtypes: All
 // Field: cptraceability
-// Execute: Insert, Update
+// Trigger: Insert, Update
 
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation

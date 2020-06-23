@@ -4,8 +4,9 @@
 // Description: Generate IDs for PipelineAssembly using database sequences
 // Subtypes: All
 // Field: assetid
-// Execute: Insert
+// Trigger: Insert
 
+{FieldA,Fi}
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation
 

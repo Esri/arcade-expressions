@@ -3,7 +3,7 @@
 // Description: Rule searches for structure line containers with a certain distance to contain teh cable in it.
 // Subtypes: All
 // Field: Assetid
-// Execute: Insert
+// Trigger: Insert
 
 
 // ***************************************

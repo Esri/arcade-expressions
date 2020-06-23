@@ -44,7 +44,7 @@ A version for a subtype feature class that can be assigned to all and an dict wi
 // Description: Generate IDs for <> using database sequences
 // Subtypes: All
 // Field: assetid
-// Execute: Insert
+// Trigger: Insert
 
 var assigned_to_field = $feature.assetid;
 

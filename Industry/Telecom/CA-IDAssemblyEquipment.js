@@ -3,7 +3,7 @@
 // Description:  Calculate Assembly Equipment ID by parent container
 // Subtypes: Assembly Equipment
 // Field: AssetID
-// Execute: Insert, Update
+// Trigger: Insert, Update
 
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation

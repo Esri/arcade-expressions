@@ -3,7 +3,7 @@
 // Description: Rule generates strand end port devices inside Terminator Devices based on field on the feature
 // Subtypes: All
 // Field: TerminatorCount
-// Execute: Insert
+// Trigger: Insert
 
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation

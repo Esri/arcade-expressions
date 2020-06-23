@@ -3,7 +3,7 @@
 // Description: Contain Splice Ports in Splice Enclosure using the ContainerGuid field
 // Subtypes: Splice
 // Field: AssetID
-// Execute: Insert
+// Trigger: Insert
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation
 

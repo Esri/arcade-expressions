@@ -3,7 +3,7 @@
 // Description: Contains a knock out port in a knockout using the ContainerGuid field
 // Subtypes: Wire Vault
 // Field: AssetID
-// Execute: Insert
+// Trigger: Insert
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation
 

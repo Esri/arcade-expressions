@@ -3,7 +3,7 @@
 // Description: Rule generates ducts inside duct banks based on the ductshigh and ductswide fields
 // Subtypes: Wire Duct Bank
 // Field: Assetid
-// Execute: Insert
+// Trigger: Insert
 
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation

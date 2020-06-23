@@ -4,7 +4,7 @@
 //              This supports adding a conduit or duct bank in a trench or tunnel and a lashing guy in a Aerial Span.
 // Subtypes: All
 // Field: Assetid
-// Execute: Insert
+// Trigger: Insert
 
 
 // ***************************************

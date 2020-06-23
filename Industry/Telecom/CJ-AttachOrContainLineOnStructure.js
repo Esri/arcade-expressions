@@ -3,7 +3,7 @@
 // Description: Rule generates connection points at a vertex when within a distance of a structure junction
 // Subtypes: Connection Point
 // Field: AssetID
-// Execute: Insert
+// Trigger: Insert
 
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation

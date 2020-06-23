@@ -3,7 +3,7 @@
 // Description: Update ductavailable attribute when content changes
 // Subtypes: Wire Duct, Conduit
 // Field: ductavailable
-// Execute: Insert,Update,Delete
+// Trigger: Insert,Update,Delete
 
 
 // ***************************************

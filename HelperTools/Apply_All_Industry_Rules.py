@@ -108,7 +108,7 @@ comments_to_parameter = {
     'Description': "description",
     'Subtypes': "subtype",
     'Field': "field",
-    'Execute': "triggering_events",
+    'Trigger': "triggering_events",
     'Exclude From Client': "exclude_from_client_evaluation",
     'Error Number': "error_number",
     'Error Message': "error_message",

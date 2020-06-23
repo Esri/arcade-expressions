@@ -4,7 +4,7 @@
 // Description: Generate IDs for StructureLine using database sequences
 // Subtypes: All
 // Field: assetid
-// Execute: Insert
+// Trigger: Insert
 
 // ***************************************
 // This section has the functions and variables that need to be adjusted based on your implementation
