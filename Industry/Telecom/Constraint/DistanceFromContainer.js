@@ -1,6 +1,7 @@
+// Rule Type: Constraint
 // Assigned To: N/A
 // Name: Check distance from container
-// Description: Validates that the $feature is within a specified distance from its container feature
+// Description: Validates that the feature is within a specified distance from its container feature
 // Subtypes: N/A
 // Trigger: Insert, Update
 // Execution: Exclude from application evaluation
@@ -19,9 +20,9 @@ function get_features_switch_yard(class_name, fields, include_geometry) {
     var feature_set = null;
     if (class_name == "StructureJunction") {
         feature_set = FeatureSetByName($datastore, "StructureJunction", fields, include_geometry);
-    } else if (class_name == 'StructureLine') {
-        feature_set = FeatureSetByName($datastore, 'StructureLine', fields, include_geometry)
-    } else if (class_name == 'StructureBoundary') {
+    } else if (class_name == "StructureLine") {
+        feature_set = FeatureSetByName($datastore, "StructureLine", fields, include_geometry)
+    } else if (class_name == "StructureBoundary") {
         feature_set = FeatureSetByName($datastore, "StructureBoundary", fields, include_geometry);
     }
     return feature_set;
@@ -33,27 +34,25 @@ function get_features_switch_yard(class_name, fields, include_geometry) {
 // *************       Functions            *************
 
 // Function to get UN associated container feature id
-function get_associated_container_id(feature) {
+function get_associated_container_ids(feature) {
     // feature(Feature): A feature object used to lookup associations
-    var associated_id = {};
-
+    var associated_ids = {};
     // Query to get all the content associations
     var associations = FeatureSetByAssociation(feature, "container");
-
     // If there is no content, exit the function
     if (Count(associations) == 0) {
-        return associated_id;
+        return associated_ids;
     }
     // loop over all associated records to get a list of the associated classes and the IDs of the features
     for (var row in associations) {
-        if (HasKey(associated_id, row.className) == false) {
-            associated_id[row.className] = [];
+        if (HasKey(associated_ids, row.className) == false) {
+            associated_ids[row.className] = [];
         }
-        associated_id[row.className][Count(associated_id[row.className])] = row.globalId;
+        associated_ids[row.className][Count(associated_ids[row.className])] = row.globalId;
         break;
     }
     //return a dict by class name with GlobalIDs of features, if empty, return empty dict
-    return associated_id;
+    return associated_ids;
 }
 
 
@@ -66,19 +65,28 @@ if (Count(valid_asset_types) > 0) {
 }
 
 // Get objectid of container feature
-var associated_id = get_associated_container_id($feature);
+var associated_id = get_associated_container_ids($feature);
 if (Text(associated_id) == "{}") {
     return true;
 }
 
-// Get geometry of container feature using globalid
+// Get global IDs of any container features outside allowable distance from feature
+var error_globalids = [];
 for (var class_name in associated_id) {
     var feature_set = get_features_switch_yard(class_name, ['globalID'], true);
     var global_ids = associated_id[class_name];
     var features = Filter(feature_set, "globalid in @global_ids");
-    var feat = First(features);
+    for (var feat in features) {
+        // Distance measures shortest distance between two geometries, including edges
+        if (Distance($feature, feat, unit_of_measure) > distance_check) {
+            error_globalids[Count(error_globalids)] = feat.globalId
+        }
+    }
 }
 
-// Distance measures shortest distance between two geometries, including edges
-var separation = Distance($feature, feat, unit_of_measure);
-return separation < distance_check;
+if (Count(error_globalids) > 0) {
+    var mess = Concatenate("Feature is outside allowable distance from container(s): ", Concatenate(error_globalids, ", "));
+    return {"errorMessage": mess}
+} else {
+    return true;
+}
