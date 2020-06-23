@@ -5,7 +5,7 @@ import pandas as pd
 import re
 
 workspace = r"C:\\temp\\GasPipelineEnterpriseDataManagement\\Gas and Pipeline Enterprise Data Management\\Databases\\UPDM_UtilityNetwork.gdb"
-#workspace = r"C:\temp\GasPipelineEnterpriseDataManagement\Gas and Pipeline Enterprise Data Management\Databases\UPDM_AssetPackage.gdb"
+# workspace = r"C:\temp\GasPipelineEnterpriseDataManagement\Gas and Pipeline Enterprise Data Management\Databases\UPDM_AssetPackage.gdb"
 # workspace = r"C:\temp\UPDM2019\UN\UPDM_UtilityNetwork.gdb"
 is_un = True
 
@@ -101,6 +101,7 @@ industry_folder = pathlib.Path(r"C:\_MyFiles\github\arcade-expressions\Industry\
 fcs = set()
 all_args = []
 all_seq = []
+req_args = ['in_table', 'type', 'name']
 comments_to_parameter = {
     'Assigned To': "in_table",
     'Name': "name",
@@ -131,6 +132,9 @@ for path in industry_folder.rglob('*.js'):
         if param == 'Assigned To':
             if is_un:
                 kwargs[comments_to_parameter[param]] = os.path.join(workspace, details)
+                if arcpy.Exists(os.path.join(workspace, details)) == False:
+                    print(f"{details} does not exist")
+                    continue
                 fcs.add(os.path.join(workspace, details))
             else:
                 kwargs[comments_to_parameter[param]] = details
@@ -138,7 +142,7 @@ for path in industry_folder.rglob('*.js'):
             kwargs[comments_to_parameter[param]] = details.upper()
         elif param == 'Subtypes':
             kwargs[comments_to_parameter[param]] = 'ALL' if is_un else None if details == 'All' else details
-        elif param == 'Execute':
+        elif param == 'Trigger':
             trigger_events = [det.strip().upper() for det in details.split(',')]
             if is_un:
                 kwargs[comments_to_parameter[param]] = trigger_events
@@ -158,8 +162,9 @@ for path in industry_folder.rglob('*.js'):
         else:
             all_seq.extend([dict(seq_name=seq_name, seq_start_id=1, seq_inc_value=1) for seq_name in seq_names])
 
-    if 'type' not in kwargs:
-        print(f'***** Type is missing from {path}')
+    missing_args = [req_arg for req_arg in req_args if req_arg not in kwargs]
+    if missing_args:
+        print(f'***** The args {missing_args} are missing from {path}')
     all_args.append(kwargs)
 
 if is_un:
