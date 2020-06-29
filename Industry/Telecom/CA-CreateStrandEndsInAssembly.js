@@ -31,7 +31,7 @@ var offset_distance = DefaultValue($feature.terminatoroffset, 0);
 
 var device_class = "CommunicationsDevice";
 var port_ag = 8;
-var port_at = 144;
+var port_at = 143;
 
 // ************* End User Variables Section *************
 
