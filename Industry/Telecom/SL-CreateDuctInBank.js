@@ -1,13 +1,15 @@
 // Assigned To: StructureLine
+// Type: Calculation
 // Name: Create ducts in duct bank
-// Description: Rule generates ducts inside duct banks based on the ductshigh and ductswide fields
+// Description: Generates ducts inside duct banks based on the ductshigh and ductswide fields
 // Subtypes: Wire Duct Bank
-// Field: Assetid
+// Field: assetid
 // Trigger: Insert
+// Exclude From Client: True
+// Disable: False
 
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
-
 var valid_asset_types = [81];
 // this will auto assign from/to port numbers to ducts
 var assign_port_numbers = true;
@@ -26,7 +28,6 @@ var knock_out_sql = "AssetGroup = 110 and AssetType = 363";
 var knock_out_duct_wide_field = 'ductcountwide';
 var knock_out_duct_high_field = 'ductcounthigh';
 
-
 function get_features_switch_yard(class_name, fields, include_geometry) {
     var class_name = Split(class_name, '.')[-1];
     var feature_set = null;
@@ -41,8 +42,10 @@ function get_features_switch_yard(class_name, fields, include_geometry) {
     }
     return feature_set;
 }
-// ************* End Section *****************
 
+// ************* End User Variables Section *************
+
+// *************       Functions            *************
 
 // get "StructureJunction" feature that intersects with input point geometry. filter using knock_out_sql. returns Point type or null
 function get_snapped_point(point_geo) {
@@ -129,8 +132,8 @@ function get_port_lookup(height, width) {
     return lookup_dict;
 }
 
+// ************* End Functions Section ******************
 
-// ************* Validation *****************
 // Limit the rule to valid subtypes
 if (IndexOf(valid_asset_types, $feature.assettype) == -1) {
     return assigned_to_value;

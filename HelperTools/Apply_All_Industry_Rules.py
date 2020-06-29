@@ -4,9 +4,11 @@ import pathlib
 import pandas as pd
 import re
 
-workspace = r"C:\\temp\\GasPipelineEnterpriseDataManagement\\Gas and Pipeline Enterprise Data Management\\Databases\\UPDM_UtilityNetwork.gdb"
+workspace = r"C:\tmp\AR\add_AR_script\SuggestedModel1.gdb"
+industry_folder = pathlib.Path(r"C:\Git\arcade-expressions\Industry\Telecom")
 # workspace = r"C:\temp\GasPipelineEnterpriseDataManagement\Gas and Pipeline Enterprise Data Management\Databases\UPDM_AssetPackage.gdb"
 # workspace = r"C:\temp\UPDM2019\UN\UPDM_UtilityNetwork.gdb"
+# industry_folder = pathlib.Path(r"C:\_MyFiles\github\arcade-expressions\Industry\UPDM")
 is_un = True
 
 pat = re.compile("(?:'sequence': )'(.*?)'")
@@ -97,7 +99,7 @@ if workspace.lower().endswith('.gdb') and arcpy.Exists(os.path.join(workspace, '
     seq_df = cursor_to_df(arcpy.da.SearchCursor(os.path.join(workspace, 'B_DatabaseSequence'), ['*']))
     is_un = False
 
-industry_folder = pathlib.Path(r"C:\_MyFiles\github\arcade-expressions\Industry\UPDM")
+
 fcs = set()
 all_args = []
 all_seq = []
@@ -113,9 +115,12 @@ comments_to_parameter = {
     'Exclude From Client': "exclude_from_client_evaluation",
     'Error Number': "error_number",
     'Error Message': "error_message",
-    'Is Editable': "is_editable"
+    'Is Editable': "is_editable",
+    'Disable': "is_enabled"
 }
 for path in industry_folder.rglob('*.js'):
+    if path.parent.name.lower() == 'notused':
+        continue
     f = open(str(path), "r")
 
     kwargs = {}
@@ -150,6 +155,12 @@ for path in industry_folder.rglob('*.js'):
                 kwargs['triggering_insert'] = 1 if 'INSERT' in trigger_events else 0
                 kwargs['triggering_delete'] = 1 if 'DELETE' in trigger_events else 0
                 kwargs['triggering_update'] = 1 if 'UPDATE' in trigger_events else 0
+        elif param == 'Exclude From Client':
+            details = details.lower() == 'true'
+            if is_un:
+                kwargs[comments_to_parameter[param]] = details
+            else:
+                kwargs[comments_to_parameter[param]] = 1 if details else 0
         elif param in ('Description', 'Name', 'Error Number', 'Error Message', 'Field'):
             kwargs[comments_to_parameter[param]] = details
     f.seek(0, 0)
@@ -179,11 +190,13 @@ if is_un:
         for seq in all_seq:
             print(f"Creating seq {seq}")
             arcpy.CreateDatabaseSequence_management(workspace, **seq)
+
     for fc in fcs:
-        att_rules = arcpy.Describe(os.path.join(workspace, fc)).attributeRules
+        att_rules = arcpy.Describe(fc).attributeRules
         ar_names = [ar.name for ar in att_rules]
         if ar_names:
-            print(f"Deleting all rules on {fc}")
+            print(f"Deleting all rules on {fc}:")
+            print(f"\t\t{str(ar_names)}")
             arcpy.management.DeleteAttributeRule(fc, ar_names, '')
 
     for kwargs in all_args:

@@ -1,10 +1,13 @@
-// Rule Type: Constraint
-// Assigned To: N/A
-// Name: Check distance from container
+// Assigned To: StructureLine
+// Type: Constraint
+// Name: Check Distance From Container
 // Description: Validates that the feature is within a specified distance from its container feature
-// Subtypes: N/A
+// Subtypes: All
+// Error Number: 5701
+// Error Message: Feature is outside allowable distance from container
 // Trigger: Insert, Update
-// Execution: Exclude from application evaluation
+// Exclude From Client: False
+// Disable: False
 
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
@@ -34,7 +37,7 @@ function get_features_switch_yard(class_name, fields, include_geometry) {
 // *************       Functions            *************
 
 // Function to get UN associated container feature id
-function get_associated_container_ids(feature) {
+function get_container_feature_ids(feature) {
     // feature(Feature): A feature object used to lookup associations
     var associated_ids = {};
     // Query to get all the content associations
@@ -54,9 +57,8 @@ function get_associated_container_ids(feature) {
     //return a dict by class name with GlobalIDs of features, if empty, return empty dict
     return associated_ids;
 }
+// ************* End Functions Section ******************
 
-
-// *************       Main            ******************
 // Limit the rule to valid subtypes
 if (Count(valid_asset_types) > 0) {
     if (IndexOf(valid_asset_types, $feature.assettype) == -1) {
@@ -65,7 +67,7 @@ if (Count(valid_asset_types) > 0) {
 }
 
 // Get objectid of container feature
-var associated_id = get_associated_container_ids($feature);
+var associated_id = get_container_feature_ids($feature);
 if (Text(associated_id) == "{}") {
     return true;
 }

@@ -1,11 +1,14 @@
 // Assigned To: CommunicationsAssembly
+// Type: Calculation
 // Name: Calculate Assembly Equipment ID
-// Description:  Calculate Assembly Equipment ID by parent container
+// Description: Calculate Assembly Equipment ID by parent container
 // Subtypes: Assembly Equipment
 // Field: AssetID
 // Trigger: Insert, Update
+// Exclude From Client: True
+// Disable: False
 
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 var assigned_to_field = $feature.assetid;
 if (IsEmpty(assigned_to_field) == false && assigned_to_field != '') {
@@ -60,7 +63,9 @@ function get_features_switch_yard(class_name, fields, include_geometry) {
     return feature_set;
 }
 
-// ************* End Section *****************
+// ************* End User Variables Section *************
+
+// *************       Functions            *************
 
 // Function to check if a bit is in an int value
 function has_bit(num, test_value) {
@@ -91,6 +96,8 @@ function has_bit(num, test_value) {
     }
 
 }
+
+// ************* End Functions Section ******************
 
 var association_status = $feature.ASSOCIATIONSTATUS;
 if (IsEmpty(association_status) || (has_bit(association_status, 4) || has_bit(association_status, 16)) == false) {

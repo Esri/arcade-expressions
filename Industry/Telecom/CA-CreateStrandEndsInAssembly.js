@@ -1,11 +1,14 @@
 // Assigned To: CommunicationsAssembly
+// Type: Calculation
 // Name: Create Strand Ends in Terminators
 // Description: Rule generates strand end port devices inside Terminator Devices based on field on the feature
 // Subtypes: All
 // Field: TerminatorCount
 // Trigger: Insert
+// Exclude From Client: True
+// Disable: False
 
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 var assigned_to_field = $feature.TerminatorCount;
 // Instead of assigning the rule at the subtype, it is assigned to all subtypes and returns if not valid
@@ -30,7 +33,10 @@ var device_class = "CommunicationsDevice";
 var port_ag = 8;
 var port_at = 144;
 
-// ************* End Section *****************
+// ************* End User Variables Section *************
+
+// *************       Functions            *************
+
 function offset_line(point_geo, point_spacing, point_count, offset_distance, line_rotation) {
 
     // Store the geometry of the point.  Offset the y and Z to get a vertical line that represents the upper coordinate
@@ -53,6 +59,7 @@ function offset_line(point_geo, point_spacing, point_count, offset_distance, lin
     // Get the first path on the new line
     return new_line['paths'][0];
 }
+// ************* End Functions Section *****************
 
 if (point_count <= 0) {
     return {'ErrorMessage': 'Terminator count is required'};

@@ -1,24 +1,23 @@
 // Assigned To: StructureLine
+// Type: Calculation
 // Name: Contain a Structure Line in Structure Line
-// Description: Rule searches for structure line containers with a certain distance to contain the structure in it.
-//              This supports adding a conduit or duct bank in a trench or tunnel and a lashing guy in a Aerial Span.
+// Description: Rule searches for structure line containers with a certain distance to contain the structure in it. This supports adding a conduit or duct bank in a trench or tunnel and a lashing guy in a Aerial Span.
 // Subtypes: All
 // Field: Assetid
 // Trigger: Insert
+// Exclude From Client: True
+// Disable: False
 
-
-// ***************************************
-
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
-// The field the rule is assigned to
 var assigned_to_value = $feature.assetid;
 // Limit the rule to valid subtypes
 var valid_asset_groups = [102, 103, 109];
-if (indexof(valid_asset_groups, $feature.assetgroup) == -1) {
+if (IndexOf(valid_asset_groups, $feature.assetgroup) == -1) {
     return assigned_to_value;
 }
 var valid_asset_types = [81, 121, 127];
-if (Count(valid_asset_types) > 0 && indexof(valid_asset_types, $feature.assettype) == -1) {
+if (Count(valid_asset_types) > 0 && IndexOf(valid_asset_types, $feature.assettype) == -1) {
     return assigned_to_value;
 }
 
@@ -37,9 +36,11 @@ var search_distance = DefaultValue($feature.searchdistance, 75);
 var search_unit = 9002;
 
 
-// ************* End Section *****************
-// Function to check if a bit is in an int value
+// ************* End User Variables Section *************
 
+// *************       Functions            *************
+
+// Function to check if a bit is in an int value
 function has_bit(num, test_value) {
     // num = number to test if it contains a bit
     // test_value = the bit value to test for
@@ -69,16 +70,14 @@ function has_bit(num, test_value) {
 
 }
 
+// ************* End Functions Section ******************
 
 // Buffer the features to find features within a certain distance
 var closest_features = Intersects(feature_set, Buffer(Geometry($feature), search_distance, search_unit));
-//if (Count(closest_features) == 0) {
-//    return assigned_to_value;
-//}
+
 // Filter the closest results based on the sql to get assets of a certain type
 var filtered_features = Filter(closest_features, filter_structure_lines_sql);
-var closest_structure_count = Count(filtered_features);
-if (closest_structure_count == 0) {
+if (Count(filtered_features) == 0) {
     return assigned_to_value;
 }
 var line_geo = Geometry($feature);
@@ -104,7 +103,7 @@ for (var vert_idx = 0; vert_idx < vertex_count - 1; vert_idx++) {
             continue;
         }
         // If there is already content, and it is restricted to one item, skip it
-        if (has_bit(struct_feat['ASSOCIATIONSTATUS'], 1) && indexof(restrict_to_one_content, struct_feat['AssetType']) >= 0) {
+        if (has_bit(struct_feat['ASSOCIATIONSTATUS'], 1) && IndexOf(restrict_to_one_content, struct_feat['AssetType']) >= 0) {
             continue;
         }
         if (Distance(struct_feat, mid_point, search_unit) < search_distance / 2) {
@@ -123,7 +122,7 @@ for (var vert_idx = 0; vert_idx < vertex_count - 1; vert_idx++) {
         }
     }
 }
-if (count(structure_containers) == 0) {
+if (Count(structure_containers) == 0) {
     return assigned_to_value;
 }
 var edit_payload = [

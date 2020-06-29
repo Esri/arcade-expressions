@@ -1,18 +1,20 @@
 // Assigned To: CommunicationsLine
+// Type: Calculation
 // Name: Create Strands in Cable
-// Description: Rule generates strands inside the cable based on the content count field
+// Description: Generates strands inside the cable based on the content count field
 // Subtypes: All
-// Field: Assetid
+// Field: assetid
 // Trigger: Insert
+// Exclude From Client: True
+// Disable: False
 
-// **************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 var assigned_to_field = $feature.assetid;
-// Instead of assigning the rule at the subtype, it is assigned to all subtypes and returns if not valid
 
 // Limit the rule to valid subtypes
 var valid_asset_groups = [1, 3, 4, 5, 6, 7, 9];
-if (indexof(valid_asset_groups, $feature.assetgroup) == -1) {
+if (IndexOf(valid_asset_groups, $feature.assetgroup) == -1) {
     return assigned_to_field;
 }
 
@@ -50,7 +52,7 @@ var cable_snap_types = {
 var strand_snap_types = {
     'splitter': 'AssetGroup = 13 AND (AssetType = 165 OR AssetType = 166)', // Splitter: Fiber Out
     'splice': 'AssetGroup = ' + new_splice_feature_AG + ' AND AssetType = ' + new_splice_feature_AT, // Port: Splice
-    'pass-through': 'AssetGroup = 8 AND AssetType = 144' // Port: Strand Termination
+    'pass-through': 'AssetGroup = 8 AND AssetType = 143' // Port: Strand Termination
 };
 
 function get_features_switch_yard(class_name, fields, include_geometry) {
@@ -70,8 +72,10 @@ function get_features_switch_yard(class_name, fields, include_geometry) {
     return feature_set;
 }
 
+// ************* End User Variables Section *************
 
-// ************* End Section *****************
+// *************       Functions            *************
+
 function angle_line_at_point(line_geo, point_on_line) {
     var search = Extent(Buffer(point_on_line, .01, "meter"));
     var segment = Clip(line_geo, search)["paths"][0];
@@ -120,7 +124,7 @@ function adjust_z(line_dict, z_value) {
         for (var j in current_path) {
             new_path[Count(new_path)] = [current_path[j][0], current_path[j][1], z_value];
         }
-        new_paths[count(new_paths)] = new_path
+        new_paths[Count(new_paths)] = new_path
     }
     line_dict['paths'] = new_paths;
     return line_dict
@@ -178,7 +182,7 @@ function get_line_ends(container_guid, container_type) {
         var filtered_fs = Filter(assoc_fs, "fromglobalid = @container_guid and ASSOCIATIONTYPE = 2");
         var contained_ids = [];
         for (var feat in filtered_fs) {
-            contained_ids[count(contained_ids)] = feat['TOGLOBALID']
+            contained_ids[Count(contained_ids)] = feat['TOGLOBALID']
         }
         if (Count(contained_ids) > 0) {
             var fs = get_features_switch_yard(device_class, ['Globalid', 'TubeA', 'StrandA', 'TubeB', 'StrandB'], true);
@@ -286,11 +290,11 @@ function keys_to_list(dict) {
     if (IsEmpty(dict)) {
         return []
     }
-    var keys = []
+    var keys = [];
     for (var k in dict) {
-        var res = number(k)
+        var res = number(k);
         if (!IsNan(res)) {
-            keys[count(keys)] = res
+            keys[Count(keys)] = res
         }
     }
     return sort(keys)
@@ -354,11 +358,11 @@ function splice_to_point(port_features, prep_line_offset, strand_id, tube_id, st
     // If a splice port with matchsing strand info on A side is not availale, find an open splice, starting at the end
     if (IsEmpty(open_port)) {
         var tube_keys = keys_to_list(port_features);
-        for (var tube_idx = count(tube_keys) - 1; tube_idx >= 0; tube_idx--) {
-            var avail_tube = port_features[Text(tube_keys[tube_idx])]
+        for (var tube_idx = Count(tube_keys) - 1; tube_idx >= 0; tube_idx--) {
+            var avail_tube = port_features[Text(tube_keys[tube_idx])];
             var port_keys = keys_to_list(avail_tube);
-            for (var port_idx = count(port_keys) - 1; port_idx >= 0; port_idx--) {
-                var ports_in_tubes = avail_tube[Text(port_keys[port_idx])]
+            for (var port_idx = Count(port_keys) - 1; port_idx >= 0; port_idx--) {
+                var ports_in_tubes = avail_tube[Text(port_keys[port_idx])];
                 for (var open_port_idx in ports_in_tubes) {
 
                     if (ports_in_tubes[open_port_idx]['available'] == true) {
@@ -405,10 +409,12 @@ function splice_to_point(port_features, prep_line_offset, strand_id, tube_id, st
     return [to_point, new_feature, update_feature]
 }
 
+// ************* End Functions Section ******************
+
 // Validation
 
 // Limit the rule to valid subtypes
-if (indexof(valid_asset_types, $feature.assettype) == -1) {
+if (IndexOf(valid_asset_types, $feature.assettype) == -1) {
     return assigned_to_field;
 }
 

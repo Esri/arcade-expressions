@@ -1,29 +1,19 @@
 // Assigned To: CommunicationsAssembly
-// Name: Calculate Assembly Equipment ID
-// Description:  Calculate Assembly Equipment ID by parent container
+// Type: Calculation
+// Name: Calculate Port ID
+// Description: Calculate Port ID by parent container
 // Subtypes: Port
 // Field: AssetID
 // Trigger: Insert, Update
+// Exclude From Client: True
+// Disable: False
 
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 var assigned_to_field = $feature.assetid;
-if (IsEmpty(assigned_to_field) == false && assigned_to_field != '') {
-    return assigned_to_field
-}
-
 // Limit the rule to valid subtypes
 var valid_asset_groups = [8];
 var valid_asset_types = [145];
-
-
-if (count(valid_asset_groups) > 0 && indexof(valid_asset_groups, $feature.assetgroup) == -1) {
-    return assigned_to_field;
-}
-if (count(valid_asset_types) > 0 && indexof(valid_asset_types, $feature.assettype) == -1) {
-    return assigned_to_field;
-}
-
 var container_class = 'CommunicationsAssembly';
 var self_class = 'CommunicationsDevice';
 
@@ -37,6 +27,17 @@ var at_to_id_index = {
     '121': 6,
     '145': -1
 };
+
+// Exit early validation
+if (!IsEmpty(assigned_to_field)) {
+    return assigned_to_field
+}
+if (Count(valid_asset_groups) > 0 && IndexOf(valid_asset_groups, $feature.assetgroup) == -1) {
+    return assigned_to_field;
+}
+if (Count(valid_asset_types) > 0 && IndexOf(valid_asset_types, $feature.assettype) == -1) {
+    return assigned_to_field;
+}
 
 // Get Feature Switch yard, adjust the string literals to match your GDB feature class names
 function get_features_switch_yard(class_name, fields, include_geometry) {
@@ -56,7 +57,9 @@ function get_features_switch_yard(class_name, fields, include_geometry) {
     return feature_set;
 }
 
-// ************* End Section *****************
+// ************* End User Variables Section *************
+
+// *************       Functions            *************
 
 // Function to check if a bit is in an int value
 function has_bit(num, test_value) {
@@ -87,6 +90,8 @@ function has_bit(num, test_value) {
     }
 
 }
+
+// ************* End Functions Section ******************
 
 var association_status = $feature.ASSOCIATIONSTATUS;
 if (IsEmpty(association_status) || (has_bit(association_status, 4) || has_bit(association_status, 16)) == false) {
