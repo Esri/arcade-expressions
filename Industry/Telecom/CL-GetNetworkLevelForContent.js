@@ -2,7 +2,7 @@
 // Type: Calculation
 // Name: Get Network Level for content
 // Description: Populates Network Level field of any content features
-// Subtypes: Regional Network Cable
+// Subtypes: All
 // Field: networklevel
 // Trigger: Update
 // Exclude From Client: True
@@ -13,8 +13,12 @@
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
-// Optionally limit rule to specific asset types. If not specified, asset type will be ignored.
+// Optionally limit rule to specific asset groups and asset types. If not specified, will be ignored.
+var assetgroup_value = $feature.assetgroup;
+var assettype_value = $feature.assettype;
+var valid_asset_groups = [1, 3, 4, 5, 6, 7, 10];
 var valid_asset_types = [];
+
 var network_level = $feature.networklevel;
 var orig_network_level = $originalFeature.networklevel;
 var network_level_field = "networklevel";
@@ -63,11 +67,12 @@ if (network_level == orig_network_level) {
     return network_level;
 }
 
-// Limit the rule to valid asset types
-if (Count(valid_asset_types) > 0) {
-    if (IndexOf(valid_asset_types, $feature.assettype) == -1) {
-        return network_level;
-    }
+// Limit the rule to valid subtypes and asset types
+if (Count(valid_asset_groups) > 0 && IndexOf(valid_asset_groups, assetgroup_value) == -1) {
+    return assigned_to_field;
+}
+if (Count(valid_asset_types) > 0 && IndexOf(valid_asset_types, assettype_value) == -1) {
+    return assigned_to_field;
 }
 
 // Get all strand content features filtered using strand_sql
