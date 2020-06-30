@@ -42,16 +42,15 @@ function get_features_switch_yard(class_name, fields, include_geometry) {
 if (association_status == orig_association_status) {
     return network_level;
 }
-// If Association is not content, return original value
-if (IndexOf(content_association_codes, association_status) == -1) {
-    return network_level;
-}
-
 // Limit the rule to valid asset types
 if (Count(valid_asset_types) > 0) {
     if (IndexOf(valid_asset_types, $feature.assettype) == -1) {
         return network_level;
     }
+}
+// If Association is not content, set networklevel to Unknown
+if (IndexOf(content_association_codes, association_status) == -1) {
+    return 0;
 }
 
 // Get container features
