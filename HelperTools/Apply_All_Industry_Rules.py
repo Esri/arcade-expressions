@@ -4,7 +4,7 @@ import pathlib
 import pandas as pd
 import re
 
-workspace = r"C:\tmp\AR\add_AR_script\SuggestedModel1.gdb"
+workspace = r"add_AR_script\SuggestedModel1.gdb"
 industry_folder = pathlib.Path(r"C:\Git\arcade-expressions\Industry\Telecom")
 # workspace = r"C:\temp\GasPipelineEnterpriseDataManagement\Gas and Pipeline Enterprise Data Management\Databases\UPDM_AssetPackage.gdb"
 # workspace = r"C:\temp\UPDM2019\UN\UPDM_UtilityNetwork.gdb"
@@ -146,7 +146,10 @@ for path in industry_folder.rglob('*.js'):
         elif param == 'Type':
             kwargs[comments_to_parameter[param]] = details.upper()
         elif param == 'Subtypes':
-            kwargs[comments_to_parameter[param]] = 'ALL' if is_un else None if details == 'All' else details
+            if is_un:
+                kwargs[comments_to_parameter[param]] = 'ALL' if details == 'All' else details
+            else:
+                kwargs[comments_to_parameter[param]] = None if details == 'All' else details
         elif param == 'Trigger':
             trigger_events = [det.strip().upper() for det in details.split(',')]
             if is_un:
