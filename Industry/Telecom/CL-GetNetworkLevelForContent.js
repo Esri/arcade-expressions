@@ -69,10 +69,10 @@ if (network_level == orig_network_level) {
 
 // Limit the rule to valid subtypes and asset types
 if (Count(valid_asset_groups) > 0 && IndexOf(valid_asset_groups, assetgroup_value) == -1) {
-    return assigned_to_field;
+    return network_level;
 }
 if (Count(valid_asset_types) > 0 && IndexOf(valid_asset_types, assettype_value) == -1) {
-    return assigned_to_field;
+    return network_level;
 }
 
 // Get all strand content features filtered using strand_sql
