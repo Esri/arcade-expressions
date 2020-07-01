@@ -23,6 +23,7 @@ var line_class = "CommunicationsLine";
 var device_class = "CommunicationsDevice";
 var fiber_count = $feature.ContentCount;
 var tube_count = $feature.TubeCount;
+var network_level = $feature.networklevel;
 var point_spacing = .5;
 var offset_distance = .1;
 var z_level = -1000;
@@ -561,7 +562,8 @@ for (var tube_index = 1; tube_index <= tube_count; tube_index++) {
             'AssetType': strands_AT,
             'StrandID': strand_index,
             'TubeID': tube_index,
-            'IsSpatial': 0
+            'IsSpatial': 0,
+            'NetworkLevel': network_level
         };
         line_adds[Count(line_adds)] = {
             'attributes': attributes,
