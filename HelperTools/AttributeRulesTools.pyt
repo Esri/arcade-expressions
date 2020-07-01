@@ -4,6 +4,7 @@ import os
 from pathlib import Path
 import pandas as pd
 import re
+from collections import defaultdict
 
 import arcpy
 
@@ -83,19 +84,16 @@ class ApplyIndustryRules:
         'Is Editable': "is_editable",
         'Disable': "is_enabled"
     }
+    req_args = ['in_table', 'type', 'name']
 
     def __init__(self, workspace: str, industry: str):
         self.workspace = workspace
         self.industry = Path(industry)
 
         self.is_un = True
-        self.all_args = []
-        self.all_seq = []
-        self.req_args = ['in_table', 'type', 'name']
-        self.pat = re.compile("(?:'sequence': )'(.*?)'")
 
     def build_all_args(self) -> list:
-        """ build list of all arguments for each rule """
+        """ build list of all arguments for each attribute rule and sequence. build list of feature classes. """
         fcs = set()
         all_args = []
         all_seq = []
@@ -146,6 +144,12 @@ class ApplyIndustryRules:
                         kwargs[self.comments_to_parameter[param]] = details
                     else:
                         kwargs[self.comments_to_parameter[param]] = 1 if details else 0
+                elif param == 'Disable':
+                    details = details.lower() == 'false'
+                    if self.is_un:
+                        kwargs[self.comments_to_parameter[param]] = details
+                    else:
+                        kwargs[self.comments_to_parameter[param]] = 1 if details else 0
                 elif param in ('Description', 'Name', 'Error Number', 'Error Message', 'Field'):
                     kwargs[self.comments_to_parameter[param]] = details
             f.seek(0, 0)
@@ -165,6 +169,7 @@ class ApplyIndustryRules:
         return all_args, fcs, all_seq
 
     def recreate_un_seq(self, all_seq):
+        """ Recreate database sequences in UN """
         if not all_seq:
             return
         sequences = arcpy.da.ListDatabaseSequences(self.workspace)
@@ -179,6 +184,7 @@ class ApplyIndustryRules:
             arcpy.CreateDatabaseSequence_management(self.workspace, **seq)
 
     def recreate_un_ar(self, fcs, all_args):
+        """ Create and/or replace all attribute rules from Industry folder in UN """
         for fc in fcs:
             att_rules = arcpy.Describe(fc).attributeRules
             ar_names = [ar.name for ar in att_rules]
@@ -192,6 +198,7 @@ class ApplyIndustryRules:
             arcpy.AddAttributeRule_management(**kwargs)
 
     def recreate_ap_seq(self, all_seq, seq_df):
+        """ Recreate database sequences in Asset Package """
         if not all_seq:
             return
         arcpy.AddMessage(f"Removing sequences with the same name in Asset Package")
@@ -203,6 +210,7 @@ class ApplyIndustryRules:
             df_to_cursor(seq_df, cursor)
 
     def recreate_ap_ar(self, all_args, rules_df):
+        """ Create and/or replace all attribute rules from Industry folder in Asset Package B_AttributeRules table """
         ar_names = [ar['name'] for ar in all_args]
         arcpy.AddMessage(f"Removing AR with the same name in Asset Package")
         rules_df = rules_df[~rules_df['name'].isin(ar_names)]
@@ -213,6 +221,19 @@ class ApplyIndustryRules:
         arcpy.AddMessage(str(rules_df.name.to_list()))
         with arcpy.da.InsertCursor(os.path.join(self.workspace, 'B_AttributeRules'), list(rules_df)) as cursor:
             df_to_cursor(rules_df, cursor)
+
+    @staticmethod
+    def build_disable_lookup(all_args) -> defaultdict:
+        """ build default dict of Table Name: [list of attribute rule names] """
+        disable_lookup = defaultdict(lambda: [])
+        for args in all_args:
+            if 'is_enabled' not in args:
+                continue
+            # make sure to remove invalid param
+            is_enabled = args.pop('is_enabled')
+            if not is_enabled:
+                disable_lookup[args['in_table']].append(args['name'])
+        return disable_lookup
 
     def main(self):
 
@@ -225,14 +246,21 @@ class ApplyIndustryRules:
         # build args, list of feature classes, and sequences
         all_args, fcs, all_seq = self.build_all_args()
 
-        # if not asset package, recreate attr
+        # if not asset package, build disable lookup and recreate attribute rules
         if self.is_un:
+            disable_lookup = self.build_disable_lookup(all_args)
             self.recreate_un_seq(all_seq)
             self.recreate_un_ar(fcs, all_args)
 
         else:
             self.recreate_ap_ar(all_args, rules_df)
             self.recreate_ap_seq(all_seq, seq_df)
+
+        # disable rules in un
+        if self.is_un and disable_lookup:
+            for tbl, rules in disable_lookup.items():
+                arcpy.AddMessage(f"Disabling {str(rules)} on {tbl}")
+                arcpy.management.DisableAttributeRules(tbl, rules)
 
 
 def df_to_cursor(data_frame: pd.DataFrame, cursor, progressor_message: str = None):
