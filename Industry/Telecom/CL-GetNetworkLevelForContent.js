@@ -91,7 +91,7 @@ var updates_list = [];
 for (var strand in strand_contents) {
     updates_list[Count(updates_list)] = {
         'globalid': strand.globalid,
-        'attributes': {'networklevel': network_level}
+        'attributes': {network_level_field: network_level}
     }
 }
 
