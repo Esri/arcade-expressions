@@ -20,7 +20,6 @@ var valid_asset_types = [];
 
 var association_status = $feature.ASSOCIATIONSTATUS;
 var orig_association_status = $originalFeature.ASSOCIATIONSTATUS;
-var content_association_codes = [4, 5, 6, 12, 13, 16, 17, 18, 24, 25, 36, 44, 48, 56];
 
 // Optionally change/add feature class names to match you implementation
 function get_features_switch_yard(class_name, fields, include_geometry) {
@@ -37,6 +36,39 @@ function get_features_switch_yard(class_name, fields, include_geometry) {
 }
 // ************* End User Variables Section *************
 
+// *************       Functions            *************
+
+// Function to check if a bit is in an int value
+function has_bit(num, test_value) {
+    // num = number to test if it contains a bit
+    // test_value = the bit value to test for
+    // determines if num has the test_value bit set
+    // Equivalent to num AND test_value == test_value
+
+    // first we need to determine the bit position of test_value
+    var bit_pos = -1;
+    for (var i=0; i < 64; i++) {
+        // equivalent to test_value >> 1
+        var test_value = Floor(test_value / 2);
+        bit_pos++
+        if (test_value == 0)
+            break;
+    }
+    // now that we know the bit position, we shift the bits of
+    // num until we get to the bit we care about
+    for (var i=1; i <= bit_pos; i++) {
+        var num = Floor(num / 2);
+    }
+
+    if (num % 2 == 0) {
+        return false
+    }
+    else {
+       return true
+    }
+}
+
+// ************* End Functions Section *****************
 
 // Association Status did not change, return original value
 if (association_status == orig_association_status) {
@@ -49,7 +81,7 @@ if (Count(valid_asset_types) > 0) {
     }
 }
 // If Association is not content, set networklevel to Unknown
-if (IndexOf(content_association_codes, association_status) == -1) {
+if (IsEmpty(association_status) || (has_bit(association_status, 4) || has_bit(association_status, 16)) == false) {
     return 0;
 }
 
@@ -65,6 +97,6 @@ var containid = contain.globalid;
 var classname = contain.className;
 var container_fs = get_features_switch_yard(classname, [network_level_field], false);
 // add check to get past runtime evaluation (when contain_fs will be null)
-if (IsEmpty(container_fs)) return network_level;
+if (container_fs == null) return network_level;
 var container_feature = First(Filter(container_fs, "globalid = @containid"));
 return container_feature[network_level_field];
