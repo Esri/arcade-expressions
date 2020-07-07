@@ -21,8 +21,8 @@ var duct_count = $feature.maximumcapacity;
 // The Asset Group and Asset Type of the duct
 var duct_AG = 101;
 var duct_AT = 41;
-var duct_from_port_num = 'fromportid';
-var duct_to_port_num = 'toportid';
+var duct_from_port_num = 'fromport';
+var duct_to_port_num = 'toport';
 var wire_duct_sql = "ASSETGROUP = 101 and ASSETTYPE = 41";
 var knock_out_sql = "AssetGroup = 110 and AssetType = 363";
 var knock_out_duct_wide_field = 'ductcountwide';
