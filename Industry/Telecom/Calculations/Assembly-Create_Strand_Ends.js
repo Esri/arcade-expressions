@@ -8,28 +8,42 @@
 // Exclude From Client: True
 // Disable: False
 
+// Related Rules: Some rules rely on additional rules for execution. If this rule works in conjunction with another, they are listed below:
+//    - None
+
+// Duplicated in: This rule may be implemented on other classes, they are listed here to aid you in adjusting those rules when a code change is required.
+//    - None
+
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
+
+// The field the rule is assigned to
+// ** Implementation Note: Adjust this value only if the field name for Terminator Count differs
 var assigned_to_field = $feature.TerminatorCount;
-// Instead of assigning the rule at the subtype, it is assigned to all subtypes and returns if not valid
 
-// Limit the rule to valid subtypes
+// Limit the rule to valid asset groups/subtypes
+// ** Implementation Note: Instead of recreating this rule for each subtype, this rule uses a list of subtypes and exits if not valid
+//    If you have added Asset Groups, they will need to be added to this list.
 var valid_asset_groups = [1, 2, 3, 5, 6, 7];
-var valid_asset_types = [1];
-if (count(valid_asset_groups) > 0 && indexof(valid_asset_groups, $feature.assetgroup) == -1) {
-    return assigned_to_field;
-}
-if (count(valid_asset_types) > 0 && indexof(valid_asset_types, $feature.assettype) == -1) {
-    return assigned_to_field;
-}
 
+// Optionally limit rule to specific asset types.
+// ** Implementation Note: Add to list to limit rule to specific asset types. If not specified, will be ignored.
+var valid_asset_types = [1];
+
+// Settings for generating strand end port devices in Terminator
+// ** Implementation Note: The fields listed here are used to define strand end port count, spacing and placement. If the fields are empty or null,
+//    the value settings will default to the number shown.
 var point_spacing = DefaultValue($feature.terminatorspacing, .1);
 var point_count = DefaultValue($feature.terminatorcount, 0);
 var template_rotation = DefaultValue($feature.templaterotation, 0);
 var offset_distance = DefaultValue($feature.terminatoroffset, 0);
 
-
+// The class name of the strand end port devices
+// ** Implementation Note: This is just the class name and should not be fully qualified. Adjust this only if class name differs.
 var device_class = "CommunicationsDevice";
+
+// The asset group and asset type of strand end port devices
+// ** Implemenation Note: These values do not need to change if using the industry data model
 var port_ag = 8;
 var port_at = 143;
 
@@ -60,6 +74,14 @@ function offset_line(point_geo, point_spacing, point_count, offset_distance, lin
     return new_line['paths'][0];
 }
 // ************* End Functions Section *****************
+
+// Validation
+if (count(valid_asset_groups) > 0 && indexof(valid_asset_groups, $feature.assetgroup) == -1) {
+    return assigned_to_field;
+}
+if (count(valid_asset_types) > 0 && indexof(valid_asset_types, $feature.assettype) == -1) {
+    return assigned_to_field;
+}
 
 if (point_count <= 0) {
     return {'ErrorMessage': 'Terminator count is required'};

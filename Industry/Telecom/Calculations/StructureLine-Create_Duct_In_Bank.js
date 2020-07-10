@@ -8,26 +8,55 @@
 // Exclude From Client: True
 // Disable: False
 
+// Related Rules: Some rules rely on additional rules for execution. If this rule works in conjunction with another, they are listed below:
+//    - None
+
+// Duplicated in: This rule may be implemented on other classes, they are listed here to aid you in adjusting those rules when a code change is required.
+//    - None
+
 // *************       User Variables       *************
-// This section has the functions and variables that need to be adjusted based on your implementation
+
+// The field the rule is assigned to
+// ** Implementation Note: The field this rule is assigned to does not matter as it does not affect the assigned to field
+var assigned_to_value = $feature.assetid;
+
+// Limit the rule to specific asset types.
+// ** Implementation Note: This rule uses a list of asset types and exits if not valid. Add to list to limit rule to specific asset types.
 var valid_asset_types = [81];
-// this will auto assign from/to port numbers to ducts
+
+// Auto-assign port numbers
+// ** Implementation Note: If set to true, this will auto assign from/to port numbers to ducts if connected to two empty identical Knockouts.
 var assign_port_numbers = true;
 
-var assigned_to_value = $feature.assetid;
+// The class name of wire ducts and wire duct banks
+// ** Implementation Note: This value does not need to change if using the industry data model.
 var line_class = "StructureLine";
+
+// The class name of knock outs
+// ** Implementation Note: This value does not need to change if using the industry data model.
 var point_class = "StructureJunction";
+
+// Get Duct count from maximum capacity field
+// ** Implementation Note: This value does not need to change if using the industry data model.
 var duct_count = $feature.maximumcapacity;
-// The Asset Group and Asset Type of the duct
+
+// Wire Duct settings. Set Asset Group and Asset type of Ducts. Set from and to port number fields.
+// ** Implementation Note: These values do not need to change if using the industry data model.
 var duct_AG = 101;
 var duct_AT = 41;
 var duct_from_port_num = 'fromport';
 var duct_to_port_num = 'toport';
-var wire_duct_sql = "ASSETGROUP = 101 and ASSETTYPE = 41";
+var wire_duct_sql = "ASSETGROUP = " + duct_AG + " and ASSETTYPE = " + duct_AT;
+
+// Knock out settings. Set Asset Group and Asset Type of Knockout. Set duct count field names.
+// ** Implementation Note: Knock out sql is used to detect if created duct bank has been snapped to a Knock Out.
+//    Duct count fields are used to determine if Knock Out has enough duct ports to accept created duct bank.
 var knock_out_sql = "AssetGroup = 110 and AssetType = 363";
 var knock_out_duct_wide_field = 'ductcountwide';
 var knock_out_duct_high_field = 'ductcounthigh';
 
+// The FeatureSetByName function requires a string literal for the class name.  These are just the class name and should not be fully qualified
+// ** Implementation Note: Optionally change/add feature class names to match you implementation
 function get_features_switch_yard(class_name, fields, include_geometry) {
     var class_name = Split(class_name, '.')[-1];
     var feature_set = null;

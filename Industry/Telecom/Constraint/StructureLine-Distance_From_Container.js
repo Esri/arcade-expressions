@@ -1,6 +1,6 @@
 // Assigned To: StructureLine
 // Type: Constraint
-// Name: Check Distance From Container
+// Name: Check Distance From Container - StructureLine
 // Description: Validates that the feature is within a specified distance from its container feature
 // Subtypes: All
 // Error Number: 5701
@@ -9,15 +9,29 @@
 // Exclude From Client: False
 // Disable: False
 
+// Related Rules: Some rules rely on additional rules for execution. If this rule works in conjunction with another, they are listed below:
+//    - None
+
+// Duplicated in: This rule may be implemented on other classes, they are listed here to aid you in adjusting those rules when a code change is required.
+//    - None
+
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
+// The allowable distance value a feature can be from container
+// ** Implementation Note: Adjust this value based on the distance
 var distance_check = 100;
-// Options for Unit of Measure: https://developers.arcgis.com/arcade/function-reference/geometry_functions/#units-reference
+
+// The unit of the distance value in distance_check
+// ** Implementation Note: Options for Unit of Measure: https://developers.arcgis.com/arcade/function-reference/geometry_functions/#units-reference
 var unit_of_measure = "feet";
-// Optionally limit rule to specific asset types. If not specified, asset type will be ignored.
+
+// Optionally limit rule to specific asset types.
+// ** Implementation Note: Add to list to limit rule to specific asset types. If not specified, will be ignored.
 var valid_asset_types = [];
-// Optionally change/add feature class names to match you implementation
+
+// The FeatureSetByName function requires a string literal for the class name.  These are just the class name and should not be fully qualified
+// ** Implementation Note: Optionally change/add feature class names to match you implementation
 function get_features_switch_yard(class_name, fields, include_geometry) {
     var class_name = Split(class_name, '.')[-1];
     var feature_set = null;

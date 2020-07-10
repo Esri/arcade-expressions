@@ -8,32 +8,37 @@
 // Exclude From Client: True
 // Disable: False
 
+// Related Rules: Some rules rely on additional rules for execution. If this rule works in conjunction with another, they are listed below:
+//    - None
+
+// Duplicated in: This rule may be implemented on other classes, they are listed here to aid you in adjusting those rules when a code change is required.
+//    - None
+
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
-var assigned_to_field = $feature.assetid;
-if (IsEmpty(assigned_to_field) == false && assigned_to_field != '') {
-    return assigned_to_field
-}
 
-// Limit the rule to valid subtypes
-var valid_asset_groups = [4];
+// The field the rule is assigned to
+// ** Implementation Note: Adjust only if Asset ID field name differs. This rule will exit if this field is empty or null.
+var assigned_to_field = $feature.assetid;
+
+// Limit the rule to specific asset types.
+// ** Implementation Note: This rule uses a list of asset types and exits if not valid. Add to list to limit rule to specific asset types.
 var valid_asset_types = [121, 122, 123, 124, 125, 127];
 
-
-if (count(valid_asset_groups) > 0 && indexof(valid_asset_groups, $feature.assetgroup) == -1) {
-    return assigned_to_field;
-}
-if (count(valid_asset_types) > 0 && indexof(valid_asset_types, $feature.assettype) == -1) {
-    return assigned_to_field;
-}
-
-var container_class;
+// The class name of the container Cable
+// ** Implementation Note: This is just the class name and should not be fully qualified. Adjust this only if class name differs.
 var self_class = 'CommunicationsAssembly';
+
+// If asset type is Rack then set container class to StructureBoundary, otherwise set container class to CommunicationsAssembly
+// ** Implemenation Note:
 if ($feature.assettype == 123) {
-    container_class = 'StructureBoundary';
+    var container_class = 'StructureBoundary';
 } else {
-    container_class = 'CommunicationsAssembly';
+    var container_class = 'CommunicationsAssembly';
 }
+
+// Settings for generating Asset Identification based on parent container
+// ** Implementation Note: These values do not need to change if using the industry data model
 var id_split = ':';
 var at_to_id_index = {
     '123': 1,
@@ -45,7 +50,8 @@ var at_to_id_index = {
     '145': -1
 };
 
-// Get Feature Switch yard, adjust the string literals to match your GDB feature class names
+// The FeatureSetByName function requires a string literal for the class name.  These are just the class name and should not be fully qualified
+// ** Implementation Note: Optionally adjust the string literals to match your GDB feature class names.
 function get_features_switch_yard(class_name, fields, include_geometry) {
     var class_name = Split(class_name, '.')[-1];
     var feature_set = null;
@@ -99,6 +105,15 @@ function has_bit(num, test_value) {
 
 // ************* End Functions Section ******************
 
+// Validation
+if (Count(valid_asset_types) > 0 && IndexOf(valid_asset_types, $feature.assettype) == -1) {
+    return assigned_to_field;
+}
+if (IsEmpty(assigned_to_field) == false && assigned_to_field != '') {
+    return assigned_to_field
+}
+
+// Check association status is content
 var association_status = $feature.ASSOCIATIONSTATUS;
 if (IsEmpty(association_status) || (has_bit(association_status, 4) || has_bit(association_status, 16)) == false) {
     return assigned_to_field;
@@ -131,7 +146,7 @@ if (HasKey(at_to_id_index, at) == false) {
 
 var split_idx = at_to_id_index[at];
 var next_id = 1;
-if (count(global_ids) > 0) {
+if (Count(global_ids) > 0) {
 
     var content_feature_set = get_features_switch_yard(self_class, ['Globalid', 'AssetID', 'AssetGroup', 'AssetType'], false);
     var features = Filter(content_feature_set, "globalid IN @global_ids and " + other_equipment_sql);

@@ -8,20 +8,34 @@
 // Exclude From Client: True
 // Disable: False
 
-// Related Rules: GetNetworkLevelForContent
+// Related Rules: Some rules rely on additional rules for execution. If this rule works in conjunction with another, they are listed below:
+//    - Line-NetworkLevel_For_Content: works in conjunction to keep network level value on content features in sync with container
+
+// Duplicated in: This rule may be implemented on other classes, they are listed here to aid you in adjusting those rules when a code change is required.
+//    - None
 
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
+// The field the rule is assigned to
+// ** Implementation Note: Adjust only if Network Level field name differs.
 var network_level = $feature.networklevel;
+
+// The network level field name of container
 var network_level_field = "networklevel";
-// Optionally limit rule to specific asset types. If not specified, asset type will be ignored.
+
+// Optionally limit rule to specific asset types.
+// ** Implementation Note: Add to list to limit rule to specific asset types. If not specified, will be ignored.
 var valid_asset_types = [];
 
+// Compare association status states
+// ** Implementation Note: Different states of association status on feature are compared to determine if new container
+//    was added or removed.
 var association_status = $feature.ASSOCIATIONSTATUS;
 var orig_association_status = $originalFeature.ASSOCIATIONSTATUS;
 
-// Optionally change/add feature class names to match you implementation
+// The FeatureSetByName function requires a string literal for the class name. These are just the class name and should not be fully qualified
+// ** Implementation Note: Optionally change/add feature class names to match your implementation
 function get_features_switch_yard(class_name, fields, include_geometry) {
     var class_name = Split(class_name, '.')[-1];
     var feature_set = null;

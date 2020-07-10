@@ -8,33 +8,61 @@
 // Exclude From Client: True
 // Disable: False
 
+// Related Rules: Some rules rely on additional rules for execution. If this rule works in conjunction with another, they are listed below:
+//    - Line-Strandsavailable_From_Strandcount: This rule updates the Strandsavailable field of the Cable to match the number of Strands created.
+
+// Duplicated in: This rule may be implemented on other classes, they are listed here to aid you in adjusting those rules when a code change is required.
+//    - None
+
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
+
+// The field the rule is assigned to
+// ** Implementation Note: The field this rule is assigned to does not matter as it does not affect the assigned to field
 var assigned_to_field = $feature.assetid;
 
-// Limit the rule to valid subtypes
+// Limit the rule to valid asset groups/subtypes
+// ** Implementation Note: Instead of recreating this rule for each subtype, this rules uses a list of subtypes and exits if not valid
+//    If you have added Asset Groups, they will need to be added to this list.
 var valid_asset_groups = [1, 3, 4, 5, 6, 7, 9];
-if (IndexOf(valid_asset_groups, $feature.assetgroup) == -1) {
-    return assigned_to_field;
-}
 
+// Limit the rule to valid asset types
+// ** Implementation Note: Instead of recreating this rule for each asset type, this rules uses a list of domains and exits if not valid
+//    If you have added Asset Types, they will need to be added to this list.
 var valid_asset_types = [3];
+
+// The class names of the Strands and the Devices
+// ** Implementation Note: These are just the class name and should not be fully qualified.
 var line_class = "CommunicationsLine";
 var device_class = "CommunicationsDevice";
-var fiber_count = $feature.ContentCount;
+
+// The fields for Strand Count, Tube Count, and Network Level
+// ** Implementation Note: Adjust these values only if the field names differ
+var strand_count = $feature.StrandCount;
 var tube_count = $feature.TubeCount;
 var network_level = $feature.networklevel;
+
+// Strand status default value for all Strands created
+// ** Implementation Note: This sets the Strand Status value to "Available" on all child Strands created by this rule.
+var strand_status_avail = 1;
+
 var point_spacing = .5;
 var offset_distance = .1;
+
+// The z value of unsnapped strands
 var z_level = -1000;
-// The Asset Group and Type of the tubes in a cable
+
 // The Asset Group and Asset Type of the fiber strand
+// ** Implementation Note: Adjust this only if the asset group and/or asset type of Strands differs
 var strands_AG = 8;
 var strands_AT = 163;
 var strand_sql = 'AssetGroup = ' + strands_AG + ' AND  AssetType = ' + strands_AT;
 
+// The Asset Group and Asset Type of splice feature
+// ** Implementation Note: Adjust this only if the asset group and/or asset type of splice differs
 var new_splice_feature_AG = 12;
 var new_splice_feature_AT = 143;
+
 //Device,Asset Group=3,Asset Type=1 acts as a splitter
 //Device,Asset Group=(1,2,3,5,6,7),Asset Type=3 acts as a splice
 //Device,Asset Group=(1,2,5,6,7),Asset Type=1 acts as a pass-through
@@ -56,6 +84,9 @@ var strand_snap_types = {
     'pass-through': 'AssetGroup = 8 AND AssetType = 143' // Port: Strand Termination
 };
 
+// The FeatureSetByName function requires a string literal for the class name.  These are just the class names and should not be fully qualified
+// ** Implementation Note: Adjust these to match the name of the domain.  The domain name will only change if you adjusted this in the
+//    A_DomainNetwork table and renamed the domain classes in the asset package prior to applying it.
 function get_features_switch_yard(class_name, fields, include_geometry) {
     var class_name = Split(class_name, '.')[-1];
     var feature_set = null;
@@ -67,7 +98,7 @@ function get_features_switch_yard(class_name, fields, include_geometry) {
         feature_set = FeatureSetByName($datastore, "CommunicationsAssembly", fields, include_geometry);
     } else if (class_name == 'Associations') {
         feature_set = FeatureSetByName($datastore, 'UN_5_Associations', fields, false);
-    } else {
+    }else {
         feature_set = FeatureSetByName($datastore, "CommunicationsDevice", fields, include_geometry);
     }
     return feature_set;
@@ -179,6 +210,7 @@ function get_line_ends(container_guid, container_type) {
     if (!IsEmpty(container_guid)) {
         var port_features = null;
         var new_geo = null;
+        // Using the associations table to get child global ids. Cannot use FeatureSetByAssociation because we only have the guid
         var assoc_fs = get_features_switch_yard('Associations', ['TOGLOBALID'], false);
         var filtered_fs = Filter(assoc_fs, "fromglobalid = @container_guid and ASSOCIATIONTYPE = 2");
         var contained_ids = [];
@@ -414,17 +446,21 @@ function splice_to_point(port_features, prep_line_offset, strand_id, tube_id, st
 
 // Validation
 
-// Limit the rule to valid subtypes
+// Limit the rule to valid asset groups
+if (IndexOf(valid_asset_groups, $feature.assetgroup) == -1) {
+    return assigned_to_field;
+}
+// Limit the rule to valid asset types
 if (IndexOf(valid_asset_types, $feature.assettype) == -1) {
     return assigned_to_field;
 }
 
 // Require a value for fiber count
-if (IsEmpty(fiber_count) || fiber_count == 0) {
-    return {'errorMessage': 'A value is required for the content count field'};
+if (IsEmpty(strand_count) || strand_count == 0) {
+    return {'errorMessage': 'A value is required for the strand count field'};
 }
 // Fiber count must be even if not 1 strand
-if (fiber_count > 1 && is_even(fiber_count) == false) {
+if (strand_count > 1 && is_even(strand_count) == false) {
     return {'errorMessage': 'Fiber count must be even if not one strand'};
 }
 // Get the tube count based on the cable design and strand count
@@ -432,11 +468,11 @@ if (IsEmpty(tube_count)) {
     return {'errorMessage': 'Number of tubes is required'};
 }
 // Ensure the strand distribution is even
-var strand_per_tube = iif(fiber_count == 1, 1, fiber_count / tube_count);
+var strand_per_tube = iif(strand_count == 1, 1, strand_count / tube_count);
 if (strand_per_tube > 1 && strand_per_tube % 1 != 0) {
     return {
         'errorMessage': 'Fiber per tube distribution is not uniform: ' +
-            'Fiber Count:' + fiber_count + TextFormatting.NewLine +
+            'Fiber Count:' + strand_count + TextFormatting.NewLine +
             'Tube Count:' + tube_count + TextFormatting.NewLine +
             'Strands Per Tube:' + strand_per_tube
     };
@@ -456,7 +492,7 @@ snapped_container_info = get_snapped_container_info(Point(to_point));
 var to_container_GUID = snapped_container_info[0];
 var to_container_snap_type = snapped_container_info[1];
 
-// Get the from and to features the strands need to be adjusted too
+// Get the from and to features the strands need to be adjusted to
 var from_port_features = get_line_ends(from_container_GUID, from_container_snap_type);
 var to_port_features = get_line_ends(to_container_GUID, to_container_snap_type);
 
@@ -468,15 +504,15 @@ var end_angle = angle_line_at_point(assigned_line_geo, to_point);
 end_angle = (450 - end_angle) % 360;
 //end_angle = end_angle + 90;
 
-var contained_line_from_point = Dictionary(Text(from_point))
-contained_line_from_point['z'] = z_level
-contained_line_from_point = pop_empty(contained_line_from_point)
-var contained_line_to_point = Dictionary(Text(to_point))
-contained_line_to_point['z'] = z_level
-contained_line_to_point = pop_empty(contained_line_to_point)
+var contained_line_from_point = Dictionary(Text(from_point));
+contained_line_from_point['z'] = z_level;
+contained_line_from_point = pop_empty(contained_line_from_point);
+var contained_line_to_point = Dictionary(Text(to_point));
+contained_line_to_point['z'] = z_level;
+contained_line_to_point = pop_empty(contained_line_to_point);
 
-var from_offset_line = offset_line(Point(contained_line_from_point), fiber_count, point_spacing, offset_distance, start_angle);
-var to_offset_line = offset_line(Point(contained_line_to_point), fiber_count, point_spacing, offset_distance, end_angle);
+var from_offset_line = offset_line(Point(contained_line_from_point), strand_count, point_spacing, offset_distance, start_angle);
+var to_offset_line = offset_line(Point(contained_line_to_point), strand_count, point_spacing, offset_distance, end_angle);
 
 var attributes = {};
 var line_adds = [];
@@ -563,7 +599,8 @@ for (var tube_index = 1; tube_index <= tube_count; tube_index++) {
             'StrandID': strand_index,
             'TubeID': tube_index,
             'IsSpatial': 0,
-            'NetworkLevel': network_level
+            'NetworkLevel': network_level,
+            'StrandStatus': strand_status_avail
         };
         line_adds[Count(line_adds)] = {
             'attributes': attributes,

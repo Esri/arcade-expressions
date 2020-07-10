@@ -8,33 +8,58 @@
 // Exclude From Client: True
 // Disable: False
 
+// Related Rules: Some rules rely on additional rules for execution. If this rule works in conjunction with another, they are listed below:
+//    - None
+
+// Duplicated in: This rule may be implemented on other classes, they are listed here to aid you in adjusting those rules when a code change is required.
+//    - None
+
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
-var assigned_to_value = $feature.assetid;
-// Limit the rule to valid subtypes
-var valid_asset_groups = [102, 103, 109];
-if (IndexOf(valid_asset_groups, $feature.assetgroup) == -1) {
-    return assigned_to_value;
-}
-var valid_asset_types = [81, 121, 127];
-if (Count(valid_asset_types) > 0 && IndexOf(valid_asset_types, $feature.assettype) == -1) {
-    return assigned_to_value;
-}
 
-var structure_Line_class = 'StructureLine';
+// The field the rule is assigned to
+// ** Implementation Note: The field this rule is assigned to does not matter as it does not affect the assigned to field
+var assigned_to_value = $feature.assetid;
+
+// Limit the rule to valid asset groups/subtypes
+// ** Implementation Note: Instead of recreating this rule for each subtype, this rules uses a list of subtypes and exits if not valid
+//    If you have added Asset Groups, they will need to be added to this list.
+var valid_asset_groups = [102, 103, 109];
+
+// Limit the rule to specific asset types.
+// ** Implementation Note: This rule uses a list of asset types and exits if not valid. Add to list to limit rule to specific asset types.
+var valid_asset_types = [81, 121, 127];
+
+// Call the StructureLine class on which a distance search will be performed
+// ** Implementation Note: Only update the class name and field names if they differ.
+var feature_set = FeatureSetByName($datastore, 'StructureLine', ["OBJECTID", "GLOBALID", "ASSOCIATIONSTATUS", "AssetGroup", "AssetType"], true);
+
+// Limit StructureLine features to certain Asset Groups and Asset Types
+// ** Implementation Note: This SQL query limits which Structure Line features are considered in distance search
 var filter_structure_lines_sql = "AssetGroup in (103, 104, 112) and AssetType in (101, 125, 221)";
+
+// The maximum distance a structure line container can be from the content
+// ** Implementation Note: This value is derived from the field. If field is null or empty, the value will default
+//    to number shown in second parameter.
+var search_distance = DefaultValue($feature.searchdistance, 75);
+
+// The unit of the distance value in search_distance
+// ** Implementation Note: Options for Unit of Measure: https://developers.arcgis.com/arcade/function-reference/geometry_functions/#units-reference
+var search_unit = 9002;
+
 // Set the container asset types that can only contain one child item
-var restrict_to_one_content = [];
 // Create a list of what items can be in what parent containers
+// ** Implementation Note: These values do not need to change if using the industry data model.
+var restrict_to_one_content = [];
 var child_to_parent = {
     '121': [101, 221],
     '127': [125],
     '81': [101]
 };
-var feature_set = FeatureSetByName($datastore, 'StructureLine', ["OBJECTID", "GLOBALID", "ASSOCIATIONSTATUS", "AssetGroup", "AssetType"], true);
-var search_distance = DefaultValue($feature.searchdistance, 75);
-var search_unit = 9002;
 
+// Structure Line container class name
+// ** Implementation Note: This is the name of the class used to create containers
+var structure_Line_class = 'StructureLine';
 
 // ************* End User Variables Section *************
 
@@ -71,6 +96,14 @@ function has_bit(num, test_value) {
 }
 
 // ************* End Functions Section ******************
+
+// Validation
+if (IndexOf(valid_asset_groups, $feature.assetgroup) == -1) {
+    return assigned_to_value;
+}
+if (Count(valid_asset_types) > 0 && IndexOf(valid_asset_types, $feature.assettype) == -1) {
+    return assigned_to_value;
+}
 
 // Buffer the features to find features within a certain distance
 var closest_features = Intersects(feature_set, Buffer(Geometry($feature), search_distance, search_unit));

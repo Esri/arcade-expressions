@@ -8,26 +8,40 @@
 // Exclude From Client: True
 // Disable: False
 
-// Related Rules: GetNetworkLevelForContainer
+// Related Rules: Some rules rely on additional rules for execution. If this rule works in conjunction with another, they are listed below:
+//    - Line-NetworkLevel_From_Container: works in conjunction to keep network level value on content features in sync with container
+
+// Duplicated in: This rule may be implemented on other classes, they are listed here to aid you in adjusting those rules when a code change is required.
+//    - None
 
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
-// Optionally limit rule to specific asset groups and asset types. If not specified, will be ignored.
-var assetgroup_value = $feature.assetgroup;
-var assettype_value = $feature.assettype;
-var valid_asset_groups = [1, 3, 4, 5, 6, 7, 10];
-var valid_asset_types = [];
-
+// The field the rule is assigned to
+// ** Implementation Note: Different states of networklevel are compared to determine if networklevel has been changed.
+//    Adjust only if Network Level field name differs.
 var network_level = $feature.networklevel;
 var orig_network_level = $originalFeature.networklevel;
+
+// The network level field name of content
 var network_level_field = "networklevel";
 
+// Limit the rule to valid asset groups/subtypes
+// ** Implementation Note: Instead of recreating this rule for each subtype, this rule uses a list of subtypes and exits if not valid
+//    If you have added Asset Groups, they will need to be added to this list.
+var valid_asset_groups = [1, 3, 4, 5, 6, 7, 10];
+
+// Optionally limit rule to specific asset types.
+// ** Implementation Note: Add to list to limit rule to specific asset types. If not specified, will be ignored.
+var valid_asset_types = [];
+
+// Settings for content. Class name and Asset Group.
+// ** Implementation Note: Only content feature that match sql statement will be updated.
 var content_class = "CommunicationsLine";
-// Only update content features that match this sql statement
 var strand_sql = "AssetGroup = 8";
 
-// Optionally change/add feature class names to match you implementation
+// The FeatureSetByName function requires a string literal for the class name. These are just the class name and should not be fully qualified
+// ** Implementation Note: Optionally change/add feature class names to match your implementation
 function get_features_switch_yard(class_name, fields, include_geometry) {
     var class_name = Split(class_name, '.')[-1];
     var feature_set = null;
@@ -68,10 +82,10 @@ if (network_level == orig_network_level) {
 }
 
 // Limit the rule to valid subtypes and asset types
-if (Count(valid_asset_groups) > 0 && IndexOf(valid_asset_groups, assetgroup_value) == -1) {
+if (Count(valid_asset_groups) > 0 && IndexOf(valid_asset_groups, $feature.assetgroup) == -1) {
     return network_level;
 }
-if (Count(valid_asset_types) > 0 && IndexOf(valid_asset_types, assettype_value) == -1) {
+if (Count(valid_asset_types) > 0 && IndexOf(valid_asset_types, $feature.assettype) == -1) {
     return network_level;
 }
 
@@ -88,10 +102,12 @@ if (IsEmpty(strand_contents)) return network_level;
 
 // Build updates list using filtered content features and set networklevel to container networklevel value
 var updates_list = [];
+var attrs = {};
+attrs[network_level_field] = network_level;
 for (var strand in strand_contents) {
     updates_list[Count(updates_list)] = {
         'globalid': strand.globalid,
-        'attributes': {network_level_field: network_level}
+        'attributes': attrs
     }
 }
 

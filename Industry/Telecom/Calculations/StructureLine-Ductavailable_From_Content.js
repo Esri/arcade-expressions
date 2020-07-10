@@ -8,16 +8,35 @@
 // Exclude From Client: True
 // Disable: True
 
+// Related Rules: Some rules rely on additional rules for execution. If this rule works in conjunction with another, they are listed below:
+//    - None
+
+// Duplicated in: This rule may be implemented on other classes, they are listed here to aid you in adjusting those rules when a code change is required.
+//    - None
+
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
+
+// The field the rule is assigned to
+// ** Implementation Note: Adjust this value only if the field name for Duct Available differs
 var assigned_to_field = $feature.ductavailable;
+
+// The class name of the wire duct
+// ** Implementation Note: This value does not need to change if using the industry data model.
 var assigned_to_class = "StructureLine";
+
+// SQL state for wire duct
+// ** Implementation Note: Used to query all ducts contained with feature's container.
 var duct_sql = "AssetGroup = 101 and AssetType = 41";
 
+// Compare association status states
+// ** Implementation Note: Different states of association status on feature are compared to determine if new container
+//    was added or removed.
 var association_status = $feature.ASSOCIATIONSTATUS;
 var orig_association_status = $originalFeature.ASSOCIATIONSTATUS;
 
-// Get Feature Switch yard, adjust the string literals to match your GDB feature class names
+// The FeatureSetByName function requires a string literal for the class name.  These are just the class name and should not be fully qualified
+// ** Implementation Note: Optionally change/add feature class names to match you implementation
 function get_features_switch_yard(class_name, fields, include_geometry) {
     var class_name = Split(class_name, '.')[-1];
     var feature_set = null;
