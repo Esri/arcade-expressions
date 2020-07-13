@@ -20,7 +20,7 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 ```js
 // This rule will update the location of the features in a container or structure is moved
 
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
 // The field the rule is assigned to
@@ -52,7 +52,7 @@ function get_features_switch_yard(class_name, fields, include_geometry) {
     return feature_set;
 }
 
-// ************* End Section *****************
+// ************* End User Variables Section *************
 
 // Function to check if a bit is in an int value
 function has_bit(num, test_value) {
@@ -336,7 +336,7 @@ return {"result": field_value, "edit": edit_payload};
 ```js
 // This rule will update the location of the features in a container or structure is moved
 
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
 var moved_connected = false;
@@ -392,7 +392,7 @@ function class_id_to_name(id) {
         return id;
     }
 }
-// ************* End Section *****************
+// ************* End User Variables Section *************
 
 // Function to check if a bit is in an int value
 function has_bit(num, test_value) {

@@ -8,6 +8,7 @@ from collections import defaultdict
 
 import arcpy
 
+
 class Toolbox(object):
     def __init__(self):
         """Define the toolbox (the name of the toolbox is the name of the
@@ -99,7 +100,7 @@ class ApplyIndustryRules:
         all_seq = []
         pat = re.compile("(?:'sequence': )'(.*?)'")
         for path in self.industry.rglob('*.js'):
-            if path.parent.name.lower() == 'notused':
+            if path.parent.name.lower() not in ['calculation', 'constraint', 'validation']:
                 continue
             f = open(str(path), "r")
 
@@ -239,8 +240,13 @@ class ApplyIndustryRules:
 
         # check if asset package
         if self.workspace.lower().endswith('.gdb') and arcpy.Exists(os.path.join(self.workspace, 'B_AttributeRules')):
-            rules_df = cursor_to_df(arcpy.da.SearchCursor(os.path.join(self.workspace, 'B_AttributeRules'), ['*']))
-            seq_df = cursor_to_df(arcpy.da.SearchCursor(os.path.join(self.workspace, 'B_DatabaseSequence'), ['*']))
+            # TODO: Should we preserve rules that are not in the github folder.
+            # rules_df = cursor_to_df(arcpy.da.SearchCursor(os.path.join(self.workspace, 'B_AttributeRules'), ['*']))
+            # seq_df = cursor_to_df(arcpy.da.SearchCursor(os.path.join(self.workspace, 'B_DatabaseSequence'), ['*']))
+            rules_df = cursor_to_df(
+                arcpy.da.SearchCursor(os.path.join(self.workspace, 'B_AttributeRules'), ['*'], '1=0'))
+            seq_df = cursor_to_df(
+                arcpy.da.SearchCursor(os.path.join(self.workspace, 'B_DatabaseSequence'), ['*'], '1=0'))
             self.is_un = False
 
         # build args, list of feature classes, and sequences

@@ -1,6 +1,6 @@
 // Assigned To: StructureLine
 // Type: Constraint
-// Name: Check Distance From Container - StructureLine
+// Name: StructureLine - Distance From Container
 // Description: Validates that the feature is within a specified distance from its container feature
 // Subtypes: All
 // Error Number: 5701

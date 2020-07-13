@@ -21,7 +21,7 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 ```js
 // This rule will contain the added feature in a container
 
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
 // Get Feature Switch yard, adjust the string literals to match your GDB feature class names
@@ -52,7 +52,7 @@ if (use_device_as_container == true) {
 var compare_fields = ['tube', 'strand'];
 
 
-// ************* End Section *****************
+// ************* End User Variables Section *************
 function merge_arrays(arrs) {
     var merge_results = [];
     for (var l in arrs) {

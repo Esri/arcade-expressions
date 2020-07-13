@@ -47,7 +47,7 @@ for df in view_cav(fc, desc.subtypeFieldName):
 // Trigger: Insert, Update
 
 
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
 var valid_asset_groups = [{', '.join(subtypes)}];
@@ -59,7 +59,7 @@ var feature_fields = [{', '.join(field_list)}];
 
 var valid_values = {valid_combos};
 
-// ************* End Section *****************
+// ************* End User Variables Section *************
 function splice(arr, start, end) {{
     var new_arr = [];
     var k = 0;

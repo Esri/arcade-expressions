@@ -20,7 +20,7 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 When adding fiber cable, clicking near the pole that it is attached too
 
 ```js
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
 // The field the rule is assigned to
@@ -32,7 +32,7 @@ var search_distance = 25;
 var search_unit = 'feet';
 var feat_globalid = $feature.globalid;
 var valid_asset_types = [41, 42, 43];
-// ************* End Section *****************
+// ************* End User Variables Section *************
 if (indexof(valid_asset_types, $feature.assettype) == -1) {
     return field_value;
 }

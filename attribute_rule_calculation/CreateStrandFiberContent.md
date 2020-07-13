@@ -22,7 +22,7 @@ This Arcade expression creates content in a line and optionally end points [Exam
 ```js
 // This rule will generate contained spatial/non spatial features
 
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 var identifier = $feature.Identifier;
 var device_class = 'CommunicationsDevice';
@@ -64,7 +64,7 @@ if (rule_type == 'create_tubes') {
 }
 
 
-// ************* End Section *****************
+// ************* End User Variables Section *************
 
 // ************ Not used at this time**************
 function create_perp_line_old(location, line_geo, dist, length_line) {
@@ -128,7 +128,7 @@ function moved_point_on_line(location, line_geo, dist) {
     return segment[0]
 }
 
-// ************* End Section *****************
+// ************* End User Variables Section *************
 
 function adjust_z(line_geo, z_value) {
     var line_shape = Dictionary(Text(line_geo));
@@ -355,7 +355,7 @@ return {
 ```js
 // This rule will generate contained spatial/non spatial features
 
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 var valid_asset_types = [44];
 
@@ -369,7 +369,7 @@ var contained_features_AT = 21;
 
 var device_fs = FeatureSetByName($datastore, "CommunicationsDevice", ["globalid", "assetgroup", 'assettype'], false);
 
-// ************* End Section *****************
+// ************* End User Variables Section *************
 function fiber_ending_type(feat) {
     if (IsEmpty(feat)) {
         return 'unknown'

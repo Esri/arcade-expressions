@@ -1,5 +1,5 @@
 // This rule will generate contained spatial/non spatial features
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 var valid_asset_types = [3];
 

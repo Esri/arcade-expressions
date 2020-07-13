@@ -51,7 +51,7 @@ function get_features_switch_yard(class_name, fields, include_geometry) {
     return feature_set;
 }
 
-// ************* End Section *****************
+// ************* End User Variables Section *************
 
 function adjust_z(line_geo, z_value) {
     var line_shape = Dictionary(Text(line_geo));

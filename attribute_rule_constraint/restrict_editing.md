@@ -20,6 +20,16 @@ An example with using this rule is included in the [Example](./restrict_editing.
 To demonstrate, open and add both the class and table to the map.  The rules is configured on update.  Only Bob and Frank are allowed to edit.
 
 ```js
+// Assigned To: Any Class
+// Type: Constraint
+// Name: Restrict Editing on <Any Class>
+// Description: Restrict editing based on UAC table, user names are delimited by ;
+// Subtypes: All
+// Trigger: Insert, Update, Delete
+// Exclude From Client: True
+// Error Number: 5705
+// Error Message: Insufficient privileges to preform this edit
+
 var fc = 'ElectricDevice';
 var uac_fs = FeatureSetByName($datastore, 'UAC', ['featureClass', 'assetGroupCode', 'assetTypeCode', 'UAC'], false);
 var sql = "featureClass = '" + fc + "' AND " + 'assetGroupCode = ' + $feature.assetgroup + ' AND ' + 'assetTypeCode = ' + $feature.assettype

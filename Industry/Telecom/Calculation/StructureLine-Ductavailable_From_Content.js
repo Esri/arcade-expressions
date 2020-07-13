@@ -1,22 +1,45 @@
 // Assigned To: StructureLine
-// Name: Update ductavailable attribute when content changes
-// Description: Update ductavailable attribute when content changes
-// Subtypes: Wire Duct, Conduit
+// Type: Calculation
+// Name: StructureLine - Ductavailable From Content
+// Description: Update ductavailable attribute of feature when content changes. Also updates capacity attributes on any Container.
+// Subtypes: Wire Duct
 // Field: ductavailable
-// Trigger: Insert,Update,Delete
+// Trigger: Insert, Update
+// Exclude From Client: True
+// Disable: True
 
+// Implementation Note: This rule is disabled by default. It auto updates the ductavailable attribute of the feature and capacity attributes
+// of any container feature. If you desire this function, enable this rule and adjust
+
+// Related Rules: Some rules rely on additional rules for execution. If this rule works in conjunction with another, they are listed below:
+//    - None
+
+// Duplicated in: This rule may be implemented on other classes, they are listed here to aid you in adjusting those rules when a code change is required.
+//    - None
 
 // *************       User Variables       *************
-var assigned_to_field = $feature.ductavailable;
-var assigned_to_class = "StructureLine"
-var duct_sql = "AssetGroup = 101 and AssetType = 41"
-var updates_payload = [];
-var edit_payload = [];
+// This section has the functions and variables that need to be adjusted based on your implementation
 
+// The field the rule is assigned to
+// ** Implementation Note: Adjust this value only if the field name for Duct Available differs
+var assigned_to_field = $feature.ductavailable;
+
+// The class name of the wire duct
+// ** Implementation Note: This value does not need to change if using the industry data model.
+var assigned_to_class = "StructureLine";
+
+// SQL state for wire duct
+// ** Implementation Note: Used to query all ducts contained with feature's container.
+var duct_sql = "AssetGroup = 101 and AssetType = 41";
+
+// Compare association status states
+// ** Implementation Note: Different states of association status on feature are compared to determine if new container
+//    was added or removed.
 var association_status = $feature.ASSOCIATIONSTATUS;
 var orig_association_status = $originalFeature.ASSOCIATIONSTATUS;
 
-// Get Feature Switch yard, adjust the string literals to match your GDB feature class names
+// The FeatureSetByName function requires a string literal for the class name.  These are just the class name and should not be fully qualified
+// ** Implementation Note: Optionally change/add feature class names to match you implementation
 function get_features_switch_yard(class_name, fields, include_geometry) {
     var class_name = Split(class_name, '.')[-1];
     var feature_set = null;
@@ -27,6 +50,10 @@ function get_features_switch_yard(class_name, fields, include_geometry) {
     }
     return feature_set;
 }
+
+// ************* End User Variables Section *************
+
+// *************       Functions            *************
 
 // Function to check if a bit is in an int value
 function has_bit(num, test_value) {
@@ -57,12 +84,14 @@ function has_bit(num, test_value) {
     }
 }
 
+// ************* End Functions Section *****************
+
 //Association Status did not change, return original value
 if (association_status == orig_association_status) {
     return assigned_to_field;
 }
 
-// The feautre was a container and still is a container, return the original value
+// The feature was a container and still is a container, return the original value
 if (has_bit(orig_association_status, 1) && has_bit(association_status, 1))
 {
     return assigned_to_field;
@@ -70,17 +99,16 @@ if (has_bit(orig_association_status, 1) && has_bit(association_status, 1))
 // The feature was a container, but is not now
 if (has_bit(orig_association_status, 1) && has_bit(association_status, 1) == false)
 {
-    // Duct Avaible is now true
+    // Duct Available is now true
     assigned_to_field = 1;
 }
 
 // The object was not a contain and is now
 if (has_bit(association_status, 1) && has_bit(orig_association_status, 1) == false)
 {
-    // Duct Availble is now false
+    // Duct Available is now false
     assigned_to_field = 0;
 }
-
 
 container_row = First(FeatureSetByAssociation($feature, 'container'));
 if (!IsEmpty(container_row)) {
@@ -94,7 +122,7 @@ if (!IsEmpty(container_row)) {
             if (row.className == assigned_to_class) {
                 // Might need to ignore the current feature
                 if ($feature.globalid != row.globalId) {
-                    associated_ids[count(associated_ids)] = row.globalId;
+                    associated_ids[Count(associated_ids)] = row.globalId;
                 }
             }
         }
@@ -127,13 +155,13 @@ if (!IsEmpty(container_row)) {
 
 }
 
-edit_payload = [{'className':"StructureLine",
+var edit_payload = [{'className':"StructureLine",
                   'updates':[{
                               'globalID': container_row.globalid,
                               'attributes':{'maximumcapacity':max_cap,
                                             'usedcapacity': used_cap,
                                             'availablecapacity': avail_cap
-                                           }}]}]
+                                           }}]}];
 return {
     "result": assigned_to_field,
     "edit": edit_payload

@@ -69,9 +69,9 @@ function get_id(selector_value) {
     return Concatenate(id_parts, id_format['join_char'])
 }
 
-// ************* End Section *****************
+// ************* End User Variables Section *************
 
-// Functions
+// *************       Functions            *************
 function remove_empty(arr) {
     var new_arr = [];
     var j = 0;
@@ -82,12 +82,12 @@ function remove_empty(arr) {
     }
     return new_arr;
 }
-// End Functions
+// ************* End Functions Section *****************
 
-if (IsEmpty(assigned_to_field) == false && assigned_to_field != '') {
+if (IsEmpty(assigned_to_field) == false) {
     return assigned_to_field
 }
-var new_id = get_id($feature.assetgroup)
+var new_id = get_id(id_selector_value)
 if (IsEmpty(new_id)){
     return assigned_to_field;
 }

@@ -1,5 +1,5 @@
 // This rule will update an attribute in the parent feature
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
 var parent_id = $feature.facilityguid;
@@ -12,7 +12,7 @@ var fields_to_copy = ['status', 'workoffice', 'workremote', 'essstaffonly', 'acc
     'entstaff', 'buildsecure', 'openstate', 'hoursop', 'schtoclose', 'closedatetime', 'schtoopen', 'opendatetime',
     'adddetails'];
 
-// ************* End Section *****************
+// ************* End User Variables Section *************
 
 if (IsEmpty(parent_id)) {
     return parent_id;

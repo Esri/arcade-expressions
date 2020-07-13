@@ -53,7 +53,7 @@ for df in view_cav(fc, desc.subtypeFieldName):
 // Trigger: Insert, Update
 
 
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
 var valid_asset_groups = [{','.join(subtypes)}];
@@ -62,7 +62,7 @@ if (indexof(valid_asset_groups, $feature.{desc.subtypeFieldName}) == -1) {{
 }}
 
 var valid_values = {pp.pformat(valid_combos)};
-// ************* End Section *****************
+// ************* End User Variables Section *************
 var fields = [{','.join([f"'{fld}'" for fld in df.columns])}];
 var dict_values = valid_values
 var error_msg = {{"errorMessage": "The selected attributes for {', '.join(list(df.columns))} are not valid."}}
