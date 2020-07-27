@@ -1,4 +1,5 @@
 // This rule will update an attribute in the parent feature
+
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
@@ -29,10 +30,16 @@ if (IsEmpty(parent_record)) {
 var attributes = {};
 // Loop through each field and add to attribute list to update
 for (var field_idx in fields_to_copy) {
-    attributes[fields_to_copy[field_idx]] = $feature[fields_to_copy[field_idx]];
+    var fld = fields_to_copy[field_idx]
+    if (haskey($feature, fld)){
+        attributes[fields_to_copy[field_idx]] = $feature[fields_to_copy[field_idx]];
+    }
 }
 // Return the original value in the result parameter, as to not lost the entered value
 // Using the edit parameter, return the class and list of updates
+if (Text(attributes) == '{}'){
+    return parent_id;
+}
 return {
     'result': parent_id,
     'edit': [
