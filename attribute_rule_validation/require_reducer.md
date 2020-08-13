@@ -19,7 +19,7 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 ```js
 // This rule will evaluates connected lines and if the diameter is different, require a reducer fitting.
 
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
 // The field the rule is assigned to
@@ -37,7 +37,7 @@ var line_requires_reducer_msg = "Lines requires reducer - Fitting ID: ";
 var line_does_not_need_reducer_msg = "Lines connects to another line via a reducer fitting but diameter does not change - Fitting ID: ";
 var reducer_only_connects_to_two_lines = "A reducer must connect to two lines - Fitting ID: ";
 
-// ************* End Section *****************
+// ************* End User Variables Section *************
 // Function to pop empty values in a dict
 function pop_empty(dict) {
     var new_dict = {};

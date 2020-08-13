@@ -19,7 +19,7 @@ Create an expression to identify parent networks
 ```js
 // This script will traverse the subnetwork table to find all neighboring and parent subnetworks
 
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
 // The subnetwork table in a feature service is always layer id 500002 or named Subnetworks
@@ -32,7 +32,7 @@ var subnetwork_table = FeatureSetByName($datastore, 'UN_5_Subnetworks', subnetwo
 // In a FGDB, use the name of the feature class in the GDB
 var device_table = FeatureSetByName($datastore, 'ElectricDevice', ['subnetworkname', 'globalid'], false);
 
-// ************* End Section *****************
+// ************* End User Variables Section *************
 
 
 function get_parents(current_subnetwork) {

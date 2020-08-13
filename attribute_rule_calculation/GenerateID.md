@@ -36,3 +36,61 @@ else {
    return $feature.assetid
 }
 ```
+
+A version for a subtype feature class that can be assigned to all and an dict with values per subtype
+```js
+// Assigned To: Device
+// Name: Generate IDs for <FC>
+// Description: Generate IDs for <> using database sequences
+// Subtypes: All
+// Field: assetid
+// Trigger: Insert
+
+var assigned_to_field = $feature.assetid;
+
+// Define the leading text, the trailing text and the delimiter for the ID, this function requires the keyed passed in
+// NextSequenceValue requires a string literal for copy and paste, although it supports a variable, it is recommended
+// to not use one
+function get_id(selector_value) {
+    var id_format = {}
+    var seq_val = null;
+    var selector_value_txt = Text(selector_value);  
+    if (selector_value_txt == '1') {
+        id_format = {
+            'prefix': "ABC",
+            'join_char': '-',
+            'suffix': 'XYZ'
+        }
+        seq_val = NextSequenceValue('<YOUR_SEQUENCE_NAME>');
+    } else {
+        return null;
+    }
+    var id_parts = remove_empty([id_format['prefix'], seq_val, id_format['suffix']])
+    return Concatenate(id_parts, id_format['join_char'])
+}
+
+// ************* End User Variables Section *************
+
+// *************       Functions            *************
+function remove_empty(arr) {
+    var new_arr = [];
+    var j = 0;
+    for (var i = 0; i < Count(arr); i++) {
+        if (!IsEmpty(arr[i]) && Text(arr[i]) != '') {
+            new_arr[j++] = arr[i];
+        }
+    }
+    return new_arr;
+}
+// ************* End Functions Section *****************
+
+if (IsEmpty(assigned_to_field) == false) {
+    return assigned_to_field
+}
+var new_id = get_id(id_selector_value)
+if (IsEmpty(new_id)){
+    return assigned_to_field;
+}
+return new_id
+
+```

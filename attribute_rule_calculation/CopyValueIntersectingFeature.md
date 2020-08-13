@@ -31,7 +31,14 @@ var feature_field = "ValueCopied";
 var intersecting_featset = FeatureSetByName($datastore, 'Line', [intersecting_field], true);
 
 // Intersect the edited feature with the feature set and retrieve the first feature
-var intersected_feature = First(Intersects(intersecting_featset, $feature));
+// For lines, you could use the start or end point by
+// Start point
+//var search_feature = $feature['path'][0][0];
+// End Point
+//var search_feature = $feature['path'][-1][1];
+var search_feature = $feature;
+
+var intersected_feature = First(Intersects(intersecting_featset, search_feature));
 
 // Check to make sure there was an intersected feature, if not, return the original value
 if (intersected_feature == null)

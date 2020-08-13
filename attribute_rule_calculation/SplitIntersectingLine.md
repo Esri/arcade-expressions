@@ -27,7 +27,7 @@ This Arcade expression will split a line when a point is placed.  [Example](./Sp
 //   Would like to convert some blocks to functions for cleaner code
 // END NOTES
 
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
 // The field the rule is assigned to
@@ -37,7 +37,7 @@ var line_class_name = "Line";
 var line_fs = FeatureSetByName($datastore, "Line", ['*'], true);
 var use_cutter = true;
 
-// ************* End Section *****************
+// ************* End User Variables Section *************
 
 function dist_to_line(start_coord, end_coord, point_coord) {
     var Dx = end_coord[0] - start_coord[0];

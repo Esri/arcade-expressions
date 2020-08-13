@@ -21,7 +21,7 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 ```js
 // This rule will update an Z of the container if the edited point has a different Z and is the lowest
 
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
 // The field the rule is assigned to
@@ -50,7 +50,7 @@ function get_features_switch_yard(class_name, fields, include_geometry) {
     }
     return feature_set;
 }
-// ************* End Section *****************
+// ************* End User Variables Section *************
 
 // Converts dict to required return edits format
 function convert_to_edits(record_dict) {

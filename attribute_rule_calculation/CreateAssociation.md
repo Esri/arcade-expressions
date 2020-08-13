@@ -1,7 +1,7 @@
 ```js
 // This rule will create a Junction to Junction association when a feature is placed
 
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
 // The field the rule is assigned to
@@ -24,7 +24,7 @@ var id_lookup = {
     'ElectricDistributionJunction': 9
 };
 
-// ************* End Section *****************
+// ************* End User Variables Section *************
 
 var association_type_lookup = {
     'connectivity': 1,
@@ -85,7 +85,7 @@ return {"result": field_value, "edit": edit_payload};
 ```js
 // This rule will create a Junction to Junction association when a feature is placed
 
-// ***************************************
+// *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
 // The field the rule is assigned to
@@ -108,7 +108,7 @@ var id_lookup = {
     'ElectricJunction': 9
 };
 
-// ************* End Section *****************
+// ************* End User Variables Section *************
 
 var association_type_lookup = {
     'connectivity': 1,
