@@ -41,6 +41,7 @@ class ApplyIndustryRulesGP(object):
                                     parameterType='Required')
         industry_folder = (Path(__file__).parents[1]) / 'Industry'
         industry.filter.list = [p.name for p in industry_folder.glob('*')]
+
         return [industry, workspace]
 
     def isLicensed(self):
@@ -98,7 +99,7 @@ class ApplyIndustryRules:
         fcs = set()
         all_args = []
         all_seq = []
-        pat = re.compile("(?:'sequence': )'(.*?)'")
+        pat = re.compile(r"(?:NextSequenceValue\(')(.*?)'", re.I)
         for path in self.industry.rglob('*.js'):
             if path.parent.name.lower() not in ['calculation', 'constraint', 'validation']:
                 continue
@@ -159,7 +160,8 @@ class ApplyIndustryRules:
             if 'NextSequenceValue' in script_expression:
                 seq_names = pat.findall(script_expression) or []
                 if not seq_names:
-                    arcpy.AddMessage('***** Could not parse sequences, make sure to the dict format for definition')
+                    arcpy.AddWarning(
+                        f'***** Could not parse sequences, make sure to the dict format for definition-{os.path.basename(path)}')
                 else:
                     all_seq.extend([dict(seq_name=seq_name, seq_start_id=1, seq_inc_value=1) for seq_name in seq_names])
 
@@ -200,25 +202,28 @@ class ApplyIndustryRules:
 
     def recreate_ap_seq(self, all_seq, seq_df):
         """ Recreate database sequences in Asset Package """
+
+        arcpy.AddMessage(f"Removing all sequences in the Asset Package")
+        arcpy.TruncateTable_management(os.path.join(self.workspace, 'B_DatabaseSequence'))
         if not all_seq:
             return
-        arcpy.AddMessage(f"Removing sequences with the same name in Asset Package")
         seq_df = seq_df[~seq_df['seq_name'].isin([seq['seq_name'] for seq in all_seq])]
         seq_df = seq_df.append(all_seq, ignore_index=True)
         seq_df.loc[seq_df['current_value'].isnull(), 'current_value'] = 1
-        arcpy.TruncateTable_management(os.path.join(self.workspace, 'B_DatabaseSequence'))
+        arcpy.AddMessage("Adding Seqs...")
+        arcpy.AddMessage(str(seq_df.seq_name.to_list()))
         with arcpy.da.InsertCursor(os.path.join(self.workspace, 'B_DatabaseSequence'), list(seq_df)) as cursor:
             df_to_cursor(seq_df, cursor)
 
     def recreate_ap_ar(self, all_args, rules_df):
         """ Create and/or replace all attribute rules from Industry folder in Asset Package B_AttributeRules table """
+        arcpy.AddMessage(f"Removing all existing Attribute Rules in the Asset Package")
+        arcpy.TruncateTable_management(os.path.join(self.workspace, 'B_AttributeRules'))
         ar_names = [ar['name'] for ar in all_args]
-        arcpy.AddMessage(f"Removing AR with the same name in Asset Package")
         rules_df = rules_df[~rules_df['name'].isin(ar_names)]
         rules_df = rules_df.append(all_args, ignore_index=True)
-        arcpy.TruncateTable_management(os.path.join(self.workspace, 'B_AttributeRules'))
         rules_df.loc[((rules_df['is_editable'].isnull()) & (rules_df['type'] == 'CALCULATION')), 'is_editable'] = 1
-        arcpy.AddMessage("Adding...")
+        arcpy.AddMessage("Adding ARs...")
         arcpy.AddMessage(str(rules_df.name.to_list()))
         with arcpy.da.InsertCursor(os.path.join(self.workspace, 'B_AttributeRules'), list(rules_df)) as cursor:
             df_to_cursor(rules_df, cursor)

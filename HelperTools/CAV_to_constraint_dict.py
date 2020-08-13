@@ -5,7 +5,7 @@ import pandas as pd
 import os
 import pprint
 
-fc = r"C:\\temp\\UPDM2019\\UN\\Pipeline_UtilityNetwork.gdb\\UtilityNetwork\\PipelineLine"
+fc = r"C:\\temp\\GasPipelineEnterpriseDataManagement\\Databases\\UPDM_UtilityNetwork.gdb\\UtilityNetwork\\PipelineLine"
 field_group_name = 'Limit Material By Asset Type'
 
 
