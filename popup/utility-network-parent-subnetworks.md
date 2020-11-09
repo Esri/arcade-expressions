@@ -141,11 +141,11 @@ function create_result() {
             continue
         }
         if (feature_tier_rank == tier_key) {
-            // If you want to display the information about other subnetworks on the same tier as the feaures, change the
-            // line below,
-            result_string = result_string + tier_names[tier_key] + " - " + Concatenate(results_dict[tier_key], ', ') + " \n";
+            // If you want to display the information about other subnetworks on the same tier as the feature, change 
+            // the line below,
+            result_string = result_string + tier_names[tier_key] + " - " + Concatenate(Distinct(results_dict[tier_key]), ', ') + " \n";
         } else {
-            result_string = result_string + tier_names[tier_key] + " - " + Concatenate(results_dict[tier_key], ', ') + " \n";
+            result_string = result_string + tier_names[tier_key] + " - " + Concatenate(Distinct(results_dict[tier_key]), ', ') + " \n";
         }
     }
     return result_string;
