@@ -25,10 +25,17 @@ This Arcade expression will split a line when a point is placed.  [Example](./Sp
 //   As this is not calling a GDB split, Domain Split policy will not be honored, this would have to add to this logic
 //   The logic for a point on a line but not at vertex might need rework
 //   Would like to convert some blocks to functions for cleaner code
+//   Setting the keys/fields to remove from the new feature is critical, not setting this list, the server may reject the edit if the insert is sending read only fields
 // END NOTES
 
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
+
+// List of keys to remove from new feature, existing features change only requires global id
+// If this is being used on a Utility Network layer, make sure to remove all the Subnetwork fields and other read only fields, here is a complete example from the water data model
+//  var keys = ['OBJECTID','ASSOCIATIONSTATUS','ISCONNECTED','CREATIONDATE','CREATOR','LASTUPDATE','UPDATEDBY','GLOBALID','SUBNETWORKNAME','SUPPORTEDSUBNETWORKNAME','SHAPE_LENGTH','ST_LENGTH(SHAPE)','MEASUREDLENGTH','CPTRACEABILITY',"ADDDETAILS","ASSETID","BONDEDINSULATED","CPOVERRIDE","CPSUBNETWORKNAME","DESIGNTYPE","DIAMETER","DMASUBNETWORKNAME","FROMDEVICETERMINAL","INSERVICEDATE","INSTALLDATE","ISOLATIONSUBNETWORKNAME","LIFECYCLESTATUS","MAINTBY","MATERIAL","NOTES","OWNEDBY","PRESSURESUBNETWORKNAME","RETIREDDATE","SHAPE__LENGTH","SPATIALCONFIDENCE","SPATIALSOURCE","SUPPORTINGSUBNETWORKNAME","SYSTEMSUBNETWORKNAME","TODEVICETERMINAL"];
+  
+var keys = ['SHAPE_LENGTH', 'GLOBALID', 'OBJECTID'];
 
 // The field the rule is assigned to
 var field_value = $feature.ValueCopied;
@@ -246,8 +253,6 @@ for (var line_feature in intersecting_lines) {
     // Convert feature to dictionary to get all its attributes
     var line_att = Dictionary(Text(line_feature))['attributes'];
 
-    // List of keys to remove from new feature, existing features change only requires global id
-    var keys = ['SHAPE_LENGTH', 'GLOBALID', 'OBJECTID'];
     // Check length of new shapes, adjust the current feature to the longest segment
     if (polyline_1_length > polyline_2_length) {
         update_features[Count(update_features)] = {
