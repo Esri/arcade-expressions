@@ -31,11 +31,11 @@ This Arcade expression will split a line when a point is placed.  [Example](./Sp
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
-// List of keys to remove from new feature, existing features change only requires global id
+// List of fields to remove from new feature, existing features change only requires global id
 // If this is being used on a Utility Network layer, make sure to remove all the Subnetwork fields and other read only fields, here is a complete example from the water data model
-//  var keys = ['OBJECTID','ASSOCIATIONSTATUS','ISCONNECTED','CREATIONDATE','CREATOR','LASTUPDATE','UPDATEDBY','GLOBALID','SUBNETWORKNAME','SUPPORTEDSUBNETWORKNAME','SHAPE_LENGTH','ST_LENGTH(SHAPE)','MEASUREDLENGTH','CPTRACEABILITY',"ADDDETAILS","ASSETID","BONDEDINSULATED","CPOVERRIDE","CPSUBNETWORKNAME","DESIGNTYPE","DIAMETER","DMASUBNETWORKNAME","FROMDEVICETERMINAL","INSERVICEDATE","INSTALLDATE","ISOLATIONSUBNETWORKNAME","LIFECYCLESTATUS","MAINTBY","MATERIAL","NOTES","OWNEDBY","PRESSURESUBNETWORKNAME","RETIREDDATE","SHAPE__LENGTH","SPATIALCONFIDENCE","SPATIALSOURCE","SUPPORTINGSUBNETWORKNAME","SYSTEMSUBNETWORKNAME","TODEVICETERMINAL"];
-  
-var keys = ['SHAPE_LENGTH', 'GLOBALID', 'OBJECTID'];
+//  var remove_fields_from_new_feature = ['OBJECTID','ASSOCIATIONSTATUS','ISCONNECTED','CREATIONDATE','CREATOR','LASTUPDATE','UPDATEDBY','GLOBALID','SUBNETWORKNAME','SUPPORTEDSUBNETWORKNAME','SHAPE_LENGTH','ST_LENGTH(SHAPE)','MEASUREDLENGTH','CPTRACEABILITY',"ADDDETAILS","ASSETID","BONDEDINSULATED","CPOVERRIDE","CPSUBNETWORKNAME","DESIGNTYPE","DIAMETER","DMASUBNETWORKNAME","FROMDEVICETERMINAL","INSERVICEDATE","INSTALLDATE","ISOLATIONSUBNETWORKNAME","LIFECYCLESTATUS","MAINTBY","MATERIAL","NOTES","OWNEDBY","PRESSURESUBNETWORKNAME","RETIREDDATE","SHAPE__LENGTH","SPATIALCONFIDENCE","SPATIALSOURCE","SUPPORTINGSUBNETWORKNAME","SYSTEMSUBNETWORKNAME","TODEVICETERMINAL"];
+
+var remove_fields_from_new_feature = ['SHAPE_LENGTH', 'GLOBALID', 'OBJECTID'];
 
 // The field the rule is assigned to
 var field_value = $feature.ValueCopied;
@@ -68,6 +68,24 @@ function compare_coordinate(source_geo, coordinate) {
     return true
 }
 
+function get_non_edit_fields(convert_string) {
+    // convert_string options are Upper, Lower or Null
+    var sc = Schema($layer)
+    var non_edit_fields = [];
+    var func = Decode(Lower(convert_string), "lower", Lower, "upper", Upper, Text)
+
+    for (var i in sc.fields) {
+        if (sc.fields[i]['editable'] == false) {
+            var fld_name = sc.fields[i]['name']
+            if (!IsEmpty(convert_string)) {
+                fld_name = func(fld_name);
+            }
+            non_edit_fields[Count(non_edit_fields)] = fld_name
+        }
+    }
+    return non_edit_fields
+}
+
 function pop_keys(dict, keys) {
     var new_dict = {};
     for (var k in dict) {
@@ -83,7 +101,7 @@ function cut_line_at_point_cutter(line_feature, point_geometry) {
     var search = Extent(Buffer(point_geometry, .1, "meter"));
     var geo = Geometry(line_feature);
     var segment = Clip(geo, search)["paths"][0];
-    
+
     // Rotate logic - https://stackoverflow.com/questions/45701615/how-can-i-rotate-a-line-segment-around-its-center-by-90-degrees
     // Start and end points of the line
     var x1 = segment[0]['x']
@@ -213,6 +231,13 @@ function cut_line_at_point(line_geometry, point_geometry) {
     return [new_shape_1, new_shape_2];
 }
 
+// merge the non editable fields in the pop key list
+var non_edit_fields = get_non_edit_fields('Upper');
+for (var i in non_edit_fields) {
+    if (indexof(remove_fields_from_new_feature, non_edit_fields[i]) < 0) {
+        remove_fields_from_new_feature[Count(remove_fields_from_new_feature)] = non_edit_fields[i]
+    }
+}
 var intersecting_lines = Intersects(line_fs, $feature);
 // If no features were found, return the original value
 if (IsEmpty(intersecting_lines) || Count(intersecting_lines) == 0) {
@@ -263,7 +288,7 @@ for (var line_feature in intersecting_lines) {
             {
                 'globalID': GUID(),
                 'geometry': polyline_2,
-                'attributes': pop_keys(line_att, keys)
+                'attributes': pop_keys(line_att, remove_fields_from_new_feature)
             };
     } else {
         update_features[Count(update_features)] = {
@@ -274,7 +299,7 @@ for (var line_feature in intersecting_lines) {
             {
                 'globalID': GUID(),
                 'geometry': polyline_1,
-                'attributes': pop_keys(line_att, keys)
+                'attributes': pop_keys(line_att, remove_fields_from_new_feature)
             };
     }
 }
