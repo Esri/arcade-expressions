@@ -18,6 +18,9 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 This Arcade expression will split a line when a point is placed.  [Example](./SplitIntersectingLine.zip)
 
 ```js
+
+var remove_fields_from_new_feature = ['SHAPE_LENGTH', 'GLOBALID', 'OBJECTID'];
+
 // Split the intersecting line
 
 // NOTES
@@ -31,21 +34,20 @@ This Arcade expression will split a line when a point is placed.  [Example](./Sp
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
-// List of fields to remove from new feature, existing features change only requires global id
-// If this is being used on a Utility Network layer, make sure to remove all the Subnetwork fields and other read only fields, here is a complete example from the water data model
-//  var remove_fields_from_new_feature = ['OBJECTID','ASSOCIATIONSTATUS','ISCONNECTED','CREATIONDATE','CREATOR','LASTUPDATE','UPDATEDBY','GLOBALID','SUBNETWORKNAME','SUPPORTEDSUBNETWORKNAME','SHAPE_LENGTH','ST_LENGTH(SHAPE)','MEASUREDLENGTH','CPTRACEABILITY',"ADDDETAILS","ASSETID","BONDEDINSULATED","CPOVERRIDE","CPSUBNETWORKNAME","DESIGNTYPE","DIAMETER","DMASUBNETWORKNAME","FROMDEVICETERMINAL","INSERVICEDATE","INSTALLDATE","ISOLATIONSUBNETWORKNAME","LIFECYCLESTATUS","MAINTBY","MATERIAL","NOTES","OWNEDBY","PRESSURESUBNETWORKNAME","RETIREDDATE","SHAPE__LENGTH","SPATIALCONFIDENCE","SPATIALSOURCE","SUPPORTINGSUBNETWORKNAME","SYSTEMSUBNETWORKNAME","TODEVICETERMINAL"];
-
-var remove_fields_from_new_feature = ['SHAPE_LENGTH', 'GLOBALID', 'OBJECTID'];
+// List of fields to remove from new feature, existing features change only requires global id, non editable fields
+// are removed for you by using the Schema function to determine them
+var remove_fields_from_new_feature = [];
 
 // The field the rule is assigned to
 var field_value = $feature.ValueCopied;
 // The line class to split
 var line_class_name = "Line";
+// This is used to get Non Editable fields, do not change the fields from *
 var line_fs = FeatureSetByName($datastore, "Line", ['*'], true);
 var use_cutter = true;
 
-// Set this to the assigned to class, this is required to get the non editable fields from Schema
-var assigned_to_class = FeatureSetByName($datastore, 'Point', ['*'], false)
+// When the line is split, a new vertex is added, this could be within a distance of an existing vertex, this tolerance will remove that closest one
+var remove_vertex_tolerance = .00002
 
 // ************* End User Variables Section *************
 
@@ -73,7 +75,7 @@ function compare_coordinate(source_geo, coordinate) {
 
 function get_non_edit_fields(convert_string) {
     // convert_string options are Upper, Lower or Null
-    var sc = Schema(assigned_to_class)
+    var sc = Schema(line_fs)
     var non_edit_fields = [];
     var func = Decode(Lower(convert_string), "lower", Lower, "upper", Upper, Text)
 
@@ -142,7 +144,49 @@ function cut_line_at_point_cutter(line_feature, point_geometry) {
         "paths": [[[x1, y1], [x2, y2]]],
         "spatialReference": {"wkid": geo.spatialReference.wkid}
     });
-    return Cut(line_feature, cutter);
+    var new_lines = Cut(line_feature, cutter);
+    var line_a = Dictionary(Text(new_lines[0]))
+    var line_b = Dictionary(Text(new_lines[1]))
+    line_a['paths'] = remove_vertex(line_a['paths'])
+    line_b['paths'] = remove_vertex(line_b['paths'])
+    return [Polyline(line_a), Polyline(line_b)]
+}
+
+function remove_vertex(path_array) {
+    var current_path = path_array[0]
+    var vertex_count = Count(current_path)
+    if (vertex_count > 2) {
+        var dif_x = ABS(current_path[0][0] - current_path[1][0])
+        var dif_y = ABS(current_path[0][1] - current_path[1][1])
+        if (dif_x <= remove_vertex_tolerance && dif_y <= remove_vertex_tolerance) {
+            var new_path = []
+            for (var i in current_path) {
+                if (i != 1) {
+                    new_path[Count(new_path)] = current_path[i]
+                }
+            }
+            current_path = new_path
+        }
+    }
+    path_array[0] = current_path
+    current_path = path_array[-1]
+    vertex_count = Count(current_path)
+    if (Count(current_path) > 2) {
+        var dif_x = ABS(current_path[-1][0] - current_path[-2][0])
+        var dif_y = ABS(current_path[-1][1] - current_path[-2][1])
+
+        if (dif_x <= remove_vertex_tolerance && dif_y <= remove_vertex_tolerance) {
+            var new_path = []
+            for (var i in current_path) {
+                if (i != vertex_count - 2) {
+                    new_path[Count(new_path)] = current_path[i]
+                }
+            }
+            current_path = new_path
+        }
+    }
+    path_array[-1] = current_path
+    return path_array
 }
 
 function cut_line_at_point(line_geometry, point_geometry) {
@@ -272,8 +316,10 @@ for (var line_feature in intersecting_lines) {
             continue;
         }
         var line_spat_ref = Geometry(line_feature).spatialReference.wkid;
-        polyline_1 = Polyline({"paths": new_geoms[0], "spatialReference": {"wkid": line_spat_ref}});
-        polyline_2 = Polyline({"paths": new_geoms[1], "spatialReference": {"wkid": line_spat_ref}});
+        var new_geom_1 = remove_vertex(new_geoms[0])
+        var new_geom_2 = remove_vertex(new_geoms[1])
+        polyline_1 = Polyline({"paths": new_geom_1, "spatialReference": {"wkid": line_spat_ref}});
+        polyline_2 = Polyline({"paths": new_geom_2, "spatialReference": {"wkid": line_spat_ref}});
     }
     var polyline_1_length = Length(polyline_1);
     var polyline_2_length = Length(polyline_2);
