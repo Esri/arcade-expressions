@@ -44,6 +44,9 @@ var line_class_name = "Line";
 var line_fs = FeatureSetByName($datastore, "Line", ['*'], true);
 var use_cutter = true;
 
+// Set this to the assigned to class, this is required to get the non editable fields from Schema
+var assigned_to_class = FeatureSetByName($datastore, 'Point', ['*'], false)
+
 // ************* End User Variables Section *************
 
 function dist_to_line(start_coord, end_coord, point_coord) {
@@ -70,7 +73,7 @@ function compare_coordinate(source_geo, coordinate) {
 
 function get_non_edit_fields(convert_string) {
     // convert_string options are Upper, Lower or Null
-    var sc = Schema($layer)
+    var sc = Schema(assigned_to_class)
     var non_edit_fields = [];
     var func = Decode(Lower(convert_string), "lower", Lower, "upper", Upper, Text)
 
