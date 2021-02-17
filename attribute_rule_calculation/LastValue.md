@@ -19,4 +19,4 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 
 Sample data with rule implemented.  [Example](./LastValue.gdb.zip)
 
-Code is stored in the a JS file.  Code](./LastValue.js)
+Code is stored in the a JS file.  [Code](./LastValue.js)
