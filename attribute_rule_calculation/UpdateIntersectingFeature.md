@@ -82,12 +82,12 @@ for (var sewer_main in connected_mains) {
     // Depending on where the edited feature is snapped to main, update different fields
     if (points_snapped(port_geo, from_point)) {
         updates[i++] = {
-            'globalid': device.globalid,
+            'globalid': sewer_main.globalid,
             'attributes': {'fromid': assetid}
         }
     } else {
         updates[i++] = {
-            'globalid': device.globalid,
+            'globalid': sewer_main.globalid,
             'attributes': {'toid': assetid}
         }
     }
