@@ -39,6 +39,10 @@ function get_last_values(current_time) {
 }
 
 function process(field_name) {
+    // Check if field exist, needed to bypass validatiob
+    if (!HasKey($feature, field_name)) {
+        return null;
+    }
     // check if there is a valid last value within the max age window in the last value tale
     var feature_value = $feature[field_name];
     var has_last_value = HasKey(last_values, field_name);
@@ -87,10 +91,13 @@ if (Count(inserts) > 0) {
 if (Count(updates) > 0) {
     Push(edit, {'className': last_value_table, 'updates': updates})
 }
-
-return {
-    'result': {
-        'attributes': attributes
-    },
-    'edit': edit
+var result = {};
+if (Count(edit) > 0) {
+    result['edit'] = edit;
 }
+if (Text(attributes) != '{}') {
+    result['result'] = {
+        'attributes': attributes
+    }
+}
+return result
