@@ -35,4 +35,4 @@ var fs_gp = GroupBy(fs_split, ['split_choices'], [ { name: 'split_count', expres
 // Return enhanced featureset
 return fs_gp
 ```
-![The pie chart on the left is driven by a column with comma separated values. The other pie chart is driven by the Arcade data expession that splis the column across multiple rows.](/images/SplitCategories(PieChart).png)
+![](/dashboard_data/images/SplitCategories(PieChart).png)
