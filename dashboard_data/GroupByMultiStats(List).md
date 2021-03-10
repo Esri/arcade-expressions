@@ -14,4 +14,4 @@ return GroupBy(fs, ['COUNTY'],
                     statistic: 'MAX' },]); 
 ```
 
-![GroupByList](/images/GroupByList.png)
+![GroupByList](/dashboard_data/images/GroupByList.png)
