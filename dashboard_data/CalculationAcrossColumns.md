@@ -13,4 +13,4 @@ var ratioDict = {
 return FeatureSet(Text(ratioDict)); 
 ```
 
-![Indicator](/images/CalculationAcrossColumns.png)
+![Indicator](/dashboard_data/images/CalculationAcrossColumns.png)
