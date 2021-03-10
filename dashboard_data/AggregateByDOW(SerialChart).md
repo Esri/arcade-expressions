@@ -45,5 +45,5 @@ var fs_gp = GroupBy(fs_dict,
 return fs_gp; 
 ```
 
-![Serial chart](arcade-expressions/dashboard_data/images/DOW.png)
+![Serial chart](/dashboard_data/images/DOW.png)
 
