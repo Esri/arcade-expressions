@@ -10,4 +10,4 @@ return GroupBy(fs, ['Division'], [{name:'AvgTravelTimeSecs',expression:'Response
 
 The resulting data can be visualized in a serial chart element using the 'Categories from Features' configuration. 
 
-![](https://devtopia.esri.com/viv10651/db-data-expressions/blob/master/images/GroupBySQLExpressionAverage(SerialChart).png)
+![](/dashboard_data/images/GroupBySQLExpressionAverage(SerialChart).png)
