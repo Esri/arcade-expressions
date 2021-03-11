@@ -14,6 +14,6 @@ var ratioDict = {
 return FeatureSet(Text(ratioDict)); 
 ```
 
-The FeatureSet returns the Case Fatality Ratio as a percentage which can visualized in an Indicator element. 
+The FeatureSet returns Case Fatality Ratio as a percentage which can visualized in an Indicator element. 
 
 ![Indicator](/dashboard_data/images/CalculationAcrossColumns.png)
