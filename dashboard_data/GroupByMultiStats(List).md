@@ -1,17 +1,12 @@
-This expression calculates two statistic values using the group by function. The list element in Dashboards can be enhanced to show one or more statistics using the resultant featureset. 
+# Calculate multiple statistics using Arcade's GroupBy() function.  
+
+This expression calculates two statistic values using the group by function. The featureset can be used to enhance the List element which does not support statistics. 
 
 ```
-var p = 'https://dbqa.maps.arcgis.com/';
-var itemId = '164373608f1241e78c66f8f4b9822866';
-var fs = FeatureSetByPortalItem(Portal(p), itemId, 0, ['*'], false);
+var fs = FeatureSetByPortalItem(Portal('https://dbqa.maps.arcgis.com/'), '164373608f1241e78c66f8f4b9822866', 0, ['*'], false);
 
-return GroupBy(fs, ['COUNTY'], 
-                    [{ name: 'total_sites', 
-                    expression: 'STATIONNUM', 
-                    statistic: 'COUNT' }, 
-                    { name: 'max_rain', 
-                    expression: 'RAINFALL', 
-                    statistic: 'MAX' },]); 
+return GroupBy(fs, ['COUNTY'], [{name: 'total_sites', expression: 'STATIONNUM', statistic: 'COUNT' }, 
+                   {name: 'max_rain', expression: 'RAINFALL', statistic: 'MAX' },]); 
 ```
 
 ![GroupByList](/dashboard_data/images/GroupByList.png)
