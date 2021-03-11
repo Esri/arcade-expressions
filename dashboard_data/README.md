@@ -4,4 +4,4 @@ Dashboard authors can create [data expressions](https://docdev.arcgis.com/en/das
 
 This folder holds sample data expressions and recommended charts. 
 
-Note: Data expressions and advanced formatting in Dashboards are two different profiles. 
+Note: Data expressions and advanced formatting in Dashboards are separate Arcade profiles. 
