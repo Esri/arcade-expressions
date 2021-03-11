@@ -1,7 +1,9 @@
-This expression shows how you can leverage SQL expressions in the Arcade GroupBy() function to calculate a metric as a virtual field. 
-In this example, we are calculating Average Travel Time by Division for a Fire Agency. 
+# Calculate a statistic on a virtual field. 
+
+This expression shows how you can leverage the Arcade GroupBy() function to calculate a statisitic on a virtual field. In this example, we are calculating Average Travel Time by Division for a Fire Agency. 
 
 Travel time is calculated using the formula ```(Response Time) - (Dispatch Time) - (Turnout Time)```
+Response time, dispatch time and turnout time are separate fields in the feature layer. 
 
 ```
 var fs = FeatureSetByPortalItem(Portal('https://arcgis.com'),'07945c22c9bc497f9489f97e6203de3c',0,['ResponseTimeSecs', 'DispatchTimeSecs','TurnoutTimeSecs', 'Division'], false)
