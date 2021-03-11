@@ -1,4 +1,6 @@
-This data expression splits a comma separated field into multiple rows of single values. A common use case is data from a Survey123 form with multichoice questions, like in the below example. 
+## Split comma separated values across multiple rows
+
+This data expression splits a comma separated values in a field into multiple rows of single values. A common use case is data from a Survey123 form with multichoice questions, like in the below example. 
 ```
 var p = 'https://www.arcgis.com'
 var itemID = 'a2e03e78e0d042d19e6f731c9b522bfc'
@@ -35,4 +37,7 @@ var fs_gp = GroupBy(fs_split, ['split_choices'], [ { name: 'split_count', expres
 // Return enhanced featureset
 return fs_gp
 ```
+
+By restructuring data, we are able to build a more effective pie chart. The below image shows two pie charts for the same underlying dataset. The chart on the left visualizes the raw data. The chart on the right is driven by the enhanced dataset generated this data expression.  
+
 ![](/dashboard_data/images/SplitCategories(PieChart).png)
