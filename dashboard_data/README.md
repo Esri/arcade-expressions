@@ -1,5 +1,7 @@
-# db-data-expressions
+# Sample data expressions
 
-ArcGIS Dashboards will support Arcade data expressions in the coming release. Publishers can create data expressions using the [Arcade function library](https://developers.arcgis.com/arcade/function-reference/) to unlock insights and create robust visualizations conveniently. Data expressions must return [feature sets](https://developers.arcgis.com/arcade/guide/types/) which can drive data driven elements in Dashboards. Data expressions are authored, saved, and executed within the context of a Dashboard. 
+Dashboard authors can create [data expressions](https://docdev.arcgis.com/en/dashboards/get-started/create-data-expressions.htm) using the [Arcade function library](https://developers.arcgis.com/arcade/function-reference/) to unlock insights and create robust visualizations. Data expressions must return [feature sets](https://developers.arcgis.com/arcade/guide/types/) which can drive data driven elements in Dashboards. Data expressions are authored, saved, and executed within the context of a Dashboard. 
 
-This repo holds sample Arcade data expressions, along with use cases and charts. Each markdown file has a code block with a data expression. The markdown file name contains the recommended element for that data expression in curly braces.
+This folder holds sample data expressions and recommended charts. 
+
+Note: Data expressions and advanced formatting in Dashboards are two different profiles. 
