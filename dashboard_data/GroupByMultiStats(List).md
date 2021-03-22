@@ -3,7 +3,7 @@
 This expression calculates two statistic values using the group by function. The featureset can be used to enhance the List element which does not support statistics. 
 
 ```
-var fs = FeatureSetByPortalItem(Portal('https://arcgis.com/'), '164373608f1241e78c66f8f4b9822866', 0, ['STATIONNUM', 'RAINFALL'], false);
+var fs = FeatureSetByPortalItem(Portal('https://arcgis.com/'), '164373608f1241e78c66f8f4b9822866', 0, ['COUNTY','STATIONNUM', 'RAINFALL'], false);
 
 return GroupBy(fs, ['COUNTY'], [{name: 'total_sites', expression: 'STATIONNUM', statistic: 'COUNT' }, 
                    {name: 'max_rain', expression: 'RAINFALL', statistic: 'MAX' },]); 
