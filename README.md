@@ -10,6 +10,7 @@ These expressions are organized based on their intended [execution profile](http
 * [Alias](https://github.com/Esri/arcade-expressions/tree/master/alias)
 * [Calculation](https://github.com/Esri/arcade-expressions/tree/master/attribute_rule_calculation)
 * [Constraint](https://github.com/Esri/arcade-expressions/tree/master/constraint)
+* [Dashboard data](https://github.com/Esri/arcade-expressions/tree/master/dashboard_data)
 * [Labeling](https://github.com/Esri/arcade-expressions/tree/master/labeling)
 * [Popup](https://github.com/Esri/arcade-expressions/tree/master/popup)
 * [Visualization](https://github.com/Esri/arcade-expressions/tree/master/visualization)
