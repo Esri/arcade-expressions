@@ -82,4 +82,4 @@ return FeatureSet(Text(combinedDict));
 
 We can use this expression to create a serial chart that shows both the cumulative count of vaccinations allocated each week and how many doses were allocated by each manufacturer. 
 
-![Serial chart](/Data%20Expressions/images/combined-serial-chart.png)
+![Serial chart](/dashboard_data/images/combined-serial-chart.png)
