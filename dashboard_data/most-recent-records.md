@@ -28,4 +28,4 @@ return Filter(fs, "date = @maxDate");
 
 We can use this expression to create and update indicators or gauges that show the most recent information on vaccination adiministration. 
 
-![Indicators](/Data%20Expressions/images/most-recent-record.png)
+![Indicators](/dashboard_data/images/most-recent-record.png)
