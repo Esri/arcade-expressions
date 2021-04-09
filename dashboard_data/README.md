@@ -5,5 +5,5 @@ This folder contains sample [data expressions](https://doc.arcgis.com/en/dashboa
 Note: Data expressions and advanced formatting in Dashboards are separate [Arcade profiles](https://developers.arcgis.com/arcade/guide/profiles/). 
 
 ### Additional resources: 
-1. Introduction and tutorial-style [blog on data expressions](https://www.esri.com/arcgis-blog/?post_type=blog&p=1162422&preview=true). 
-2. [Best practices](https://docdev.arcgis.com/en/dashboards/reference/authoring-data-expressions.htm) for working with data expressions. 
+1. Introduction and tutorial-style [blog on data expressions](https://www.esri.com/arcgis-blog/products/ops-dashboard/real-time/introducing-data-expressions-in-arcgis-dashboards). 
+2. [Best practices](https://doc.arcgis.com/en/dashboards/reference/authoring-data-expressions.htm) for working with data expressions. 
