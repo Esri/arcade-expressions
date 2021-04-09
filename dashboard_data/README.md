@@ -6,4 +6,4 @@ Note: Data expressions and advanced formatting in Dashboards are separate [Arcad
 
 ### Additional resources: 
 1. Introduction and tutorial-style [blog on data expressions](https://www.esri.com/arcgis-blog/?post_type=blog&p=1162422&preview=true). 
-2. [Best practices](https://docdev.arcgis.com/en/dashboards/reference/authoring-data-expressions.htm) for working with data expressions]. 
+2. [Best practices](https://docdev.arcgis.com/en/dashboards/reference/authoring-data-expressions.htm) for working with data expressions. 
