@@ -1,4 +1,4 @@
-This data expression can be used to mimic the SQL ```HAVING``` clause. The HAVING clause filters a dataset post aggregation. 
+This data expression can be used to mimic the SQL ```HAVING``` clause which filters aggregated data. 
 
 ```
 var fs= FeatureSetByPortalItem(Portal('https://www.arcgis.com'),'f8492125f78445b284751ced4e9d6573',0,['Waterbody_Type','Rainfall'],false);
