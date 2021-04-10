@@ -18,4 +18,4 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 This Arcade expression rule extracts the address number from the closest street centerline.. An example with using this rule is included in the [Example](./GetAddressFromCenterline.zip)
 
 
-Code(./GetAddressFromCenterline.js)
+[Code](./GetAddressFromCenterline.js)
