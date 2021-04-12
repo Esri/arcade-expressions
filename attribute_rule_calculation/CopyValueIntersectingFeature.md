@@ -33,9 +33,9 @@ var intersecting_featset = FeatureSetByName($datastore, 'Line', [intersecting_fi
 // Intersect the edited feature with the feature set and retrieve the first feature
 // For lines, you could use the start or end point by
 // Start point
-//var search_feature = $feature['path'][0][0];
+//var search_feature = Geometry($feature)['paths'][0][0];
 // End Point
-//var search_feature = $feature['path'][-1][1];
+//var search_feature = Geometry($feature)['paths'][-1][1];
 var search_feature = $feature;
 
 var intersected_feature = First(Intersects(intersecting_featset, search_feature));
