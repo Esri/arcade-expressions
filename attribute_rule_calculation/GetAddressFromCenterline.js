@@ -7,6 +7,12 @@ var fromright = "FROMRIGHT"
 var toright = "TORIGHT"
 var fullname = "FULLNAME"
 
+// Site Address Point fields to calculate
+var percent_field = "PERCENTALONG"   // percent along centerline where site address lies
+var offdir_field = "OFFDIR"          // side of centerline where site address lies
+var fullname_field = "FULLNAME"      // name of closest centerline
+var address_field = "ADDRESSNUM"     // address number calculated based on where site address lies
+
 // The Road Centerline feature set
 var line_class = FeatureSetByName($datastore, "RoadCenterline", [fromleft, toleft, fromright, toright, fullname], true);
 
@@ -28,7 +34,7 @@ function find_closest_line() {
 
 function closest_point_info(point_feature, line_feature) {
     /*
-        finds the closest point from point_feature to line_feature
+        finds the closest point on line_feature from point_feature
 
         Args:
             point_feature: Point Geometry
@@ -37,7 +43,7 @@ function closest_point_info(point_feature, line_feature) {
         Returns: dictionary
             {distance: number,    // distance from point_feature to closest point
              coordinates: array,  // the coordinate pair of the closest point
-             isVertex: bool,      // if the closest point is a vertex of other_feature
+             isVertex: bool,      // if the closest point is a vertex of line_feature
              lineSide: text}      // side of the line that point_feature is on based
 
     */
@@ -139,7 +145,7 @@ function intersect_distance_along(intersect_geometry, line, unit){
                 var last_segment = Polyline({'paths': [[[first_point.x, first_point.y], [intersect_geometry.x, intersect_geometry.y]]], 'spatialReference' : first_point.spatialReference});
                 // Add to the total distance along the line and break the loop
                 distance_along_line += Length(last_segment, unit);
-                return [two_point_line, distance_along_line]
+                return distance_along_line
             }
             // Add to the toal distance along the line
             distance_along_line += Length(two_point_line, unit);
@@ -158,7 +164,9 @@ function create_point(coordinates, spatial_ref) {
 function get_addr_num(road, percent_along, dir) {
     // This function will return the address number of the new site address point
     // It determines this based on the from and to address range on the intersecting road and the direction of the offset
+    // If direction is null, defaults to left offset
     var addr_num = null;
+    if (IsEmpty(dir)) dir = 'left';
     var from = road[fromleft];
     var to = road[toleft];
     if (Lower(dir) == 'right') {
@@ -189,22 +197,24 @@ if (data == null) return
 
 // calculate the distance along of closest point
 var closest_point = create_point(data["coordinates"], Geometry($feature)["spatialReference"])
-var results = intersect_distance_along(closest_point, closest_line, 'feet')
-if (results == null) return {
+var distance_along = intersect_distance_along(closest_point, closest_line, "feet")
+if (distance_along == null) return {
     "errorMessage": "could not calculate distance along"
 }
-var percent_along = results[-1] / Length(closest_line, "feet")
+var percent_along = distance_along / Length(closest_line, "feet")
 
 // calculate address number
 var address_num = get_addr_num(closest_line, percent_along, data["lineSide"])
 
+// return result to update attributes of $feature
 return {
     "result": {
-        "attributes":{
-            "percentalong": percent_along,
-            "offdir": data["lineSide"],
-            "addressnum": address_num,
-            "fullname": closest_line[fullname]
-        }
+        "attributes":
+            Dictionary(
+                percent_field, percent_along,
+                offdir_field, data["lineSide"],
+                address_field, address_num,
+                fullname_field, closest_line[fullname]
+            )
     }
 }
