@@ -16,18 +16,17 @@ for (var feature in fs) {
     var split_array  =  Split(feature["Report_road_condition"], ',') 
     var count_arr = Count(split_array) 
     for(var i = 0; i < count_arr; i++ ){ 
-        choicesDict.features[index] = { 
+        choicesDict.features[index++] = { 
             'attributes': { 'split_choices': Trim(split_array[i]),  
-            }} 
-    index++; 
-}} 
+            }
+}}} 
 
 // Convert dictionary to featureSet. 
 var fs_dict = FeatureSet(Text(choicesDict)); 
 
 // Return featureset after grouping by hazard types. 
 return GroupBy(fs_dict, ['split_choices'], 
-       [{ name: 'split_count', expression: 'split_choices', statistic: 'COUNT' }]); 
+       [{ name: 'split_count', expression: 'split_choices', statistic: 'COUNT' }]);  
 ```
 
 By restructuring data, we are able to build a more effective pie chart. The below image shows two pie charts for the same underlying dataset. The chart on the left visualizes the raw data. The chart on the right is driven by the enhanced dataset generated this data expression.  
