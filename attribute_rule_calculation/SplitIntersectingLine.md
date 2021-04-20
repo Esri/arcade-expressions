@@ -18,7 +18,8 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 This Arcade expression will split a line when a point is placed.  [Example](./SplitIntersectingLine.zip)
 
 ```js
-
+// The field to not move to a new field, edit tracking fields need to be remove
+// All fields listed here, need to be in upper case, they are forced to upper in the logic below.
 var remove_fields_from_new_feature = ['SHAPE_LENGTH', 'GLOBALID', 'OBJECTID'];
 
 // Split the intersecting line
