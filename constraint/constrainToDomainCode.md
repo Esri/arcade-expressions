@@ -87,7 +87,7 @@ function get_all_fields(feature) {
 var invalid_value_errors = [];
 
 var all_fields = get_all_fields($feature);
-assigned_fs = get_features_switch_yard($datastore, assigned_to_class, all_fields, false);
+var assigned_fs = get_features_switch_yard($datastore, assigned_to_class, all_fields, false);
 for (var idx in all_fields) {
     var d2 = Domain(assigned_fs, all_fields[idx]);  // have to force assetgroup to Number to get past validation
     if (IsEmpty(d2)) {
