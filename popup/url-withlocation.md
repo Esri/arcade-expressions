@@ -23,9 +23,9 @@ To configure the script to your layer, you replace the EndGoal variable with one
 var EndGoal = "Google Directions"
 
 var BaseUrl = Decode( EndGoal,
-  "Google Directions", "https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=",
-  "Google Panoramic", "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=",
-  "Google Pin", "https://maps.google.com/maps?t=k&q=loc:",
+  "Google Directions", "https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=${LATITUDE},${LONGITUDE}",
+  "Google Panoramic", "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${LATITUDE},${LONGITUDE}",
+  "Google Pin", "https://maps.google.com/maps?t=k&q=loc:${LATITUDE},${LONGITUDE}",
   "Invalid"
 );
 
@@ -63,8 +63,11 @@ if (ArcadeSr == 4326) {
 }
 
 //Build Url Link
-function BuildLink(Url, Lat, Long) {
-  return Url + text(Lat) + "," + text(Long);
+function BuildLink(BaseUrl, Lat, Long) {
+  var Url = BaseUrl;
+  Url = Replace(Url, '${LATITUDE}', Lat);
+  Url = Replace(Url, '${LONGITUDE}', Long);
+  return Url;
 }
 
 BuildLink(BaseUrl, Latitude, Longitude);
