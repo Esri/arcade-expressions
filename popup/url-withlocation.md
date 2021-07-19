@@ -7,6 +7,7 @@ This example shows how to create a custom hyperlink based on a hard coded base u
 * Open Google Maps and drop a pin at the same location
 * Open Google Maps and get directions from your Current Location to the specified location
 * Open Google Maps and open a panoramic view at the same location
+* Open Jakarto Maps and open a panoramic view at the same location
 
 This code gets latitude and longitude values for points, lines and polygons using Arcade functions. For lines and polygons, centroid values are generated. As Arcade passes back geometries in the spatial reference of the Web Map basemap, it is likely that a conversion is necessary as most basemaps in ArcGIS Online are in Web Mercator Auxiliary Sphere. The conversion from Web Mercator Auxiliary Sphere to WGS84  is included in the code.
 
@@ -14,18 +15,19 @@ This code gets latitude and longitude values for points, lines and polygons usin
 
 Copy and paste the expression found in the expression template below to the Arcade editor in ArcGIS Online, the relevant location in ArcGIS Pro, or the relevant location in a custom app.
 
-To configure the script to your layer, you replace the EndGoal variable with one of Google Directions, Google Panoramic or Google Pin. If you want to pass these geometry values to other API's, simply alter the code to add a new BaseUrl and pass the appropriate parameters.
+To configure the script to your layer, you replace the EndGoal variable with one of Google Directions, Google Panoramic, Google Pin or Jakarto. If you want to pass these geometry values to other API's, simply alter the code to add a new BaseUrl and pass the appropriate parameters.
 
 ## Expression Template
 
 ```js
-// Options are "Google Directions", "Google Panoramic", and "Google Pin"
+// Options are "Google Directions", "Google Panoramic", "Google Pin" and "Jakarto"
 var EndGoal = "Google Directions"
 
 var BaseUrl = Decode( EndGoal,
-  "Google Directions", "https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=",
-  "Google Panoramic", "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=",
-  "Google Pin", "https://maps.google.com/maps?t=k&q=loc:",
+  "Google Directions", "https://www.google.com/maps/dir/?api=1&origin=Current+Location&destination=${LATITUDE},${LONGITUDE}",
+  "Google Panoramic", "https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=${LATITUDE},${LONGITUDE}",
+  "Google Pin", "https://maps.google.com/maps?t=k&q=loc:${LATITUDE},${LONGITUDE}",
+  "Jakarto", "https://maps.jakarto.com/?lat=${LATITUDE}&lng=${LONGITUDE}",
   "Invalid"
 );
 
@@ -63,8 +65,11 @@ if (ArcadeSr == 4326) {
 }
 
 //Build Url Link
-function BuildLink(Url, Lat, Long) {
-  return Url + text(Lat) + "," + text(Long);
+function BuildLink(BaseUrl, Lat, Long) {
+  var Url = BaseUrl;
+  Url = Replace(Url, '${LATITUDE}', Lat);
+  Url = Replace(Url, '${LONGITUDE}', Long);
+  return Url;
 }
 
 BuildLink(BaseUrl, Latitude, Longitude);
