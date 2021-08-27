@@ -1,8 +1,11 @@
 # Join attributes from a layer to a table
 
+This expression reads two layers & adds attributes from one to the other based on a shared ID. Typically this same operation would be completed through a dynamic join using hosted feature layers as described here: 
+https://doc.arcgis.com/en/arcgis-online/analyze/join-features.htm
 
+In cases where the dynamic join isnt possible (i.e. you are not the owner of the layers, you're pulling data from Portal into ArcGIS Online, etc) this workflow could be used inside a Dashboard data expression to add attributes from the source layer to the target.
 
-//sample arcade to join data from a feature layer to a table
+## Example Expression
 
 var portal = Portal("https://www.arcgis.com/");
 var polyfs = FeatureSetByPortalItem(portal,"4dbbad3d6f694e0ebc7c3b4132ea34df",0,["*"],false);
