@@ -10,12 +10,12 @@ Each expression lives in a Markdown file, which contains a general description o
 
 See the list below for shared expressions.
 
-*There aren't any expression templates or functions shared for this profile.*
+- [Station](./station.md)
 
 ## Resources
 
-* [ArcGIS Arcade Documentation](https://developers.arcgis.com/arcade/)
-* [ArcGIS Arcade Playground](https://developers.arcgis.com/arcade/playground/)
+- [ArcGIS Arcade Documentation](https://developers.arcgis.com/arcade/)
+- [ArcGIS Arcade Playground](https://developers.arcgis.com/arcade/playground/)
 
 ## Contributing
 
@@ -29,7 +29,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-   http://www.apache.org/licenses/LICENSE-2.0
+http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
