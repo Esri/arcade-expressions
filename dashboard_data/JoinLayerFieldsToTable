@@ -1,3 +1,7 @@
+# Join attributes from a layer to a table
+
+
+
 //sample arcade to join data from a feature layer to a table
 
 var portal = Portal("https://www.arcgis.com/");
