@@ -3,8 +3,18 @@
 This expression aggregates data by day of the week using the Arcade Weekday() function. The sample data contains a record of new COVID-19 cases across California recorded by county on a daily basis.   
 
 ```
-// Create a FeatureSet from the Feature Layer containing the COVID-19 case information. 
-var fs = FeatureSetByPortalItem(Portal('https://www.arcgis.com'), '290bfa5c085c4861a85573111f2641ce', 0, ["date", "newcountconfirmed"], false);
+// Create a FeatureSet from the Feature Layer containing the COVID-19 case information.
+var portal = Portal('https://www.arcgis.com/');
+var fs = FeatureSetByPortalItem(
+    portal,
+    '290bfa5c085c4861a85573111f2641ce',
+    0,
+    [
+        'date',
+        'newcountconfirmed'
+    ],
+    false
+);
 
 // Group county level data by date. 
 var fs_gp = GroupBy(fs, ['date'], [{name: 'cases_by_day', expression: 'newcountconfirmed', statistic: 'SUM'}]);
@@ -22,9 +32,9 @@ var index = 0;
 for (var feature in fs_gp) { 
     dowDict.features[index] = { 
         'attributes': { 
-            'dow_num': Weekday(feature["date"]), 
-            'dow': Text(feature["date"], 'dddd'),
-            'newcases': feature["cases_by_day"] 
+            'dow_num': Weekday(feature['date']), 
+            'dow': Text(feature['date'], 'dddd'),
+            'newcases': feature['cases_by_day'] 
         }} 
     index++;} 
 

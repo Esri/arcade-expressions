@@ -2,8 +2,15 @@
 
 This data expression splits a comma separated values in a field into multiple rows of single values. A common use case is data from a Survey123 form with multichoice questions, like in the below example. 
 ```
-// Reference layer using the FeatureSetByPortalItem() method. 
-var fs = FeatureSetByPortalItem(Portal('https://www.arcgis.com'), 'd10b9e8dbd7f4cccbd0a938a06c586e9' , 0, ['Report_road_condition'], false);
+// Reference layer using the FeatureSetByPortalItem() method.
+var portal = Portal('https://www.arcgis.com')
+var fs = FeatureSetByPortalItem(
+    portal,
+    'd10b9e8dbd7f4cccbd0a938a06c586e9',
+    0,
+    ['Report_road_condition'],
+    false
+);
 
 // Empty dictionary to capture each hazard reported as separate rows. 
 var choicesDict = {'fields': [{ 'name': 'split_choices', 'type': 'esriFieldTypeString'}], 
