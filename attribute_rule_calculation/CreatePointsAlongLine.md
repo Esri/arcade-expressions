@@ -19,4 +19,4 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 This Arcade attribute rule creates midspan points along a line. An example using this rule is included in this [Example](./CreatePointsAlongLine.zip)
 
 
-[Code](./CreatePointsAlongLinge.js)
+[Code](./CreatePointsAlongLine.js)
