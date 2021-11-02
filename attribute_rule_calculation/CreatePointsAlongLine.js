@@ -10,7 +10,7 @@ var point_class = "points"
 // *************       Functions            *************
 
 function drop_points_on_line(line, points_number) {
-    var mispan = [];
+    var midspan = [];
     var distance_along_line = 0;
     var break_distance = Length(line) / (points_number + 1)
 
@@ -21,6 +21,11 @@ function drop_points_on_line(line, points_number) {
         // loop through segments of line
         for (var i in line_part) {
             if (i == 0) continue;
+
+            // exit early if we hit the midspan number
+            if (Count(midspan) == points_number) {
+                return midspan
+            }
 
             // Construct a 2-point line segment from the current and previous point
             var first_point = line_part[i-1];
@@ -35,7 +40,7 @@ function drop_points_on_line(line, points_number) {
             }
             if (seg_length + distance_along_line == break_distance) {
                 // Break point is endpoint of segment
-                push(mispan, Point(second_point))
+                push(midspan, Point(second_point))
                 distance_along_line = 0
                 continue
             }
@@ -44,24 +49,20 @@ function drop_points_on_line(line, points_number) {
             for (var current_length = seg_length + distance_along_line; current_length>=break_distance; ) {
                 var xy = get_xy_along_line(first_point.x, first_point.y, second_point.x, second_point.y, break_distance - distance_along_line)
                 var new_point = Point({"x": xy[0], "y": xy[1], "spatialReference": first_point.spatialReference})
-                push(mispan, new_point)
-                if (Count(mispan) == points_number) {
-                    return mispan
+                push(midspan, new_point)
+                if (Count(midspan) == points_number) {
+                    return midspan
                 }
                 // reset values for next loop if remaining portion of segment is larger than break distance.
                 current_length = Length(Polyline({"paths": [[new_point, [second_point.x, second_point.y]]], "spatialReference": second_point.spatialReference}))
                 distance_along_line = 0
                 first_point = new_point
             }
-            // exit early if we hit the midspan number
-            if (Count(mispan) == points_number) {
-                return mispan
-            }
             // current_length is less than break distance, set distance_along_line to current_length and move to next segment
             distance_along_line = current_length
         }
     }
-    return mispan
+    return midspan
 }
 
 function get_xy_along_line(x0, y0, x1, y1, d) {
@@ -78,7 +79,7 @@ function get_xy_along_line(x0, y0, x1, y1, d) {
 function get_endpoints(line) {
     // return an array of Point objects
     var geom = Geometry(line)
-    return [Point(geom["paths"][0][0]), Point(geom["paths"][0][-1])]
+    return [Point(geom["paths"][0][0]), Point(geom["paths"][-1][-1])]
 }
 
 // ************* End Functions Section ******************
