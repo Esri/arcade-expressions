@@ -1,6 +1,6 @@
 # ArcGIS Workforce: Obtain the the worker name & description of assignment type from a FeatureSet
 
-This expression obtains the worker name and description of assignment type.
+This expression obtains the worker name and description of assignment type using the Dashboard Data profile used to create FeatureSets in ArcGIS Dashboards.
 This expression provides the ability to filter the assignments by worker name or assignment name. With the default schema, this is not an option, since the field type is GUID.
 
 Potential changes you will likely need to tailor it for your implementation:
@@ -8,10 +8,11 @@ Potential changes you will likely need to tailor it for your implementation:
 1. Check/change config settings (lines 11-15)
 
 2. Fields returned from Assignments layer (line 26)
-3. Assignments layer filter (line 27) -- more records might impact performance, so filtering here instead of in the Dashboard element can be beneficial
+3. Assignments layer filter (line 27) -- more records may impact performance, so filtering here instead of in the Dashboard element can be beneficial
 
 ```
 function getTableValue(features, matchValue, matchField, returnFieldName){
+    // Loop through features, return the field name
     for (var f in features){
         if (f[matchField] == matchvalue){
             return f[returnFieldName]
@@ -19,13 +20,15 @@ function getTableValue(features, matchValue, matchField, returnFieldName){
     }
     return "N/A"
 }
+// Configurations
 var cfg = {
     "portal_url":"https://<your-portal>.com",
     "wf_project_id":"<your-wf-project-id>",
-    "assignments_lyr_ndx":0,
-    "assignments_type_lyr_ndx":3,
-    "worker_lyr_ndx": 1
+    "assignments_lyr_ndx":<int>,
+    "assignments_type_lyr_ndx":<int>,
+    "worker_lyr_ndx": <int>
 }
+// Set variables
 var p = Portal(cfg.portal_url)
 var wrkrs_fs = FeatureSetByPortalItem(p, cfg.wf_project_id, cfg.worker_lyr_ndx, ['globalid','name'])
 var workers = Filter(wrkrs_fs, '1=1')
@@ -44,6 +47,7 @@ var returnFS = {
     features: [],
 }
 var count = 0;
+// Loop through assigned, return FeatureSet
 for (var a in assigned){
     var t = {}
     for (var f in a){
