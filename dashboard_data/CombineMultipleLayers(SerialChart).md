@@ -30,6 +30,43 @@ var janssen = GroupBy(
     [{ name: 'janssen', expression: 'F_1st_dose_allocations', statistic: 'SUM' }]
 );
 
+// Create empty array for features
+var features = [];
+
+// Loop through each of the three FeatureSets and populate feature array.
+for (var m in moderna) {
+    var feat = {
+        attributes: {
+            manufacturer: 'Moderna',
+            week_of_allocation: m['week_of_allocations'],
+            count_of_doses: SUM(m['moderna_1'], m['moderna_2']),
+        },
+    };
+    Push(features, feat);
+}
+
+for (var p in pfizer) {
+    var feat = {
+        attributes: {
+            manufacturer: 'Pfizer',
+            week_of_allocation: p['week_of_allocations'],
+            count_of_doses: SUM(p['pfizer_1'], p['pfizer_2']),
+        },
+    };
+    Push(features, feat);
+}
+
+for (var j in janssen) {
+    var feat = {
+        attributes: {
+            manufacturer: 'Janssen',
+            week_of_allocation: j['week_of_allocations'],
+            count_of_doses: j['janssen'],
+        },
+    };
+    Push(features, feat);
+}
+
 var combinedDict = {
     fields: [
         { name: 'manufacturer', type: 'esriFieldTypeString' },
@@ -37,43 +74,8 @@ var combinedDict = {
         { name: 'count_of_doses', type: 'esriFieldTypeInteger' },
     ],
     geometryType: '',
-    features: [],
+    features: features,
 };
-
-// Loop through each of the three FeatureSets and store attributes into a combined dictionary.
-var i = 0;
-for (var m in moderna) {
-    combinedDict.features[i] = {
-        attributes: {
-            manufacturer: 'Moderna',
-            week_of_allocation: m['week_of_allocations'],
-            count_of_doses: SUM(m['moderna_1'], m['moderna_2']),
-        },
-    };
-    i++;
-}
-
-for (var p in pfizer) {
-    combinedDict.features[i] = {
-        attributes: {
-            manufacturer: 'Pfizer',
-            week_of_allocation: p['week_of_allocations'],
-            count_of_doses: SUM(p['pfizer_1'], p['pfizer_2']),
-        },
-    };
-    i++;
-}
-
-for (var j in janssen) {
-    combinedDict.features[i] = {
-        attributes: {
-            manufacturer: 'Janssen',
-            week_of_allocation: j['week_of_allocations'],
-            count_of_doses: j['janssen'],
-        },
-    };
-    i++;
-}
 
 // Return dictionary cast as a feature set 
 return FeatureSet(Text(combinedDict));
