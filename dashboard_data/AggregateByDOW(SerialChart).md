@@ -25,7 +25,7 @@ var feat;
 
 // Populate feature array
 for (var feature in fs_gp) { 
-    var feat = { 
+    feat = { 
         'attributes': { 
             'dow_num': Weekday(feature['date']), 
             'dow': Text(feature['date'], 'dddd'),
