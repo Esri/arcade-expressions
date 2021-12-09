@@ -13,14 +13,17 @@ var fs = FeatureSetByPortalItem(
 );
 
 // Create empty array for features
-var features = []
+var features = [];
+
+// Declare feat object for use in loop
+var feat = '';
 
 // Split comma separated hazard types and store in dictionary.  
 for (var feature in fs) { 
     var split_array  =  Split(feature["Report_road_condition"], ',') 
     var count_arr = Count(split_array) 
     for(var i = 0; i < count_arr; i++ ){ 
-        var feat = {
+        feat = {
             'attributes': {
                 'split_choices': Trim(split_array[i])
             }
