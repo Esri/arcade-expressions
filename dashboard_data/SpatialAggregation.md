@@ -30,8 +30,9 @@ var pt_fs = FeatureSetByPortalItem(
     true
 );
 
-// Create empty feature array for output
+// Create empty feature array and feat object for output
 var features = [];
+var feat;
 
 // Iterate over time zones
 for (var poly in poly_fs) {
@@ -40,7 +41,7 @@ for (var poly in poly_fs) {
     var pts = Contains(poly, pt_fs);
     
     // Create feature with aggregated values
-    var feat = { 
+    feat = { 
         'attributes': { 
             'tz': poly['ZONE'], 
             'pt_cnt': Count(pts)
