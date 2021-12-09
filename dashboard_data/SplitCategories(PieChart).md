@@ -12,11 +12,9 @@ var fs = FeatureSetByPortalItem(
     false
 );
 
-// Create empty array for features
+// Create empty array for features and feat object
 var features = [];
-
-// Declare feat object for use in loop
-var feat = '';
+var feat;
 
 // Split comma separated hazard types and store in dictionary.  
 for (var feature in fs) { 

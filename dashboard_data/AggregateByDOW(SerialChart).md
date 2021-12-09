@@ -19,8 +19,9 @@ var fs = FeatureSetByPortalItem(
 // Group county level data by date. 
 var fs_gp = GroupBy(fs, ['date'], [{name: 'cases_by_day', expression: 'newcountconfirmed', statistic: 'SUM'}]);
 
-// Create array for holding features
+// Create array for holding features, feat object for populating array
 var features = [];
+var feat;
 
 // Populate feature array
 for (var feature in fs_gp) { 

@@ -30,11 +30,9 @@ var janssen = GroupBy(
     [{ name: 'janssen', expression: 'F_1st_dose_allocations', statistic: 'SUM' }]
 );
 
-// Create empty array for features
+// Create empty array for features, feat object to populate array
 var features = [];
-
-// Declare feat outside of loops
-var feat = '';
+var feat;
 
 // Loop through each of the three FeatureSets and populate feature array.
 for (var m in moderna) {

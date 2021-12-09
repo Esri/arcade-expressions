@@ -24,14 +24,15 @@ var tablefs = FeatureSetByPortalItem(
     false
 );
 
-// Create empty features array
+// Create empty features array and feat object
 var features = [];
+var feat;
 
 // Populate Feature Array
 for (var t in tablefs) {
     var tableID = t["FeatureID"]
     for (var p in Filter(polyfs, "HydroID = "+tableID)){
-        var feat = {
+        feat = {
             attributes: {
                 FeatureID: tableID,
                 Name: p["DPS_Region"],
