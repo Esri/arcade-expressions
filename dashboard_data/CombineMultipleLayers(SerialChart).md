@@ -33,9 +33,12 @@ var janssen = GroupBy(
 // Create empty array for features
 var features = [];
 
+// Declare feat outside of loops
+var feat = '';
+
 // Loop through each of the three FeatureSets and populate feature array.
 for (var m in moderna) {
-    var feat = {
+    feat = {
         attributes: {
             manufacturer: 'Moderna',
             week_of_allocation: m['week_of_allocations'],
@@ -46,7 +49,7 @@ for (var m in moderna) {
 }
 
 for (var p in pfizer) {
-    var feat = {
+    feat = {
         attributes: {
             manufacturer: 'Pfizer',
             week_of_allocation: p['week_of_allocations'],
@@ -57,7 +60,7 @@ for (var p in pfizer) {
 }
 
 for (var j in janssen) {
-    var feat = {
+    feat = {
         attributes: {
             manufacturer: 'Janssen',
             week_of_allocation: j['week_of_allocations'],
