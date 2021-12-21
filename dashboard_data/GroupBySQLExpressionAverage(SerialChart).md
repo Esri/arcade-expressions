@@ -5,7 +5,7 @@ This expression shows how you can leverage the Arcade GroupBy() function to calc
 Travel time is calculated using the formula ```(Response Time) - (Dispatch Time) - (Turnout Time)```
 Response time, dispatch time and turnout time are separate fields in the feature layer. 
 
-```
+```js
 var portal = Portal('https://arcgis.com');
 
 var fs = FeatureSetByPortalItem(

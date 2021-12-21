@@ -2,7 +2,7 @@
 
 This data expression can be used to mimic the SQL ```HAVING``` clause which filters on aggregated data. 
 
-```
+```js
 var portal = Portal('https://www.arcgis.com/');
 var fs = FeatureSetByPortalItem(
     portal,

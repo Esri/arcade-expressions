@@ -2,7 +2,7 @@
 
 This expression retrieves the most recent feature (or row) from a set of features. The sample data contains COVID-19 vaccination records captured over time on a daily basis.   
 
-```
+```js
 var portal = Portal('https://www.arcgis.com/');
 var fs = FeatureSetByPortalItem(
   portal,

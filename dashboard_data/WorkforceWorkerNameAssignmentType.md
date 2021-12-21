@@ -10,7 +10,7 @@ Potential changes you will likely need to tailor it for your implementation:
 2. Fields returned from Assignments layer (line 26)
 3. Assignments layer filter (line 27) -- more records may impact performance, so filtering here instead of in the Dashboard element can be beneficial
 
-```
+```js
 function getTableValue(features, matchValue, matchField, returnFieldName){
     // Loop through features, return the field name
     for (var f in features){
