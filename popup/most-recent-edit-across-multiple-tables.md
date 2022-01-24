@@ -24,47 +24,26 @@ function MostRecent(lyr){
 }
 
 // Dict of features
-var feats = {
-    'Complaint Details': $feature,
-    'Violations': MostRecent(FeatureSetByRelationshipName($feature, "EH_Complaints_violations")),
-    'Narrative': MostRecent(FeatureSetByRelationshipName($feature, "EH_Complaints_narrative"))
-}
+var feats = [
+    {table: 'Complaint Details', feat: $feature},
+    {table: 'Violations', feat: MostRecent(FeatureSetByRelationshipName($feature, "EH_Complaints_violations"))},
+    {table: 'Narrative', feat: MostRecent(FeatureSetByRelationshipName($feature, "EH_Complaints_narrative"))}
+]
 
-// Empty array to populate with features
-var dict_feats = []
-
-// Iterate over feats dict and push values into feature array
-for (var f in feats){
-    var feat = {
-        attributes: {
-            tablename: f,
-            last_edited_date: Number(feats[f]['last_edited_date']),
-            last_edited_user: feats[f]['last_edited_user']
-        }
+function DateSort(a, b){
+    if (a['feat']['last_edited_date'] > b['feat']['last_edited_date']){
+        return -1
+    } else {
+        return 1
     }
-    
-    Push(dict_feats, feat)
 }
 
-// Create a FeatureSet
-var fs_dict = {
-    fields: [
-        {name: 'tablename', type: 'esriFieldTypeString'},
-        {name: 'last_edited_date', type: 'esriFieldTypeDate'},
-        {name: 'last_edited_user', type: 'esriFieldTypeString'}],
-    geometryType: '',
-    features: dict_feats
-}
-
-var fs = FeatureSet(Text(fs_dict))
-
-// Get the most recent feature of the resulting FeatureSet
-var most_recent = First(OrderBy(fs, 'last_edited_date DESC'))
+var most_recent = First(Sort(feats, DateSort))
 
 // Return a formatted output string based on the most recent feature
-return `${most_recent['tablename']} table
-edited ${Text(most_recent['last_edited_date'], 'DD-MMM-YYYY')}
-by ${GetUser(Portal('https://maps.co.kendall.il.us/portal'), most_recent['last_edited_user'])['fullName']}`
+return `${most_recent['table']} table
+edited ${Text(most_recent['feat']['last_edited_date'], 'DD-MMM-YYYY')}
+by ${GetUser(Portal('https://maps.co.kendall.il.us/portal'), most_recent['feat']['last_edited_user'])['fullName']}`
 ```
 
 ## Example output
