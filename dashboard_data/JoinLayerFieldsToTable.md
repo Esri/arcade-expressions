@@ -5,8 +5,9 @@ https://doc.arcgis.com/en/arcgis-online/analyze/join-features.htm
 
 In cases where the dynamic join isn't possible (i.e. you are not the owner of the layers, you're pulling data from Portal into ArcGIS Online, etc) this workflow could be used to add attributes from the source layer to the target.
 
-```
-// Get layers
+## Example Expression
+
+```js
 var portal = Portal("https://www.arcgis.com/");
 var polyfs = FeatureSetByPortalItem(
     portal,

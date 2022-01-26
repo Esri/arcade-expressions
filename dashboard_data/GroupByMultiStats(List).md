@@ -2,7 +2,7 @@
 
 This expression calculates mutliple statistic values using the GroupBy() function. The featureset can be used to enhance the List element which supports feature-based visualization. 
 
-```
+```js
 var portal = Portal('https://www.arcgis.com/');
 var fs = FeatureSetByPortalItem(
     portal,

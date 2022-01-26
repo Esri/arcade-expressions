@@ -1,7 +1,8 @@
 ## Split comma separated values across multiple rows
 
 This data expression splits a comma separated values in a field into multiple rows of single values. A common use case is data from a Survey123 form with multichoice questions, like in the below example. 
-```
+
+```js
 // Reference layer using the FeatureSetByPortalItem() method.
 var portal = Portal('https://www.arcgis.com')
 var fs = FeatureSetByPortalItem(
