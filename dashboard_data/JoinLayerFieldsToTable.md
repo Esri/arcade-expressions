@@ -3,31 +3,37 @@
 This expression reads two layers & adds attributes from one to the other based on a shared ID. Typically this same operation would be completed through a dynamic join using hosted feature layers as described here: 
 https://doc.arcgis.com/en/arcgis-online/analyze/join-features.htm
 
-In cases where the dynamic join isnt possible (i.e. you are not the owner of the layers, you're pulling data from Portal into ArcGIS Online, etc) this workflow could be used inside a Dashboard data expression to add attributes from the source layer to the target.
+In cases where the dynamic join isn't possible (i.e. you are not the owner of the layers, you're pulling data from Portal into ArcGIS Online, etc) this workflow could be used to add attributes from the source layer to the target.
 
 ## Example Expression
 
 ```js
 var portal = Portal("https://www.arcgis.com/");
-var polyfs = FeatureSetByPortalItem(portal,"4dbbad3d6f694e0ebc7c3b4132ea34df",0,["*"],false);
-var tablefs = FeatureSetByPortalItem(portal,"4dbbad3d6f694e0ebc7c3b4132ea34df",6,["*"],false);
+var polyfs = FeatureSetByPortalItem(
+    portal,
+    "4dbbad3d6f694e0ebc7c3b4132ea34df",
+    0,
+    ["*"],
+    false
+);
 
-var joinedDict = {
-  fields: [
-    { name: "FeatureID", type: "esriFieldTypeString" },
-    { name: "Name", type: "esriFieldTypeString" },	
-    { name: "ModelID", type: "esriFieldTypeInteger" },
-    { name: "AddressCount", type: "esriFieldTypeInteger" },
-    { name: "MAX_TSTime", type: "esriFieldTypeString" },
-  ],
-'geometryType': '',
-'features':[]};
+var tablefs = FeatureSetByPortalItem(
+    portal,
+    "4dbbad3d6f694e0ebc7c3b4132ea34df",
+    6,
+    ["*"],
+    false
+);
 
-var i = 0;
+// Create empty features array and feat object
+var features = [];
+var feat;
+
+// Populate Feature Array
 for (var t in tablefs) {
     var tableID = t["FeatureID"]
     for (var p in Filter(polyfs, "HydroID = "+tableID)){
-        joinedDict.features[i] = {
+        feat = {
             attributes: {
                 FeatureID: tableID,
                 Name: p["DPS_Region"],
@@ -36,10 +42,27 @@ for (var t in tablefs) {
                 MAX_TSTime: t["MAX_TSTime"],
             }
         }
+
+    Push(features, feat)
     }
-i++
 }
+
+var joinedDict = {
+    fields: [
+        { name: "FeatureID", type: "esriFieldTypeString" },
+        { name: "Name", type: "esriFieldTypeString" },	
+        { name: "ModelID", type: "esriFieldTypeInteger" },
+        { name: "AddressCount", type: "esriFieldTypeInteger" },
+        { name: "MAX_TSTime", type: "esriFieldTypeString" },
+    ],
+    'geometryType': '',
+    'features':features
+};
 
 // Return dictionary cast as a feature set 
 return FeatureSet(Text(joinedDict));
 ```
+
+Bringing additional attributes into our main layer by a shared ID allows us to combine data we would otherwise not be able to, as in the following chart. Note that the `DPS_Region` field comes from the polygon layer, while the `ModelID` and `AddressCount` fields come from the tabular layer.
+
+![](/dashboard_data/images/JoinLayerFieldsToTable.png)

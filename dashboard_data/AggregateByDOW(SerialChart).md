@@ -19,24 +19,28 @@ var fs = FeatureSetByPortalItem(
 // Group county level data by date. 
 var fs_gp = GroupBy(fs, ['date'], [{name: 'cases_by_day', expression: 'newcountconfirmed', statistic: 'SUM'}]);
 
+// Create array for holding features, feat object for populating array
+var features = [];
+var feat;
+
+// Populate feature array
+for (var feature in fs_gp) { 
+    feat = { 
+        'attributes': { 
+            'dow_num': Weekday(feature['date']), 
+            'dow': Text(feature['date'], 'dddd'),
+            'newcases': feature['cases_by_day'] 
+        }}
+    Push(features, feat);
+};
+
 var dowDict = { 
   'fields': [{ 'name': 'dow_num', 'type': 'esriFieldTypeInteger'},
   {'name': 'dow', 'type': 'esriFieldTypeString'}, 
   {'name': 'newcases', 'type': 'esriFieldTypeInteger'}], 
   'geometryType': '', 
-  'features': [] 
+  'features': features
 }; 
-
-var index = 0; 
-
-for (var feature in fs_gp) { 
-    dowDict.features[index] = { 
-        'attributes': { 
-            'dow_num': Weekday(feature['date']), 
-            'dow': Text(feature['date'], 'dddd'),
-            'newcases': feature['cases_by_day'] 
-        }} 
-    index++;} 
 
 // Convert dictionary to feature set. 
 var fs_dict = FeatureSet(Text(dowDict)); 

@@ -13,21 +13,29 @@ var fs = FeatureSetByPortalItem(
     false
 );
 
-// Empty dictionary to capture each hazard reported as separate rows. 
-var choicesDict = {'fields': [{ 'name': 'split_choices', 'type': 'esriFieldTypeString'}], 
-                    'geometryType': '', 'features': []}; 
-
-var index = 0; 
+// Create empty array for features and feat object
+var features = [];
+var feat;
 
 // Split comma separated hazard types and store in dictionary.  
 for (var feature in fs) { 
     var split_array  =  Split(feature["Report_road_condition"], ',') 
     var count_arr = Count(split_array) 
     for(var i = 0; i < count_arr; i++ ){ 
-        choicesDict.features[index++] = { 
-            'attributes': { 'split_choices': Trim(split_array[i]),  
+        feat = {
+            'attributes': {
+                'split_choices': Trim(split_array[i])
             }
+        Push(features, feat);
 }}} 
+
+// Empty dictionary to capture each hazard reported as separate rows. 
+var choicesDict = {
+    'fields': [
+        { 'name': 'split_choices', 'type': 'esriFieldTypeString'}], 
+    'geometryType': '',
+    'features': features
+}; 
 
 // Convert dictionary to featureSet. 
 var fs_dict = FeatureSet(Text(choicesDict)); 
