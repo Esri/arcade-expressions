@@ -4,7 +4,7 @@ This expression aggregates data from one layer using a spatial relationship with
 
 In this specific example, point features ([Global Power Plants](https://www.arcgis.com/home/item.html?id=848d61af726f40d890219042253bedd7)) are being aggregated by polygons ([Time Zones](https://www.arcgis.com/home/item.html?id=312cebfea2624e108e234220b04460b8)) using the **Contains** function.
 
-```javascript
+```js
 // Portal
 var portal = Portal('https://www.arcgis.com/');
 
