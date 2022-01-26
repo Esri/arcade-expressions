@@ -2,7 +2,7 @@
 
 This expression aggregates data by day of the week using the Arcade Weekday() function. The sample data contains a record of new COVID-19 cases across California recorded by county on a daily basis.   
 
-```
+```js
 // Create a FeatureSet from the Feature Layer containing the COVID-19 case information.
 var portal = Portal('https://www.arcgis.com/');
 var fs = FeatureSetByPortalItem(

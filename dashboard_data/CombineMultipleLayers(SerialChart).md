@@ -2,7 +2,7 @@
 
 This expression combines features from multiple feature layers. Each of the three sample data contains a record of how many vaccinations were allocated by each manufacturer (Moderna, Pfizer, and Janssen).     
 
-```
+```js
 var portal = Portal('https://www.arcgis.com/');
 // Create a FeatureSet for each manufacturer Feature Layer containing vaccination allocation data. 
 // Group the features by the week of allocation 

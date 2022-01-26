@@ -7,7 +7,7 @@ In cases where the dynamic join isnt possible (i.e. you are not the owner of the
 
 ## Example Expression
 
-```javascript
+```js
 var portal = Portal("https://www.arcgis.com/");
 var polyfs = FeatureSetByPortalItem(portal,"4dbbad3d6f694e0ebc7c3b4132ea34df",0,["*"],false);
 var tablefs = FeatureSetByPortalItem(portal,"4dbbad3d6f694e0ebc7c3b4132ea34df",6,["*"],false);

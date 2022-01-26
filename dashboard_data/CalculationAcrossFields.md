@@ -2,7 +2,7 @@
 
 This expression demostrates how calculations can be performed across multiple fields in a layer. We can calculate Case Fatality Ratio from COVID-19 case information using the metrics of confirmed cases and deaths which are recorded in separate fields of the layer. Using date filters, we will calculate CFR for whole dataset and compare it to CFR from a week ago.
 
-```
+```js
 var portal = Portal('https://www.arcgis.com');
 var fs = FeatureSetByPortalItem(
     portal,
