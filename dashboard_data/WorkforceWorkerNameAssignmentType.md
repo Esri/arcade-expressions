@@ -64,7 +64,7 @@ for (var a in assigned){
     var at = getTablevalue(assignment_types, a.assignmenttype, 'GlobalID', 'description')
     t["assignment_name"] = at
 
-    Push(returnFS.features[count], {'attributes':t})
+    Push(returnFS.features, {'attributes':t})
 }
 return FeatureSet(Text(returnFS))
 ```
