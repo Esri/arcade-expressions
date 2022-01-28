@@ -5,10 +5,10 @@ This expression provides the ability to filter the assignments by worker name or
 
 Potential changes you will likely need to tailor it for your implementation:
 
-1. Check/change config settings (lines 11-15)
+1. Check/change config settings (lines 12-16)
 
-2. Fields returned from Assignments layer (line 26)
-3. Assignments layer filter (line 27) -- more records may impact performance, so filtering here instead of in the Dashboard element can be beneficial
+2. Fields returned from Assignments layer (line 24)
+3. Assignments layer filter (line 25) -- more records may impact performance, so filtering here instead of in the Dashboard element can be beneficial
 
 ```js
 function getTableValue(features, matchValue, matchField, returnFieldName){
@@ -46,20 +46,25 @@ var returnFS = {
     geometryType: "",
     features: [],
 }
-var count = 0;
+
 // Loop through assigned, return FeatureSet
+var start_epoch = ToLocal(Date(1970,0,01,0,0,0,0))                
 for (var a in assigned){
     var t = {}
     for (var f in a){
-        t[f] = a[f]
+        if (TypeOf(a[f]) == 'Date'){
+            // Convert date fields to Unix Timestamp
+            t[f] = DateDiff(a[f], start_epoch, 'milliseconds')
+        } else{
+            t[f] = a[f]
+        }
     }
     var n = getTableValue(workers, a.workerid, 'globalid', 'name')
     t["worker_name"] = n
     var at = getTablevalue(assignment_types, a.assignmenttype, 'GlobalID', 'description')
     t["assignment_name"] = at
 
-    returnFS.features[count] = {'attributes':t}
-    count++
+    Push(returnFS.features, {'attributes':t})
 }
 return FeatureSet(Text(returnFS))
 ```
