@@ -48,13 +48,12 @@ var returnFS = {
 }
 
 // Loop through assigned, return FeatureSet
-var start_epoch = ToLocal(Date(1970,0,01,0,0,0,0))                
 for (var a in assigned){
     var t = {}
     for (var f in a){
         if (TypeOf(a[f]) == 'Date'){
             // Convert date fields to Unix Timestamp
-            t[f] = DateDiff(a[f], start_epoch, 'milliseconds')
+            t[f] = Number(a[f])
         } else{
             t[f] = a[f]
         }
