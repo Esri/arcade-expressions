@@ -27,8 +27,8 @@ for (var path_idx in paths){
     for (var vert_idx in paths[path_idx])
     {
         var coords = paths[path_idx][vert_idx];
-        if (!IsEmpty(coords[3])){
-            max_m = iif(coords[3]>max_m,coords[3],max_m);
+        if (!IsEmpty(coords[-1])){
+            max_m = iif(coords[-1]>max_m,coords[-1],max_m);
         }
 
     }
@@ -37,9 +37,9 @@ for (var path_idx in paths){
     for (var vert_idx in paths[path_idx])
     {
 
-        if (IsEmpty(paths[path_idx][vert_idx][3])){
+        if (IsEmpty(paths[path_idx][vert_idx][-1])){
             max_m++;
-            paths[path_idx][vert_idx][3] = max_m;
+            paths[path_idx][vert_idx][-1] = max_m;
             shape_updated = true
         }
 
