@@ -12,7 +12,7 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
   
   - **Rule Type:** Calculation
   - **Triggering Events:** Insert, Update
-
+  - **Field** Blank, do not set this
 
 
 ## Expression Template
@@ -20,36 +20,34 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 This Arcade expression will return the a value from an intersected feature. An example with using this rule is included in the [Example](./CopyValueIntersectingFeature.zip)
 
 ```js
+
 // This rule will populate the edited features field with a value from an intersecting feature
 
 // Value to copy from the intersected feature
 var intersecting_field = "ValueToCopy";
-//Field rule is assigned to in the Attribute Rule
-var feature_field = "ValueCopied";
 
 // Create feature set to the intersecting class using the GDB Name
 var intersecting_featset = FeatureSetByName($datastore, 'Line', [intersecting_field], true);
 
 // Intersect the edited feature with the feature set and retrieve the first feature
-// For lines, you could use the start or end point by
-// Start point
-//var search_feature = Geometry($feature)['paths'][0][0];
-// End Point
-//var search_feature = Geometry($feature)['paths'][-1][1];
-var search_feature = $feature;
-
-var intersected_feature = First(Intersects(intersecting_featset, search_feature));
+var intersected_feature = First(Intersects(intersecting_featset, $feature));
 
 // Check to make sure there was an intersected feature, if not, return the original value
-if (intersected_feature == null)
-{
-    return $feature[feature_field];
+if (IsEmpty(intersected_feature) || intersected_feature == null)
+{ 
+    return;
 }
 // If the intersected feature is null, return the original value
-if (IsEmpty(intersected_feature[intersecting_field]))
+if (IsEmpty(intersected_feature.valueToCopy))
 {
-    return $feature[feature_field];
+    return;
 }
-// Return the intersected features value
-return intersected_feature[intersecting_field];
+return {
+    //result is a dictionary
+    "result": {
+        "attributes": {
+            "ValueCopied": intersected_feature[intersecting_field]
+        }
+    }
+};
 ```
