@@ -14,9 +14,10 @@ function drop_points_on_line(line, points_number) {
     var distance_along_line = 0;
     var break_distance = Length(line) / (points_number + 1)
 
+    var geo = Geometry(line);
     // Handle multipart geometries.
-    for (var part in Geometry(line).paths) {
-        var line_part = Geometry(line).paths[part]
+    for (var part in geo.paths) {
+        var line_part = geo.paths[part]
 
         // loop through segments of line
         for (var i in line_part) {
