@@ -26,8 +26,9 @@ for (var feature in fs) {
             'attributes': {
                 'split_choices': Trim(split_array[i])
             }
+        }
         Push(features, feat);
-}}} 
+}}
 
 // Empty dictionary to capture each hazard reported as separate rows. 
 var choicesDict = {
