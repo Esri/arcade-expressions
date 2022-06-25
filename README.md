@@ -6,14 +6,15 @@ This repository is intended for sharing and maintaining reuseable Arcade express
 
 These expressions are organized based on their intended [execution profile](https://developers.arcgis.com/arcade/guide/profiles/). The following folders correspond with each profile:
 
-* [Any](https://github.com/Esri/arcade-expressions/tree/master/any)
-* [Alias](https://github.com/Esri/arcade-expressions/tree/master/alias)
-* [Calculation](https://github.com/Esri/arcade-expressions/tree/master/attribute_rule_calculation)
-* [Constraint](https://github.com/Esri/arcade-expressions/tree/master/constraint)
-* [Dashboard data](https://github.com/Esri/arcade-expressions/tree/master/dashboard_data)
-* [Labeling](https://github.com/Esri/arcade-expressions/tree/master/labeling)
-* [Popup](https://github.com/Esri/arcade-expressions/tree/master/popup)
-* [Visualization](https://github.com/Esri/arcade-expressions/tree/master/visualization)
+* [Any](./any)
+* [Alias](./alias)
+* [Calculation](./attribute_rule_calculation)
+* [Constraint](./constraint)
+* [Dashboard data](./dashboard_data)
+* [Form Calculation](./form_calculation/)
+* [Labeling](./labeling)
+* [Popup](./popup)
+* [Visualization](./visualization)
 
 Click on the desired profile name to view relevant expressions.
 
