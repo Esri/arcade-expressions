@@ -1,5 +1,5 @@
 /*
-Descriptoion:  This rule finds the closet line and draws a line to the closest point on it.  This can be used in a water or sewer network to draw the service line.
+Description:  This rule finds the closet line and draws a line to the closest point on it.  This can be used in a water or sewer network to draw the service line.
 
 */
 function find_closest_line() {
