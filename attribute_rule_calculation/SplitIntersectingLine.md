@@ -52,6 +52,26 @@ var remove_vertex_tolerance = .00002
 
 // ************* End User Variables Section *************
 
+function get_date_fields(){
+    var date_fields = [];
+    for(var f in Schema($feature).fields){
+        if(Schema($feature).fields[f].type == 'esriFieldTypeDate'){
+            date_fields = Upper(Schema($feature).fields[f].name)
+        }
+    }
+    return date_fields;
+}
+function set_date_type(dict){
+    // Dates need to be set to date types for some platforms
+    var keys = get_date_fields()
+    for (var k in dict) {
+        if (IndexOf(keys, Upper(k)) != -1) {
+            continue
+        }
+        dict[k] = Date(dict[k]);
+    }
+    return dict
+}
 function dist_to_line(start_coord, end_coord, point_coord) {
     var Dx = end_coord[0] - start_coord[0];
     var Dy = end_coord[1] - start_coord[1];
@@ -102,6 +122,7 @@ function pop_keys(dict, keys) {
     }
     return new_dict
 }
+
 
 function cut_line_at_point_cutter(line_feature, point_geometry) {
     var search = Extent(Buffer(point_geometry, .1, "meter"));
@@ -338,7 +359,7 @@ for (var line_feature in intersecting_lines) {
             {
                 'globalID': GUID(),
                 'geometry': polyline_2,
-                'attributes': pop_keys(line_att, remove_fields_from_new_feature)
+                'attributes': set_date_type(pop_keys(line_att, remove_fields_from_new_feature))
             };
     } else {
         update_features[Count(update_features)] = {
@@ -349,7 +370,7 @@ for (var line_feature in intersecting_lines) {
             {
                 'globalID': GUID(),
                 'geometry': polyline_1,
-                'attributes': pop_keys(line_att, remove_fields_from_new_feature)
+                'attributes': set_date_type(pop_keys(line_att, remove_fields_from_new_feature))
             };
     }
 }
