@@ -22,25 +22,6 @@ This Arcade expression will split a line when a point is placed.  [Example](./Sp
 // All fields listed here, need to be in upper case, they are forced to upper in the logic below.
 var remove_fields_from_new_feature = ['SHAPE_LENGTH', 'GLOBALID', 'OBJECTID'];
 
-// Split the intersecting line
-
-// NOTES
-//   Need to handle Zs and Ms better.
-//   As this is not calling a GDB split, Domain Split policy will not be honored, this would have to add to this logic
-//   The logic for a point on a line but not at vertex might need rework
-//   Would like to convert some blocks to functions for cleaner code
-//   Setting the keys/fields to remove from the new feature is critical, not setting this list, the server may reject the edit if the insert is sending read only fields
-// END NOTES
-
-// *************       User Variables       *************
-// This section has the functions and variables that need to be adjusted based on your implementation
-
-// List of fields to remove from new feature, existing features change only requires global id, non editable fields
-// are removed for you by using the Schema function to determine them
-var remove_fields_from_new_feature = [];
-
-// The field the rule is assigned to
-var field_value = $feature.ValueCopied;
 // The line class to split
 var line_class_name = "Line";
 // This is used to get Non Editable fields, do not change the fields from *
@@ -48,24 +29,32 @@ var line_fs = FeatureSetByName($datastore, "Line", ['*'], true);
 var use_cutter = true;
 
 // When the line is split, a new vertex is added, this could be within a distance of an existing vertex, this tolerance will remove that closest one
-var remove_vertex_tolerance = .00002
+var remove_vertex_tolerance = .00002;
 
 // ************* End User Variables Section *************
 
-function get_date_fields(){
-    var date_fields = [];
-    for(var f in Schema($feature).fields){
-        if(Schema($feature).fields[f].type == 'esriFieldTypeDate'){
-            date_fields = Upper(Schema($feature).fields[f].name)
-        }
-    }
-    return date_fields;
+
+function get_fields_by_type(feat, convert_string, param, value) {
+    var fields = Schema(feat).fields;
+    var return_fields = [];
+    var func = Decode(Lower(convert_string), "lower", Lower, "upper", Upper, Text)
+
+	for (var f in fields) {
+		if (fields[f][param] == value) {
+			var fld_name = fields[f].name
+			if (!IsEmpty(convert_string)) {
+				fld_name = func(fld_name);
+			}
+			Push(return_fields, fld_name)
+		}
+	}
+	return return_fields
 }
-function set_date_type(dict){
+function set_date_type(feat, dict){
     // Dates need to be set to date types for some platforms
-    var keys = get_date_fields()
+    var dt_keys = get_fields_by_type(feat, dict, 'type', 'esriFieldTypeDate')
     for (var k in dict) {
-        if (IndexOf(keys, Upper(k)) != -1) {
+        if (IndexOf(dt_keys, Upper(k)) == -1) {
             continue
         }
         dict[k] = Date(dict[k]);
@@ -94,23 +83,6 @@ function compare_coordinate(source_geo, coordinate) {
     return true
 }
 
-function get_non_edit_fields(convert_string) {
-    // convert_string options are Upper, Lower or Null
-    var sc = Schema(line_fs)
-    var non_edit_fields = [];
-    var func = Decode(Lower(convert_string), "lower", Lower, "upper", Upper, Text)
-
-    for (var i in sc.fields) {
-        if (sc.fields[i]['editable'] == false) {
-            var fld_name = sc.fields[i]['name']
-            if (!IsEmpty(convert_string)) {
-                fld_name = func(fld_name);
-            }
-            non_edit_fields[Count(non_edit_fields)] = fld_name
-        }
-    }
-    return non_edit_fields
-}
 
 function pop_keys(dict, keys) {
     var new_dict = {};
@@ -184,7 +156,7 @@ function remove_vertex(path_array) {
             var new_path = []
             for (var i in current_path) {
                 if (i != 1) {
-                    new_path[Count(new_path)] = current_path[i]
+                    Push(new_path, current_path[i]);
                 }
             }
             current_path = new_path
@@ -201,7 +173,7 @@ function remove_vertex(path_array) {
             var new_path = []
             for (var i in current_path) {
                 if (i != vertex_count - 2) {
-                    new_path[Count(new_path)] = current_path[i]
+                    Push(new_path, current_path[i]);
                 }
             }
             current_path = new_path
@@ -250,25 +222,25 @@ function cut_line_at_point(line_geometry, point_geometry) {
         for (var j in current_path) {
             // Split has occurs, just store the rest of the paths and segments in segment 2
             if (split_found == true) {
-                new_path_2[Count(new_path_2)] = current_path[j];
+                Push(new_path_2, current_path[j]);
                 continue
             }
             // Add the coordinate to both features if the split is on the from
             // NOTE, as this is on a known vertex, no Z interpolation should be needed
             if (compare_coordinate(point_geometry, current_path[j])) {
-                new_path_1[Count(new_path_1)] = point_coord;
-                new_path_2[Count(new_path_2)] = point_coord;
+                Push(new_path_1, point_coord);
+                Push(new_path_2, point_coord);
                 split_found = true;
                 continue;
             }
             // Save the last coordinate of a path
             if (Count(current_path) == j - 1) {
-                new_path_1[Count(new_path_1)] = current_path[j];
+                Push(new_path_1, current_path[j]);
                 continue;
             }
             // If the To is the last coordinate and matches the point, continue
             if (compare_coordinate(point_geometry, current_path[j + 1])) {
-                new_path_1[Count(new_path_1)] = current_path[j];
+                Push(new_path_1, current_path[j]);
                 continue;
             }
             // Check to see if point is between vertexs
@@ -278,40 +250,31 @@ function cut_line_at_point(line_geometry, point_geometry) {
             //TODO: reevaluate distance to line function, do we need to build in a fuzzy tolerance, could construct
             // a line and use intersect function
             if (dist_to_line(from_coord, to_coord, point_coord) < .01) {
-                new_path_1[Count(new_path_1)] = current_path[j];
-                new_path_1[Count(new_path_1)] = point_coord;
+                Push(new_path_1, current_path[j]);
+                Push(new_path_1, point_coord);
                 // Start the next line
-                new_path_2[Count(new_path_2)] = point_coord;
+                Push(new_path_2, point_coord);
                 split_found = true;
                 continue
             }
             // Save the coordinate in first segment and move on to next point
-            new_path_1[Count(new_path_1)] = current_path[j];
+            Push(new_path_1, current_path[j]);
 
         }
         // Save the paths to the new path collections
         if (Count(new_path_1) > 0) {
-            new_shape_1[Count(new_shape_1)] = new_path_1;
+            Push(new_shape_1, new_path_1);
         }
         if (Count(new_path_2) > 0) {
-            new_shape_2[Count(new_shape_2)] = new_path_2;
+            Push(new_shape_2, new_path_2);
         }
     }
     return [new_shape_1, new_shape_2];
 }
 
-// merge the non editable fields in the pop key list
-var non_edit_fields = get_non_edit_fields('Upper');
-for (var i in non_edit_fields) {
-    if (indexof(remove_fields_from_new_feature, non_edit_fields[i]) < 0) {
-        remove_fields_from_new_feature[Count(remove_fields_from_new_feature)] = non_edit_fields[i]
-    }
-}
+
 var intersecting_lines = Intersects(line_fs, $feature);
-// If no features were found, return the original value
-if (IsEmpty(intersecting_lines) || Count(intersecting_lines) == 0) {
-    return field_value;
-}
+
 var point_geometry = Geometry($feature);
 
 var update_features = [];
@@ -321,6 +284,7 @@ var new_geoms = [];
 // Loop through lines to split
 
 for (var line_feature in intersecting_lines) {
+	
     var polyline_1 = null;
     var polyline_2 = null;
     if (use_cutter) {
@@ -348,41 +312,52 @@ for (var line_feature in intersecting_lines) {
 
     // Convert feature to dictionary to get all its attributes
     var line_att = Dictionary(Text(line_feature))['attributes'];
-
+	var atts_to_remove = get_fields_by_type(line_feature, 'Upper', 'editable', false);
+	for (var i in remove_fields_from_new_feature){
+		var fld = Upper(remove_fields_from_new_feature[i]);
+		if (IndexOf(atts_to_remove, fld) != 1) {
+			continue;
+		}
+		Push(atts_to_remove, fld);
+	}
+	line_att = set_date_type(line_feature, pop_keys(line_att, atts_to_remove));
     // Check length of new shapes, adjust the current feature to the longest segment
     if (polyline_1_length > polyline_2_length) {
-        update_features[Count(update_features)] = {
+        Push(update_features, {
             'globalID': line_feature.globalID,
             'geometry': polyline_1
-        };
-        new_features[Count(new_features)] =
+        });
+        Push(new_features,
             {
-                'globalID': GUID(),
+                //'globalID': GUID(),
                 'geometry': polyline_2,
-                'attributes': set_date_type(pop_keys(line_att, remove_fields_from_new_feature))
-            };
+                'attributes': line_att
+            });
     } else {
-        update_features[Count(update_features)] = {
+        Push(update_features, {
             'globalID': line_feature.globalID,
             'geometry': polyline_2
-        };
-        new_features[Count(new_features)] =
+        });
+        Push(new_features,
             {
-                'globalID': GUID(),
+                //'globalID': GUID(),
                 'geometry': polyline_1,
-                'attributes': set_date_type(pop_keys(line_att, remove_fields_from_new_feature))
-            };
+                'attributes': line_att
+            });
     }
 }
-var results = {'result': field_value};
+
 // Only include edit info when a split was required
 if (Count(update_features) > 0 && Count(new_features)) {
+	var results = {};
     results['edit'] = [{
         'className': line_class_name,
         'updates': update_features,
         'adds': new_features
     }]
-
+	return results;
 }
-return results;
+
+return
+
 ```
