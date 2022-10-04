@@ -39,18 +39,19 @@ function get_fields_by_type(feat, convert_string, param, value) {
     var return_fields = [];
     var func = Decode(Lower(convert_string), "lower", Lower, "upper", Upper, Text)
 
-	for (var f in fields) {
-		if (fields[f][param] == value) {
-			var fld_name = fields[f].name
-			if (!IsEmpty(convert_string)) {
-				fld_name = func(fld_name);
-			}
-			Push(return_fields, fld_name)
-		}
-	}
-	return return_fields
+    for (var f in fields) {
+        if (fields[f][param] == value) {
+            var fld_name = fields[f].name
+            if (!IsEmpty(convert_string)) {
+                fld_name = func(fld_name);
+            }
+            Push(return_fields, fld_name)
+        }
+    }
+    return return_fields
 }
-function set_date_type(feat, dict){
+
+function set_date_type(feat, dict) {
     // Dates need to be set to date types for some platforms
     var dt_keys = get_fields_by_type(feat, dict, 'type', 'esriFieldTypeDate')
     for (var k in dict) {
@@ -61,6 +62,7 @@ function set_date_type(feat, dict){
     }
     return dict
 }
+
 function dist_to_line(start_coord, end_coord, point_coord) {
     var Dx = end_coord[0] - start_coord[0];
     var Dy = end_coord[1] - start_coord[1];
@@ -135,8 +137,15 @@ function cut_line_at_point_cutter(line_feature, point_geometry) {
     y2 += cy;
 
     var cutter = Polyline({
-        "paths": [[[x1, y1], [x2, y2]]],
-        "spatialReference": {"wkid": geo.spatialReference.wkid}
+        "paths": [
+            [
+                [x1, y1],
+                [x2, y2]
+            ]
+        ],
+        "spatialReference": {
+            "wkid": geo.spatialReference.wkid
+        }
     });
     var new_lines = Cut(line_feature, cutter);
     var line_a = Dictionary(Text(new_lines[0]))
@@ -206,7 +215,7 @@ function cut_line_at_point(line_geometry, point_geometry) {
 
     // If the point is at the start or end, skip splitting line
     if (compare_coordinate(point_geometry, line_shape['paths'][0][0]) || compare_coordinate(point_geometry, line_shape['paths'][-1][-1])) {
-        continue;
+        return [];
     }
     var split_found = false;
     var new_shape_1 = [];
@@ -284,7 +293,7 @@ var new_geoms = [];
 // Loop through lines to split
 
 for (var line_feature in intersecting_lines) {
-	
+
     var polyline_1 = null;
     var polyline_2 = null;
     if (use_cutter) {
@@ -304,58 +313,66 @@ for (var line_feature in intersecting_lines) {
         var line_spat_ref = Geometry(line_feature).spatialReference.wkid;
         var new_geom_1 = remove_vertex(new_geoms[0])
         var new_geom_2 = remove_vertex(new_geoms[1])
-        polyline_1 = Polyline({"paths": new_geom_1, "spatialReference": {"wkid": line_spat_ref}});
-        polyline_2 = Polyline({"paths": new_geom_2, "spatialReference": {"wkid": line_spat_ref}});
+        polyline_1 = Polyline({
+            "paths": new_geom_1,
+            "spatialReference": {
+                "wkid": line_spat_ref
+            }
+        });
+        polyline_2 = Polyline({
+            "paths": new_geom_2,
+            "spatialReference": {
+                "wkid": line_spat_ref
+            }
+        });
     }
     var polyline_1_length = Length(polyline_1);
     var polyline_2_length = Length(polyline_2);
 
     // Convert feature to dictionary to get all its attributes
     var line_att = Dictionary(Text(line_feature))['attributes'];
-	var atts_to_remove = get_fields_by_type(line_feature, 'Upper', 'editable', false);
-	for (var i in remove_fields_from_new_feature){
-		var fld = Upper(remove_fields_from_new_feature[i]);
-		if (IndexOf(atts_to_remove, fld) != 1) {
-			continue;
-		}
-		Push(atts_to_remove, fld);
-	}
-	line_att = set_date_type(line_feature, pop_keys(line_att, atts_to_remove));
+    var atts_to_remove = get_fields_by_type(line_feature, 'Upper', 'editable', false);
+    for (var i in remove_fields_from_new_feature) {
+        var fld = Upper(remove_fields_from_new_feature[i]);
+        if (IndexOf(atts_to_remove, fld) != 1) {
+            continue;
+        }
+        Push(atts_to_remove, fld);
+    }
+    line_att = set_date_type(line_feature, pop_keys(line_att, atts_to_remove));
     // Check length of new shapes, adjust the current feature to the longest segment
     if (polyline_1_length > polyline_2_length) {
         Push(update_features, {
             'globalID': line_feature.globalID,
             'geometry': polyline_1
         });
-        Push(new_features,
-            {
-                //'globalID': GUID(),
-                'geometry': polyline_2,
-                'attributes': line_att
-            });
+        Push(new_features, {
+            //'globalID': GUID(),
+            'geometry': polyline_2,
+            'attributes': line_att
+        });
     } else {
         Push(update_features, {
             'globalID': line_feature.globalID,
             'geometry': polyline_2
         });
-        Push(new_features,
-            {
-                //'globalID': GUID(),
-                'geometry': polyline_1,
-                'attributes': line_att
-            });
+        Push(new_features, {
+            //'globalID': GUID(),
+            'geometry': polyline_1,
+            'attributes': line_att
+        });
     }
 }
 
 // Only include edit info when a split was required
 if (Count(update_features) > 0 && Count(new_features)) {
-	var results = {};
+    var results = {};
     results['edit'] = [{
         'className': line_class_name,
         'updates': update_features,
         'adds': new_features
     }]
-	return results;
+    return results;
 }
 
 return
