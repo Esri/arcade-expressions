@@ -4,12 +4,23 @@ This calculation attribute rule split a line when a point is placed
 
 ## Use cases
 
-Split a water main when a valve is placed
+Split a line when a point is placed.  There is special logic for the Utility Network and requires two rules.  One on the line and one on the point.
+Clients like ArcGIS Pro insert a vertex on a line when a point is snapped to it.  This causes an apply edits to the line and point.  The point AR
+is fired first, which reshapes and adds the new line.  Then the apply edits to add the new vertex is applied, which is the original line
+geometry plus the new vertex.  So the code below is set up for the UN, where if the point is on a vertex, it splits the line, but if 
+the point is not on the vertex, it does nothing as the AR on the line detects if the line has a new vertex inserted and if that vertex 
+is on point feature with that passes the exit early logic. 
+
 
 ## Workflow
 
 Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this rule on a feature class and optionally on a subtype in that feature class.  Use the following values when defining the rule, the other options are not required or depend on your situation.
-  
+
+Device
+  - **Rule Type:** Calculation
+  - **Triggering Events:** Insert, maybe update
+
+Line
   - **Rule Type:** Calculation
   - **Triggering Events:** Update
 
@@ -34,9 +45,9 @@ var exit_early_values = Dictionary('SplitInt', [200],'SplitText', ['DontSplitThe
 var remove_fields_from_new_feature = ['SHAPE_LENGTH', 'GLOBALID', 'OBJECTID'];
 
 // The line class to split
-var line_class_name = "UNO.PipelineLine";
+var line_class_name = "line";
 // This is used to get Non Editable fields, do not change the fields from *
-var line_fs = FeatureSetByName($datastore, "UNO.PipelineLine", ['*'], true);
+var line_fs = FeatureSetByName($datastore, "line", ['*'], true);
 
 // Set this when using decimal degrees, it adjust the tolerances
 var decimal_degrees = false;
