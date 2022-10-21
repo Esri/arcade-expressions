@@ -714,25 +714,26 @@ function get_first_new_vertex(new_geom, orig_geom) {
         // Loop over the vertex, store the first one that is not the same
         // If there are more than one, not the same, exit
         for (var j = 0, k = 0; j < path_len_new -1; j++) {
-            
-            if (!Equals(new_geom.paths[i][k], orig_geom.paths[i][j])) {
+
+            if (!Equals(new_geom.paths[i][j], orig_geom.paths[i][k])) {
                 // Store the new vertex, decrement the counter on original. so the rest of the vertex
                 // are compared at the correct index
                 if (new_vertex == null) {
-                    new_vertex = new_geom.paths[i][k];
-                    j--;
+                    new_vertex = new_geom.paths[i][j];
+                    k--;
                 } else {
+                    // more than one is different, exit early
                     return null;
                 }
             }
+            k++;
         }
-        k++;
+
     }
     return new_vertex;
 }
 
-
-var snap_vertex = get_first_new_vertex(Geometry($feature), Geometry($OriginalFeature));
+var snap_vertex = get_first_new_vertex( Geometry($feature),Geometry($OriginalFeature));
 if (snap_vertex == null){
     return;
 }
