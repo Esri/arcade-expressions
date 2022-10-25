@@ -733,7 +733,13 @@ function get_first_new_vertex(new_geom, orig_geom) {
     return new_vertex;
 }
 
-var snap_vertex = get_first_new_vertex( Geometry($feature),Geometry($OriginalFeature));
+var current_geom = Geometry($feature);
+var orig_geom = Geometry($OriginalFeature);
+if (Equals(orig_geom, current_geom))
+{
+    return
+}
+var snap_vertex = get_first_new_vertex(current_geom,orig_geom);
 if (snap_vertex == null){
     return;
 }
