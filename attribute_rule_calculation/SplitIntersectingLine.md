@@ -701,7 +701,7 @@ function get_first_new_vertex(new_geom, orig_geom) {
 
     var new_vertex = null;
     // Length of paths must be the same
-    if (Count(orig_geom.paths) != Count(orig_geom.paths)) {
+    if (Count(orig_geom.paths) != Count(new_geom.paths)) {
         return null;
     }
     for (var i in new_geom.paths) {
@@ -734,7 +734,10 @@ function get_first_new_vertex(new_geom, orig_geom) {
 }
 
 var current_geom = Geometry($feature);
-var orig_geom = Geometry($OriginalFeature);
+var orig_geom = Geometry($originalFeature);
+if (orig_gemo == null){
+    return;
+}
 if (Equals(orig_geom, current_geom))
 {
     return
