@@ -20,8 +20,8 @@ See the list below for sample expressions:
 
 ## Resources
 
-* [ArcGIS Arcade Documentation](https://developers.arcgis.com/arcade/)
-* [ArcGIS Arcade Playground](https://developers.arcgis.com/arcade/playground/)
+- [ArcGIS Arcade Documentation](https://developers.arcgis.com/arcade/)
+- [ArcGIS Arcade Playground](https://developers.arcgis.com/arcade/playground/)
 
 ## Contributing
 
@@ -29,7 +29,7 @@ Esri welcomes [contributions](CONTRIBUTING.md) from anyone and everyone. Please 
 
 ## License
 
-Copyright 2018 Esri
+Copyright 2022 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

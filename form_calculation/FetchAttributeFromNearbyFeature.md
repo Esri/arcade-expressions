@@ -8,18 +8,18 @@ I’m planting new trees in a neighborhood and want to store the nearest address
 
 ```js
 // If feature doesn't have geometry return null
-if (IsEmpty(Geometry($feature))) { return null }
+if (IsEmpty(Geometry($feature))) { return null; }
 
 // Get the parcels layer
-var parcels = FeatureSetByName($map, 'Parcels')
+var parcels = FeatureSetByName($map, 'Parcels');
 
 // Buffer the current location and intersect with parcels
-var bufferedLocation = Buffer($feature, 100, 'feet')
-var candidateParcels = Intersects(parcels, bufferedLocation)
+var bufferedLocation = Buffer($feature, 100, 'feet');
+var candidateParcels = Intersects(parcels, bufferedLocation);
 
 // Calculate the distance between the parcel and the current location
 // Store the feature and distance as a dictionary and push it into an array
-var featuresWithDistances = []
+var featuresWithDistances = [];
 for (var f in candidateParcels) {
     Push(featuresWithDistances, 
         {
@@ -31,16 +31,16 @@ for (var f in candidateParcels) {
 
 // Sort the candidate parcels by distance using a custom function
 function sortByDistance(a, b) {
-    return a['distance'] - b['distance']
+    return a['distance'] - b['distance'];
 }
-var sorted = Sort(featuresWithDistances, sortByDistance)
+var sorted = Sort(featuresWithDistances, sortByDistance);
 
 // Get the closest feature
-var closestFeatureWithDistance = First(sorted)
+var closestFeatureWithDistance = First(sorted);
 
 // If there was no feature, return null
-if (IsEmpty(closestFeatureWithDistance)) { return null }
+if (IsEmpty(closestFeatureWithDistance)) { return null; }
 
 // Return the address
-return `${closestFeatureWithDistance['feature']['ADDNUM']} ${closestFeatureWithDistance['feature']['ADDRESSNAM']}`
+return `${closestFeatureWithDistance['feature']['ADDNUM']} ${closestFeatureWithDistance['feature']['ADDRESSNAM']}`;
 ```

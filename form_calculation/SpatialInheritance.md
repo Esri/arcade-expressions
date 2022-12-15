@@ -7,18 +7,23 @@ Sometimes, it can be valuable to store the geographic area a feature was collect
 I am recording bird sightings and want to automatically store the region I’m in.
 
 ```js
-// Create a feature set using the 'Regions' layer in the map
-var regions = FeatureSetByName($map, 'Regions', ['name'])
+// If feature doesn't have geometry return null
+if (IsEmpty(Geometry($feature))) { return null; }
 
-// Intersect the current location with the regions and 
+// Create a feature set using the 'Regions' layer in the map, and
+// intersect the current location with the regions.
+var regions = Intersects($feature,FeatureSetByName($map, 'Regions', ['name']));
+ 
 // get the first region
-var region = First(Intersects($feature, regions))
+for (var r in regions){
+    region = r;    
+}
 
 // If the current location does intersect a feature, 
-// return the name of the region. Otherwise, return null
+// return the name of the region, otherwise return null.
 if (!IsEmpty(region)) {
-    return region['name']
+    return region['name'];
 } else {
-    return null
+    return null;
 }
 ```

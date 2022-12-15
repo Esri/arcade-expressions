@@ -7,11 +7,11 @@ When performing inspections or collecting new data, editor tracking works great 
 I’m filling out a damage inspection report and need to provide my name.
 
 ```js
-GetUser($layer).fullName
+GetUser($layer).fullName;
 ```
 
 I’m filling out a damage inspection report and need to provide my email address.
 
 ```js
-GetUser($layer).email
+GetUser($layer).email;
 ```

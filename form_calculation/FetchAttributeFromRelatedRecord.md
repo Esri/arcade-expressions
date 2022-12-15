@@ -9,17 +9,14 @@ I’m inspecting hydrants and need to record the Facility ID with each inspectio
 ## Example Code
 
 ```js
-// Get the feature set for the hydrants
-var hydrants = FeatureSetByRelationshipName($feature, 'wHydrant', ['facilityid'], true)
-
-// Get the first hydrant (should only be one)
-var hydrant = First(hydrants)
+// Get the feature set for the hydrants and return the first;
+var hydrants = First(FeatureSetByRelationshipName($feature, 'wHydrant', ['facilityid'], false));
 
 // If there was a hydrant, return the facilityid of it,
 // Otherwise, return null
 if (!IsEmpty(hydrant)) {
-    return hydrant['facilityid']
+    return hydrant['facilityid'];
 } else {
-    return null
+    return null;
 }
 ```
