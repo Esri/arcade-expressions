@@ -64,33 +64,56 @@ More complicated version that uses the number of lines to calculate the angle.  
 // This calculation attribute rule intersects a line layer and based on the number of
 // intersected features, calculates the angle for the point
 
+// Assigned To: Point
+// Type: Calculation
+// Name: Rotate Point on Line
+// Description: Calculate the rotation based on angle of the intersection line(s)
+// Subtypes: All
+// Field: symbolrotation
+// Trigger: Insert, Update
+// Exclude From Client: False
+// Disable: False
+// Is Editable: True
+
+// *************       User Variables       *************
+// This section has the functions and variables that need to be adjusted based on your implementation
+
+// Assigned to field for the rule
+var assigned_to_field = $feature.symbolrotation;
+
 // Set to true if the rotation setting is set to geographic in the layer properties
 var geographic_rotation = false;
+
 // Set the counter clockwise spin angle used for the symbol in the symbology options
 var symbol_flip_angle = 0
+
+// Create feature set to the intersecting class using the GDB Name
+// ** Implementation Note: If the Utility Network domain was changed, this variable would have to be adjusted
+var intersecting_featset = FeatureSetByName($datastore, "lines", ['objectid'], true);
+
+// ************* End User Variables Section *************
+
 // Return if a value is already set, to recalculate an angle, the field must be set to null
-if (IsEmpty($feature.symbolrotation) == false) {
-    return $feature.symbolrotation;
+if (IsEmpty(assigned_to_field) == false) {
+    return assigned_to_field;
 }
 
-// Create a feature set to the line layer
-var lineClass = FeatureSetByName($datastore, "lines", ["objectid"], true);
 // Find the intersecting lines
-var lines = Intersects(lineClass, $feature);
-//If no lines intersect, return the original value
-if (Count(lines) == 0) {
-    return $feature.symbolrotation;
-}
+var lines = Intersects(intersecting_featset, $feature);
+
+// The tolerance between lines to determine if they follow the same plane
 var diff_tol = 5;
+
 // Variable to store all found angles
 var angles = [];
+
 // Store the features geometry
 var feature_geometry = Geometry($feature);
 // Loop over all intersecting lines and find their angles
 var angle_type;
 var angle_value;
 for (var line in lines) {
-    // Buffer and create an extenf of the point by a small amount to extract the segment
+    // Buffer and create an extent of the point by a small amount to extract the segment
     var clip_area = Extent(Buffer($feature, .01, "meter"));
     // Clip the line by the extend and get the first line segment
     var segment = Clip(line, clip_area)["paths"][0];
@@ -120,14 +143,19 @@ for (var line in lines) {
 }
 
 // If only one angle, return that value
-if (Count(angles) == 1) {
+
+var angle_count = Count(angles);
+if (angle_count == 0) {
+	//If no lines intersect, return the original value
+    return assigned_to_field;
+}else if (angle_count == 1) {
     // If the point is midspan, flip to match symbol as it if was on the end point
     if (angles[0]['type'] == 'mid')
     {
         return (angles[0]['angle'] + 180) % 360;
     }
     return angles[0]['angle'];
-} else if (Count(angles) == 2) {
+} else if (angle_count == 2) {
     // If the feature is midpan of the first line, return the angle of the second line
     if (angles[0]['type'] == 'mid')
         return angles[1]['angle'];
@@ -149,7 +177,7 @@ if (Count(angles) == 1) {
     // If the feature is at the start point of the second line and start of the second line, return the first line
     return angles[0]['angle'];
 
-} else if (Count(angles) == 3) {
+} else if (angle_count == 3) {
     // Flatten the angles to ignore direction
     var flat_angle1 = angles[0]['angle'] % 180;
     var flat_angle2 = angles[1]['angle'] % 180;
@@ -158,18 +186,18 @@ if (Count(angles) == 1) {
     var angle_dif_a = Abs(flat_angle1 - flat_angle2);
     var angle_dif_b = Abs(flat_angle1 - flat_angle3);
     var angle_dif_c = Abs(flat_angle2 - flat_angle3);
-    // If difference between line 1 and 2 is below the tolerance, meaning the lines follow the ame plane, return the
+    // If difference between line 1 and 2 is below the tolerance, meaning the lines follow the same plane, return the
     // third line
     if (angle_dif_a <= (diff_tol * 2) || angle_dif_a >= (180 - (diff_tol * 2))) {
         return angles[2]['angle'];
     }
-    // If difference between line 1 and 3 is below the tolerance, meaning the lines follow the ame plane, return the
+    // If difference between line 1 and 3 is below the tolerance, meaning the lines follow the same plane, return the
     // second line
     else if (angle_dif_b <= (diff_tol * 2) || angle_dif_b >= (180 - (diff_tol * 2))) {
         return angles[1]['angle'];
 
     }
-    // If difference between line 2 and 3 is below the tolerance, meaning the lines follow the ame plane, return the
+    // If difference between line 2 and 3 is below the tolerance, meaning the lines follow the same plane, return the
     // first line
     else if (angle_dif_c <= (diff_tol * 2) || angle_dif_c >= (180 - (diff_tol * 2))) {
         return angles[0]['angle'];
