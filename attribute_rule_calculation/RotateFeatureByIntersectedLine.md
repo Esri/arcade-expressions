@@ -78,6 +78,7 @@ More complicated version that uses the number of lines to calculate the angle.  
 // *************       User Variables       *************
 // This section has the functions and variables that need to be adjusted based on your implementation
 
+Expects($feature, 'symbolrotation');
 // Assigned to field for the rule
 var assigned_to_field = $feature.symbolrotation;
 
@@ -85,11 +86,19 @@ var assigned_to_field = $feature.symbolrotation;
 var geographic_rotation = false;
 
 // Set the counter clockwise spin angle used for the symbol in the symbology options
-var symbol_flip_angle = 0
+var symbol_flip_angle = 0;
 
-// Create feature set to the intersecting class using the GDB Name
+// A number value to orient the line in case of a intersection between two lines, this can be omitted by specifying
+// null of empty string.
+// If a value is set, make sure to include it in the featuresetbyname list below
+var number_field = 'diameter';
+
+// Create feature set to the intersecting classs using the GDB Name
 // ** Implementation Note: If the Utility Network domain was changed, this variable would have to be adjusted
-var intersecting_featset = FeatureSetByName($datastore, "lines", ['objectid'], true);
+var intersecting_featsets = [
+    FeatureSetByName($datastore, "lines", ['objectid', 'diameter'], true),
+    FeatureSetByName($datastore, "lines2", ['objectid'], true)
+];
 
 // ************* End User Variables Section *************
 
@@ -97,9 +106,6 @@ var intersecting_featset = FeatureSetByName($datastore, "lines", ['objectid'], t
 if (IsEmpty(assigned_to_field) == false) {
     return assigned_to_field;
 }
-
-// Find the intersecting lines
-var lines = Intersects(intersecting_featset, $feature);
 
 // The tolerance between lines to determine if they follow the same plane
 var diff_tol = 5;
@@ -112,46 +118,55 @@ var feature_geometry = Geometry($feature);
 // Loop over all intersecting lines and find their angles
 var angle_type;
 var angle_value;
-for (var line in lines) {
-    // Buffer and create an extent of the point by a small amount to extract the segment
-    var clip_area = Extent(Buffer($feature, .01, "meter"));
-    // Clip the line by the extend and get the first line segment
-    var segment = Clip(line, clip_area)["paths"][0];
-    // The features location is on the start of the line, get the angle from the feature to the end vertex
-    if (Equals(segment[0], feature_geometry)) {
-        angle_type = 'from'
-        angle_value = Round(Angle(feature_geometry, segment[-1]), 0)
+
+// Loop over all feature sets
+for (var i in intersecting_featsets) {
+    var intersecting_featset = intersecting_featsets[i];
+    // Find the intersecting lines
+    var lines = Intersects(intersecting_featset, $feature);
+
+    for (var line in lines) {
+        // Buffer and create an extent of the point by a small amount to extract the segment
+        var clip_area = Extent(Buffer($feature, .01, "meter"));
+        // Clip the line by the extend and get the first line segment
+        var segment = Clip(line, clip_area)["paths"][0];
+        // The features location is on the start of the line, get the angle from the feature to the end vertex
+        if (Equals(segment[0], feature_geometry)) {
+            angle_type = 'from';
+            angle_value = Round(Angle(feature_geometry, segment[-1]), 0);
+        }
+        // The features location is on the end of the line, create a new segment from the feature to the start vertex
+        else if (Equals(segment[-1], feature_geometry)) {
+            angle_type = 'to';
+            angle_value = Round(Angle(feature_geometry, segment[0]), 0);
+        }
+        // The features location is midspan of the segment, use the angle of the segment
+        else {
+            angle_type = 'mid';
+            angle_value = Round(Angle(segment[0], segment[-1]), 0);
+        }
+        if (geographic_rotation == true) {
+            // Convert Arithmetic to Geographic
+            angle_value = (450 - angle_value) % 360;
+        }
+        // Add 180 to match 0 rotation in the TOC
+        // Add user specified spin angle if their symbol is rotated
+        angle_value = (angle_value + 180 + symbol_flip_angle) % 360;
+
+        // Get the numerical field from the feature
+        var num_value = IIf(HasKey(line, number_field), line[number_field], null);
+        Push(angles, {'angle': angle_value, 'type': angle_type, 'number_value': num_value});
     }
-    // The features location is on the end of the line, create a new segment from the feature to the start vertex
-    else if (Equals(segment[-1], feature_geometry)) {
-        angle_type = 'to'
-        angle_value = Round(Angle(feature_geometry, segment[0]), 0)
-    }
-    // The features location is midspan of the segment, use the angle of the segment
-    else {
-        angle_type = 'mid'
-        angle_value = Round(Angle(segment[0], segment[-1]), 0)
-    }
-    if (geographic_rotation == true) {
-        // Convert Arithmetic to Geographic
-        angle_value = (450 - angle_value) % 360;
-    }
-    // Add 180 to match 0 rotation in the TOC
-    // Add user specified spin angle if their symbol is rotated
-    angle_value = (angle_value + 180 + symbol_flip_angle) % 360;
-    angles[Count(angles)] = {'angle': angle_value, 'type': angle_type};
 }
 
 // If only one angle, return that value
-
 var angle_count = Count(angles);
 if (angle_count == 0) {
-	//If no lines intersect, return the original value
+    //If no lines intersect, return the original value
     return assigned_to_field;
-}else if (angle_count == 1) {
+} else if (angle_count == 1) {
     // If the point is midspan, flip to match symbol as it if was on the end point
-    if (angles[0]['type'] == 'mid')
-    {
+    if (angles[0]['type'] == 'mid') {
         return (angles[0]['angle'] + 180) % 360;
     }
     return angles[0]['angle'];
@@ -162,19 +177,48 @@ if (angle_count == 0) {
     // If the feature is midpan of the second line, return the angle of the first line
     else if (angles[1]['type'] == 'mid')
         return angles[0]['angle'];
-    // If the feature is at the end point of both lines, return the angle of the first line
-    else if (angles[0]['type'] == 'to' && angles[1]['type'] == 'to') {
+    // If the feature is at the end/start point of both lines, return the angle of the first line
+    else if (
+        (angles[0]['type'] == 'to' && angles[1]['type'] == 'to') ||
+        (angles[0]['type'] == 'from' && angles[1]['type'] == 'from')
+    ) {
+        // If the number values are the same, or not specified
+        if (angles[0]['number_value'] == angles[1]['number_value']) {
+            return angles[0]['angle'];
+        } else if (angles[0]['number_value'] > angles[1]['number_value']) {
+            return angles[0]['angle'];
+        } else if (angles[0]['number_value'] < angles[1]['number_value']) {
+            return angles[1]['angle'];
+        }
         return angles[0]['angle'];
-    }
-    // If the feature is at the start point of both lines, return the angle of the first line
-    else if (angles[0]['type'] == 'from' && angles[1]['type'] == 'from') {
-        return angles[0]['angle'];
+
     }
     // If the feature is at the start point of the first line and end of the second line, return the second line
-    else if (angles[0]['type'] == 'from') {
+    else if (angles[0]['type'] == 'from' && angles[1]['type'] == 'to') {
+        // If the number values are the same, or not specified
+        if (angles[0]['number_value'] == angles[1]['number_value']) {
+            return angles[1]['angle'];
+        } else if (angles[0]['number_value'] > angles[1]['number_value']) {
+            return angles[0]['angle'];
+        } else if (angles[0]['number_value'] < angles[1]['number_value']) {
+            return angles[1]['angle'];
+        }
         return angles[1]['angle'];
+
     }
     // If the feature is at the start point of the second line and start of the second line, return the first line
+    else if (angles[0]['type'] == 'to' && angles[1]['type'] == 'from') {
+        // If the number values are the same, or not specified
+        if (angles[0]['number_value'] == angles[1]['number_value']) {
+            return angles[0]['angle'];
+        } else if (angles[0]['number_value'] > angles[1]['number_value']) {
+            return angles[0]['angle'];
+        } else if (angles[0]['number_value'] < angles[1]['number_value']) {
+            return angles[1]['angle'];
+        }
+        return angles[0]['angle'];
+    }
+    //Catch anything no handled
     return angles[0]['angle'];
 
 } else if (angle_count == 3) {
@@ -191,13 +235,13 @@ if (angle_count == 0) {
     if (angle_dif_a <= (diff_tol * 2) || angle_dif_a >= (180 - (diff_tol * 2))) {
         return angles[2]['angle'];
     }
-    // If difference between line 1 and 3 is below the tolerance, meaning the lines follow the same plane, return the
+        // If difference between line 1 and 3 is below the tolerance, meaning the lines follow the same plane, return the
     // second line
     else if (angle_dif_b <= (diff_tol * 2) || angle_dif_b >= (180 - (diff_tol * 2))) {
         return angles[1]['angle'];
 
     }
-    // If difference between line 2 and 3 is below the tolerance, meaning the lines follow the same plane, return the
+        // If difference between line 2 and 3 is below the tolerance, meaning the lines follow the same plane, return the
     // first line
     else if (angle_dif_c <= (diff_tol * 2) || angle_dif_c >= (180 - (diff_tol * 2))) {
         return angles[0]['angle'];
@@ -209,4 +253,5 @@ if (angle_count == 0) {
 else {
     return angles[0]['angle'];
 }
+
 ```
