@@ -107,7 +107,7 @@ function get_fields_by_type(feat, convert_string, param, value) {
 
 function set_date_type(feat, dict) {
     // Dates need to be set to date types for some platforms
-    var dt_keys = get_fields_by_type(feat, dict, 'type', 'esriFieldTypeDate');
+    var dt_keys = get_fields_by_type(feat, 'upper', 'type', 'esriFieldTypeDate');
     for (var k in dict) {
         if (IndexOf(dt_keys, Upper(k)) == -1) {
             continue;
@@ -368,7 +368,7 @@ for (var line_feature in intersecting_lines) {
 
     // Convert feature to dictionary to get all its attributes
     var line_att = Dictionary(Text(line_feature))['attributes'];
-    var atts_to_remove = get_fields_by_type(line_feature, 'Upper', 'editable', false);
+    var atts_to_remove = get_fields_by_type(line_feature, 'upper', 'editable', false);
     for (var i in remove_fields_from_new_feature) {
         var fld = Upper(remove_fields_from_new_feature[i]);
         if (IndexOf(atts_to_remove, fld) != 1) {
@@ -795,7 +795,7 @@ var polyline_2_length = Length(polyline_2);
 
 // Convert feature to dictionary to get all its attributes
 var line_att = Dictionary(Text($feature))['attributes'];
-var atts_to_remove = get_fields_by_type($feature, 'Upper', 'editable', false);
+var atts_to_remove = get_fields_by_type($feature, 'upper', 'editable', false);
 for (var i in remove_fields_from_new_feature) {
     var fld = Upper(remove_fields_from_new_feature[i]);
     if (IndexOf(atts_to_remove, fld) != 1) {
