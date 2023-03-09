@@ -16,7 +16,7 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 
 ## Expression Template
 
-This Arcade attribute rule creates laterals to buildings along a main line. An example using this rule is included in this [Example](./CreateLateralDevSummitPlenary2023.zip)
+This Arcade attribute rule creates laterals to buildings along a main line. An example using this rule is included in this [Example](./CreateLateralDevSummitPlenary2023.zip). To use this: Add mobile gdb to Pro, zoom to the area where there are building and sketch a main line close to buildings.
 
 
 [Code](./CreateLateralDevSummitPlenary2023.js)
