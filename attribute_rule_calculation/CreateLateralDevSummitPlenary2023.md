@@ -16,8 +16,9 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 
 ## Expression Template
 
-This Arcade attribute rule creates midspan points along a line. An example using this rule is included in this [Example](./CreateLateralDevSummitPlenary2023.zip)
+This Arcade attribute rule creates laterals to buildings along a main line. An example using this rule is included in this [Example](./CreateLateralDevSummitPlenary2023.zip)
 
 
 [Code](./CreateLateralDevSummitPlenary2023.js)
+
 [Initial Prototype](./CreateLateral.js)
