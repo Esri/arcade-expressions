@@ -19,8 +19,8 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 This Arcade expression will calculates field values from intersecting point layer
 ```js
 // Get Manhole layer
-var fields = ['FACILITYID', 'RIMELEV', 'INVERTELEV']
-var point_fs = FeatureSetByName($datastore, "ssManhole", fields, true);
+var fields = ['MHID', 'ELEV']
+var point_fs = FeatureSetByName($datastore, "Manholes", fields, true);
 
 var line_shape = Geometry($feature)
 var spRef = line_shape['spatialReference']
@@ -37,23 +37,19 @@ var end_point = Point({x: end_x, y: end_y, spatialReference: spRef})
 var attributes = {}
 
 //find point intersecting origin
-//var origIntx = first(Intersects(Buffer(orig_point, 0.02), point_fs));
 var origIntx = first(Intersects(orig_point, point_fs));
 
 if (!IsEmpty(origIntx)) {
-	attributes['UPELEV'] = origIntx['INVERTELEV']
-	attributes['START_COVELEV'] = origIntx['RIMELEV']
-	attributes['FROMMH'] = origIntx['FACILITYID']
+	attributes['UPELEV'] = origIntx['ELEV']
+	attributes['FROMMH'] = origIntx['MHID']
   }
 
 //find point intersecting end
-//var endIntx = first(Intersects(Buffer(end_point, 0.02), point_fs));
 var endIntx = first(Intersects(end_point, point_fs));
 
 if (!IsEmpty(endIntx)) {
-	attributes['DOWNELEV'] = endIntx['INVERTELEV']
-	attributes['END_COVELEV'] = endIntx['RIMELEV']
-	attributes['TOMH'] = endIntx['FACILITYID']
+	attributes['DOWNELEV'] = endIntx['ELEV']
+	attributes['TOMH'] = endIntx['MHID']
   }
 
 
