@@ -16,7 +16,6 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 
 ## Expression Template
 
-This Arcade expression will calculates field values from intersecting point layer
 ```js
 var intxField = "DIAMETER"
 var intxFeatureSet = FeatureSetByName($datastore, 'Mainlines', [intxField], true)
