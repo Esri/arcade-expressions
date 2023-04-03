@@ -18,7 +18,7 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 
 This Arcade expression will calculates field values from intersecting point layer
 ```js
-// Get Manhole layer
+// Get Point layer, with fields to evaluate
 var fields = ['MHID', 'ELEV']
 var point_fs = FeatureSetByName($datastore, "Manholes", fields, true);
 
@@ -36,10 +36,16 @@ var end_point = Point({x: end_x, y: end_y, spatialReference: spRef})
 
 var attributes = {}
 
+function IsEmptyButBetter(data) {
+    if (IsEmpty(data)) return true;
+    for (var x in data) return false;
+    return true;
+}
+
 //find point intersecting origin
 var origIntx = first(Intersects(orig_point, point_fs));
 
-if (!IsEmpty(origIntx)) {
+if (!IsEmptyButBetter(origIntx)) {
 	attributes['UPELEV'] = origIntx['ELEV']
 	attributes['FROMMH'] = origIntx['MHID']
   }
@@ -47,14 +53,14 @@ if (!IsEmpty(origIntx)) {
 //find point intersecting end
 var endIntx = first(Intersects(end_point, point_fs));
 
-if (!IsEmpty(endIntx)) {
+if (!IsEmptyButBetter(endIntx)) {
 	attributes['DOWNELEV'] = endIntx['ELEV']
 	attributes['TOMH'] = endIntx['MHID']
   }
 
 
 var result = {}
-if (Text(attributes) != '{}') {
+if (IsEmptyButBetter(attributes)) {
     result['result'] = {
         'attributes': attributes
     }
