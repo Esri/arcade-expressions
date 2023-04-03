@@ -28,6 +28,12 @@ var featureY = featureGeom.y
 
 var attributes = {}
 
+function IsEmptyButBetter(data) {
+    if (IsEmpty(data)) return true;
+    for (var x in data) return false;
+    return true;
+}
+
 //cycle through selected features
 for (var intxFeature in intxFeatures) {
   var line_shape = Geometry(intxFeature)
@@ -43,13 +49,13 @@ for (var intxFeature in intxFeatures) {
   var end_x = line_shape['paths'][-1][-1].x
   var end_y = line_shape['paths'][-1][-1].y
 
-  if (featureX == orig_x && featureY == orig_y) {
+  if (featureX == end_x && featureY == end_y) {
     attributes['INDIAM'] = intxFeature['DIAMETER']
   }
 
 }
 var result = {}
-if (Text(attributes) != '{}') {
+if (!IsEmptyButBetter(attributes)) {
     result['result'] = {
         'attributes': attributes
     }
