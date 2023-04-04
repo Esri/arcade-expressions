@@ -60,7 +60,7 @@ if (!IsEmptyButBetter(endIntx)) {
 
 
 var result = {}
-if (IsEmptyButBetter(attributes)) {
+if (!IsEmptyButBetter(attributes)) {
     result['result'] = {
         'attributes': attributes
     }
