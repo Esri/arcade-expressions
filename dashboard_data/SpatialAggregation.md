@@ -65,7 +65,7 @@ var out_dict = {
 }; 
 
 // Convert dictionary to feature set. 
-return FeatureSet(out_dicear); 
+return FeatureSet(out_dict); 
 ```
 
 We can use this expression to create a serial chart or list that shows the number of points per polygon. Simple modifications to this expression can add additional statistics, such as **Sum**, **Average**, and the like.
