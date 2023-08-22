@@ -4,6 +4,8 @@ This expression aggregates data from one layer using a spatial relationship with
 
 In this specific example, point features ([Global Power Plants](https://www.arcgis.com/home/item.html?id=848d61af726f40d890219042253bedd7)) are being aggregated by polygons ([Time Zones](https://www.arcgis.com/home/item.html?id=312cebfea2624e108e234220b04460b8)) using the **Contains** function.
 
+_Note for Enterprise users: Prior to Enterprise 11.2, the FeatureSet() function does not accept dictionaries. You must wrap the dictionary with a Text() function: FeatureSet(Text(dict)). Additionally, dates need to be in EPOCH and can be converted by wrapping them with the Number() function: Number(Now()). For more information see https://community.esri.com/t5/arcgis-dashboards-blog/dashboard-data-expressions-what-has-changed-june/bc-p/1299698_
+
 ```js
 // Portal
 var portal = Portal('https://www.arcgis.com/');
@@ -63,7 +65,7 @@ var out_dict = {
 }; 
 
 // Convert dictionary to feature set. 
-return FeatureSet(Text(out_dict)); 
+return FeatureSet(out_dict); 
 ```
 
 We can use this expression to create a serial chart or list that shows the number of points per polygon. Simple modifications to this expression can add additional statistics, such as **Sum**, **Average**, and the like.

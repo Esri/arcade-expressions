@@ -2,6 +2,8 @@
 
 This expression aggregates data by day of the week using the Arcade Weekday() function. The sample data contains a record of new COVID-19 cases across California recorded by county on a daily basis.   
 
+_Note for Enterprise users: Prior to Enterprise 11.2, the FeatureSet() function does not accept dictionaries. You must wrap the dictionary with a Text() function: FeatureSet(Text(dict)). Additionally, dates need to be in EPOCH and can be converted by wrapping them with the Number() function: Number(Now()). For more information see https://community.esri.com/t5/arcgis-dashboards-blog/dashboard-data-expressions-what-has-changed-june/bc-p/1299698_
+
 ```js
 // Create a FeatureSet from the Feature Layer containing the COVID-19 case information.
 var portal = Portal('https://www.arcgis.com/');
@@ -43,7 +45,7 @@ var dowDict = {
 }; 
 
 // Convert dictionary to feature set. 
-var fs_dict = FeatureSet(Text(dowDict)); 
+var fs_dict = FeatureSet(dowDict); 
 
 // Return case data by day of week.
 return GroupBy(fs_dict, ['dow_num', 'dow'], [{ name: 'cases_by_dow', expression: 'newcases', statistic: 'SUM'}]); 

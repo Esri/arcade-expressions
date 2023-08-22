@@ -2,6 +2,8 @@
 
 This data expression splits a comma separated values in a field into multiple rows of single values. A common use case is data from a Survey123 form with multichoice questions, like in the below example. 
 
+_Note for Enterprise users: Prior to Enterprise 11.2, the FeatureSet() function does not accept dictionaries. You must wrap the dictionary with a Text() function: FeatureSet(Text(dict)). Additionally, dates need to be in EPOCH and can be converted by wrapping them with the Number() function: Number(Now()). For more information see https://community.esri.com/t5/arcgis-dashboards-blog/dashboard-data-expressions-what-has-changed-june/bc-p/1299698_
+
 ```js
 // Reference layer using the FeatureSetByPortalItem() method.
 var portal = Portal('https://www.arcgis.com')
@@ -39,7 +41,7 @@ var choicesDict = {
 }; 
 
 // Convert dictionary to featureSet. 
-var fs_dict = FeatureSet(Text(choicesDict)); 
+var fs_dict = FeatureSet(choicesDict); 
 
 // Return featureset after grouping by hazard types. 
 return GroupBy(fs_dict, ['split_choices'], 

@@ -2,6 +2,8 @@
 
 This expression combines features from multiple feature layers. Each of the three sample data contains a record of how many vaccinations were allocated by each manufacturer (Moderna, Pfizer, and Janssen).     
 
+_Note for Enterprise users: Prior to Enterprise 11.2, the FeatureSet() function does not accept dictionaries. You must wrap the dictionary with a Text() function: FeatureSet(Text(dict)). Additionally, dates need to be in EPOCH and can be converted by wrapping them with the Number() function: Number(Now()). For more information see https://community.esri.com/t5/arcgis-dashboards-blog/dashboard-data-expressions-what-has-changed-june/bc-p/1299698_
+
 ```js
 var portal = Portal('https://www.arcgis.com/');
 // Create a FeatureSet for each manufacturer Feature Layer containing vaccination allocation data. 
@@ -79,7 +81,7 @@ var combinedDict = {
 };
 
 // Return dictionary cast as a feature set 
-return FeatureSet(Text(combinedDict));
+return FeatureSet(combinedDict);
 
 ```
 

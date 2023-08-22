@@ -51,12 +51,7 @@ var returnFS = {
 for (var a in assigned){
     var t = {}
     for (var f in a){
-        if (TypeOf(a[f]) == 'Date'){
-            // Convert date fields to Unix Timestamp
-            t[f] = Number(a[f])
-        } else{
-            t[f] = a[f]
-        }
+        t[f] = a[f]
     }
     var n = getTableValue(workers, a.workerid, 'globalid', 'name')
     t["worker_name"] = n
@@ -65,9 +60,30 @@ for (var a in assigned){
 
     Push(returnFS.features, {'attributes':t})
 }
-return FeatureSet(Text(returnFS))
+return FeatureSet(returnFS)
 ```
 
 The resulting data can be visualized in a serial chart element using the 'Categories from Features' configuration.
 
 ![](/dashboard_data/images/workforce-worker-name-assignment-type.png)
+
+
+_Note for Enterprise users: Prior to Enterprise 11.2, the FeatureSet() function does not accept dictionaries. You must wrap the dictionary with a Text() function: FeatureSet(Text(dict)). Additionally, dates need to be in EPOCH and can be converted by wrapping them with the Number() function: Number(Now()). For more information see https://community.esri.com/t5/arcgis-dashboards-blog/dashboard-data-expressions-what-has-changed-june/bc-p/1299698_
+
+At line 40, when you loop through the assigned you will have to use the following:
+
+```js
+for (var f in a){
+        if (TypeOf(a[f]) == 'Date'){
+            // Convert date fields to Unix Timestamp
+            t[f] = Number(a[f])
+        } else{
+            t[f] = a[f]
+        }
+    }
+```
+
+At line 50, you will have to covert the dictionary to text based JSON:
+```js
+return FeatureSet(Text(returnFS))
+```
