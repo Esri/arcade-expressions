@@ -1,0 +1,15 @@
+contact_links:
+  - name: Arcade question within ArcGIS Online (Map Viewer)
+    url: https://community.esri.com/t5/forums/filteredbylabelpage/board-id/arcgis-online-questions/label-name/arcade
+  - name: Arcade question within ArcGIS Dashboards
+    url: https://community.esri.com/t5/arcgis-dashboards-questions/bd-p/arcgis-dashboards-questions
+  - name: Arcade question within ArcGIS Enterprise (Map Viewer)
+    url: https://community.esri.com/t5/arcgis-enterprise-portal-questions/bd-p/enterprise-portal    
+  - name: Arcade question within the ArcGIS Maps SDK for JavaScript 
+    url: https://community.esri.com/t5/arcgis-javascript-maps-sdk-questions/bd-p/arcgis-api-for-javascript-questions
+  - name: Arcade question within ArcGIS Pro SDK
+    url: https://community.esri.com/t5/arcgis-pro-sdk-questions/bd-p/arcgis-pro-sdk-questions
+  - name: Arcade question within Native Maps SDKs
+    url: https://community.esri.com/t5/arcgis-maps-sdks-for-native-apps/ct-p/arcgis-runtime-sdks
+  - name: Arcade question within other products 
+    url: http://community.esri.com
