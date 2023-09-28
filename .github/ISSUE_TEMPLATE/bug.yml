@@ -1,0 +1,34 @@
+name: Bug
+description: Report bug in existing expressions here.
+labels: ["bug"]
+body:
+  - type: checkboxes
+    id: existing-issues
+    attributes:
+      label: Check existing issues
+      description: If someone has already opened an issue for what you are requesting, please add a 👍 reaction to the existing issue instead of creating a new one.
+      options:
+        - label: I have [checked for existing issues](https://github.com/Esri/arcade-expressions/issues) to avoid duplicates.
+    validations:
+      required: true
+  - type: input
+    id: expression-path
+    attributes:
+      label: Markdown file
+      description: Please, add the path to the markdown file that contains the bug.
+    validations:
+      required: true
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Description
+      description: Describe the bug
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Comments (optional)
+      description: Add anything else that can help use reproduce/solve the issue
+    validations:
+      required: false
