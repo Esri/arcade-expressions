@@ -6,7 +6,7 @@ Esri welcomes contributions from anyone and everyone. Please see our [guidelines
 **Table of Contents**:
 
 - [I want to contribute, what should I work on?](#i-want-to-contribute-what-should-i-work-on)
-- [Before filling and issue](#before-filling-and-issue)
+- [Before creating and issue](#before-creating-and-issue)
 - [Getting a development environment set up](#getting-a-development-environment-set-up)
 - [Adding a new expression](#adding-a-new-expression)
 - [Commit message format](#commit-message-format)
@@ -26,9 +26,7 @@ You can help mostly by:
 
 > **(1)**: If you are looking for inspiration of example expressions, you can search in different places such as: ArcGIS Online ["Arcade Expressions and You"](https://www.arcgis.com/home/group.html?id=dfe07fe13d154b67bbd7a38a2be90fd9&view=list#content), [Arcade questions at Esri Community](https://community.esri.com/t5/forums/searchpage/tab/message?filter=includeForums,solvedThreads&q=arcade&noSynonym=false&solved=true&sort_by=-topicKudosCount&include_forums=true&collapse_discussion=true), [articles](https://www.esri.com/arcgis-blog/?s=#&tag=arcade), [videos](https://mediaspace.esri.com/esearch/search?keyword=arcade), or documentation pages (e.g. [Arcade samples within the ArcGIS Maps SDK for JavaScript](https://developers.arcgis.com/javascript/latest/sample-code/?tagged=Arcade)). 
 
-## Before filling and issue 
-
-
+## Before creating and issue 
 
 * If something isn't working the way you expect, **take a look at the [existing issues](https://github.com/Esri/arcade-expressions/issues) before logging a new one**. 
 * If you have a **general question about Arcade**, please check the [arcade tag at Esri Community](https://community.esri.com/t5/tag/arcade/tg-p), or go to the [right place](https://github.com/Esri/arcade-expressions/issues/new/choose) where you can ask questions, and collaborate with others.
@@ -40,8 +38,8 @@ You can help mostly by:
   - Tell us how to reproduce the issue (e.g. is it happening in a specific profile, browser, ...?).
   - Can it be reliably reproduced? If not, tell us how often it happens and under what circumstances.
   - Provide a sample that reproduces the issue  whenever possible.
-  - Screenshots, GIFsn and screen recordings are our friends!.
-  - Did this problem start happening after a recent release or was it always a bug?.
+  - Screenshots, GIFsn and screen recordings are our friends!
+  - Did this problem start happening after a recent release or was it always a bug?
 
 
 ## Getting a development environment set up
