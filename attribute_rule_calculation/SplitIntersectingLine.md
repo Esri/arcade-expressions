@@ -11,6 +11,7 @@ geometry plus the new vertex.  So the code below is set up for the UN, where if 
 the point is not on the vertex, it does nothing as the AR on the line detects if the line has a new vertex inserted and if that vertex 
 is on point feature with that passes the exit early logic. 
 
+Very important for UN controlled layers that the **is_un_controlled** is set to True in the Device Attribute Rules.
 
 ## Workflow
 
