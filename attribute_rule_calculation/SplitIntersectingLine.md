@@ -740,10 +740,13 @@ var orig_geom = Geometry($originalFeature);
 if (orig_geom == null){
     return;
 }
-if (Equals(orig_geom, current_geom))
-{
-    return
-}
+
+// This check cannot be used as a line with an extra vertex is considered equal
+//if (Equals(orig_geom, current_geom))
+//{
+//    return
+//}
+
 var snap_vertex = get_first_new_vertex(current_geom,orig_geom);
 if (snap_vertex == null){
     return;
