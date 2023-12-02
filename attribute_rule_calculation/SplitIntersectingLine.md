@@ -737,7 +737,7 @@ function get_first_new_vertex(new_geom, orig_geom) {
 
 var current_geom = Geometry($feature);
 var orig_geom = Geometry($originalFeature);
-if (orig_gemo == null){
+if (orig_geom == null){
     return;
 }
 if (Equals(orig_geom, current_geom))
