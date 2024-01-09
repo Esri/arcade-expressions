@@ -46,7 +46,7 @@ var exit_early_values = Dictionary('SplitInt', [200],'SplitText', ['DontSplitThe
 // All fields listed here, need to be in upper case, they are forced to upper in the logic below.
 var remove_fields_from_new_feature = ['SHAPE_LENGTH', 'GLOBALID', 'OBJECTID'];
 
-// The line class to split
+// The line class to split, this must match what you specify in the FeatureSetByName below
 var line_class_name = "line";
 // This is used to get Non Editable fields, do not change the fields from *
 var line_fs = FeatureSetByName($datastore, "line", ['*'], true);
@@ -432,7 +432,7 @@ var exit_early_values = Dictionary('SplitInt', [200],'SplitText', ['DontSplitThe
 // All fields listed here, need to be in upper case, they are forced to upper in the logic below.
 var remove_fields_from_new_feature = ['SHAPE_LENGTH', 'GLOBALID', 'OBJECTID'];
 
-// The point on the vertex
+// The name classes in your database, the point_class_name must match the FeatureSetByName and the line class name must match the class this is assigned to.
 var point_class_name = "point";
 var line_class_name = "line";
 // This is used to get Non Editable fields, do not change the fields from *
