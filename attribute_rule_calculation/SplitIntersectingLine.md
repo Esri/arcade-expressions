@@ -493,7 +493,7 @@ function get_fields_by_type(feat, convert_string, param, value) {
 
 function set_date_type(feat, dict) {
     // Dates need to be set to date types for some platforms
-    var dt_keys = get_fields_by_type(feat, dict, 'type', 'esriFieldTypeDate');
+    var dt_keys = get_fields_by_type(feat, 'upper', 'type', 'esriFieldTypeDate');
     for (var k in dict) {
         if (IndexOf(dt_keys, Upper(k)) == -1) {
             continue;
