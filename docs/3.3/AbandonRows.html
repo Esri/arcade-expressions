@@ -1,0 +1,501 @@
+<?xml version="1.0"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:res="http://www.esri.com/metadata/res/">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <style xmlns="" xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" type="text/css" id="internalStyle">
+    body {
+      font-family: "Segoe UI", Arial, Sans-serif;
+      font-size: 10pt;
+      color: #4C4C4C;
+      background-color: #FFFFFF;
+      margin: 6px, 6px, 6px, 6px;
+    }
+    h1 {
+      font-family: "Segoe UI Light", "Segoe UI", Arial, Sans-serif;
+      font-size: 14pt;
+      color: #0079C1;
+      margin: 0px 0px 8px 0px;
+    }
+    h3 {
+      font-family: "Segoe UI semibold", "Segoe UI", Arial, Sans-serif;
+      font-size: 12pt;
+      margin: 10px 0px 4px 0px;
+    }
+    span.ContentHeader {
+      font-family: "Segoe UI semibold", "Segoe UI", Arial, Sans-serif;
+      font-size: 12pt;
+    }
+    span.SubContentHeader {
+      font-family: "Segoe UI", Arial, Sans-serif;
+      font-size: 10pt;
+      color: #6D6C70;
+    }
+    span.ElementLabel {
+      font-family: "Segoe UI", Arial, Sans-serif;
+      font-size: 10pt;
+      color: #929497;
+    }
+    div {
+      margin: 0px 0px 0px 0px;
+    }
+    p {
+      margin: 0px 0px 6px 0px;
+    }
+    .center {
+      text-align: center;
+    }
+    img {
+      margin: 8px 0px 8px 0px;
+    }
+    img.summary {
+      width: 210px;
+      height: 133px;
+      margin: 8px 0px 8px 0px;
+    }
+    img.center {
+      text-align: center;
+      display: block;
+    }
+    img.gp {
+      width: auto;
+    }
+    .noThumbnail {
+      #color: rgb(70%, 70%, 70%);
+      color: #A6A8AB;
+      border-width: 1px;
+      border-style: solid;
+      #color: rgb(70%, 70%, 70%);
+      border-color: #A6A8AB;
+      padding: 3em 3em;
+      position: relative;
+      text-align: center;
+      width: 210px;
+      height: 140px;
+      margin: 8px 0px 8px 0px;
+    }
+    .noContent {
+      #color: rgb(70%, 70%, 70%);
+      color: #A6A8AB;
+    }
+    h3 a.expander:link {
+      color: #4C4C4C;
+      font-weight: normal;
+      text-decoration: none;
+    }
+    h3 a.expander:visited {
+      color: #0079C1;
+      text-decoration: none;
+    }
+    h3 a.expander:link:hover, h3 a.expander:visited:hover {
+      color: #0079C1;
+      text-decoration: none;
+    }
+    a.expander:link {
+      color: #323232;
+      font-weight: normal;
+      text-decoration: none;
+    }
+    a.expander:visited {
+      color: #0079C1;
+      text-decoration: none;
+    }
+    a.expander:link:hover, a.expander:visited:hover {
+      color: #0079C1;
+      text-decoration: none;
+    }
+    a:link {
+      color: #5A9359;
+      font-weight: normal;
+      text-decoration: none;
+    }
+    a:visited {
+      color: #5A9359;
+      text-decoration: none;
+    }
+    a:link:hover, a:visited:hover {
+      color: #257824;
+      text-decoration: underline;
+    }
+    div.hide {
+      display: none;
+      margin: 0px 0px 20px 0px;
+      color: #6D6C70;
+    }
+    div.show {
+      display: block;
+      margin: 0px 0px 20px 0px;
+    }
+    span.hide {
+      display: none;
+      font-family: Times;
+    }
+    span.show {
+      display: inline-block;
+      font-style: normal;
+      font-family: Times;
+    }
+    table {
+      margin: 0px 0px 0px 0px;
+      padding: 0px 0px 8px 0px;
+      border-collapse:collapse;
+      font-size: 10pt;
+    }
+    th {
+      font-family: "Segoe UI Semibold", Arial, Sans-serif;
+      color: #4C4C4C;
+      /* color: #6C6D70 for dialog/python reference heading; */
+      text-align: left;
+      vertical-align: bottom;
+      border-bottom: 1px solid #4C4C4C;
+    }
+    td {
+      text-align: left;
+      vertical-align: top;
+    }
+    td.description {
+      vertical-align: center;
+    }
+    td.gp {
+      padding: 8px 8px 8px 8px;
+      border-bottom: 1px solid #4C4C4C;
+    }
+    ul {
+      margin: 0px 0px 0px 10px;
+      padding: 0px 0px 0px 10px;
+    }
+    li {
+      margin: 0px 0px 0px 0px;
+      padding: 0px 0px 0px 10px;
+    }
+    ul ul {
+      list-style-type: square;
+    }
+    pre.wrap {
+      width: 99%;
+      font-family: "Segoe UI", Arial, Sans-serif;
+      font-size: 10pt;
+      margin: 0px 0px 0px 0px;
+      white-space: pre-wrap;       /* css-3 */
+      white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+      white-space: -pre-wrap;      /* Opera 4-6 */
+      white-space: -o-pre-wrap;    /* Opera 7 */
+      word-wrap: break-word;       /* Internet Explorer 5.5+ */
+    }
+    pre.wrap p {
+      padding-bottom: 1em;
+    }
+    pre.wrap li {
+      padding-bottom: 1em;
+    }
+    pre.wrap br {
+      display: block;
+    }
+    pre.gp {
+      font-family: Courier New, Courier, monospace;
+    }
+    .gpcode {
+      border: 1px dashed #ACC6D8;
+      padding: 10px;
+      background-color:#EEEEEE;
+      height: auto;
+      overflow: scroll; 
+      width: 98%;
+    }
+    .code {
+      font-family: monospace;
+    }
+
+    p.gp {
+      margin: 7px 0px 7px 0px;
+    }
+    dl {
+      margin: 0px 0px 0px 0px;
+    }
+    dt {
+      margin: 0px 0px 0px 15px;
+      clear: left;
+    }
+    dd {
+      margin: 0px 0px 0px 15px;
+      clear: left;
+    }
+  </style>
+    <style>.highlight .hll { background-color: #ffffcc }
+.highlight { background: #f8f8f8; }
+.highlight .c { color: #3D7B7B; font-style: italic } /* Comment */
+.highlight .err { border: 1px solid #FF0000 } /* Error */
+.highlight .k { color: #008000; font-weight: bold } /* Keyword */
+.highlight .o { color: #666666 } /* Operator */
+.highlight .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.highlight .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.highlight .cp { color: #9C6500 } /* Comment.Preproc */
+.highlight .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.highlight .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.highlight .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.highlight .gd { color: #A00000 } /* Generic.Deleted */
+.highlight .ge { font-style: italic } /* Generic.Emph */
+.highlight .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.highlight .gr { color: #E40000 } /* Generic.Error */
+.highlight .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.highlight .gi { color: #008400 } /* Generic.Inserted */
+.highlight .go { color: #717171 } /* Generic.Output */
+.highlight .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.highlight .gs { font-weight: bold } /* Generic.Strong */
+.highlight .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.highlight .gt { color: #0044DD } /* Generic.Traceback */
+.highlight .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.highlight .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.highlight .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.highlight .kp { color: #008000 } /* Keyword.Pseudo */
+.highlight .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.highlight .kt { color: #B00040 } /* Keyword.Type */
+.highlight .m { color: #666666 } /* Literal.Number */
+.highlight .s { color: #BA2121 } /* Literal.String */
+.highlight .na { color: #687822 } /* Name.Attribute */
+.highlight .nb { color: #008000 } /* Name.Builtin */
+.highlight .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.highlight .no { color: #880000 } /* Name.Constant */
+.highlight .nd { color: #AA22FF } /* Name.Decorator */
+.highlight .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.highlight .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.highlight .nf { color: #0000FF } /* Name.Function */
+.highlight .nl { color: #767600 } /* Name.Label */
+.highlight .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.highlight .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.highlight .nv { color: #19177C } /* Name.Variable */
+.highlight .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.highlight .w { color: #bbbbbb } /* Text.Whitespace */
+.highlight .mb { color: #666666 } /* Literal.Number.Bin */
+.highlight .mf { color: #666666 } /* Literal.Number.Float */
+.highlight .mh { color: #666666 } /* Literal.Number.Hex */
+.highlight .mi { color: #666666 } /* Literal.Number.Integer */
+.highlight .mo { color: #666666 } /* Literal.Number.Oct */
+.highlight .sa { color: #BA2121 } /* Literal.String.Affix */
+.highlight .sb { color: #BA2121 } /* Literal.String.Backtick */
+.highlight .sc { color: #BA2121 } /* Literal.String.Char */
+.highlight .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.highlight .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.highlight .s2 { color: #BA2121 } /* Literal.String.Double */
+.highlight .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.highlight .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.highlight .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.highlight .sx { color: #008000 } /* Literal.String.Other */
+.highlight .sr { color: #A45A77 } /* Literal.String.Regex */
+.highlight .s1 { color: #BA2121 } /* Literal.String.Single */
+.highlight .ss { color: #19177C } /* Literal.String.Symbol */
+.highlight .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.highlight .fm { color: #0000FF } /* Name.Function.Magic */
+.highlight .vc { color: #19177C } /* Name.Variable.Class */
+.highlight .vg { color: #19177C } /* Name.Variable.Global */
+.highlight .vi { color: #19177C } /* Name.Variable.Instance */
+.highlight .vm { color: #19177C } /* Name.Variable.Magic */
+.highlight .il { color: #666666 } /* Literal.Number.Integer.Long */</style>
+  </head>
+  <body oncontextmenu="return true">
+    <h1 xmlns="" xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">AbandonRows</h1>
+    <p xmlns=""><span class="ContentHeader">Title</span> 
+				Abandon Rows</p>
+    <div xmlns="" xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">
+      <h3>Description</h3>
+      <p>
+        <pre class="wrap">This tool sets up the structure for abandoning rows and creates the attribute rules necessary to migrate them to separate layers outside of the Utility Network. As a result, these rows will be excluded from the network's topology once moved.</pre>
+      </p>
+    </div>
+    <div xmlns="">
+      <h3>Usage</h3>
+      <p>
+        <pre class="wrap">
+          <span>
+Upon running this tool, new classes will be generated and will be created at the root level within the database containing your Utility Network. During configuration you select the classes associated with your utility network you would like to use for abandonment. It will create a copy of the classes with the designated prefix. For instance, if the prefix is set as 'ab' and the class selected is 'SewerDevice', the resulting class would be named 'ab_SewerDevice' and it would be located at the root level of your database. This is the class that will be used for storing abandoned rows.
+
+This tool also creates two attribute rules. The first rule is applied to the selected class to facilitate the transfer of row to the newly created abandoned class. It is an immediate calculation rule that moves rows when the specified criteria in the abandon field and value section are met. Since this is an immediate calculation rule, the features are copied immediately once the criteria is met. For instance, if you want to move a feature to the abandoned layer when the field 'lifecyclestatus' equals 0, you will set 'lifecyclestatus' as the field and the value as 0. Whenever a row in that class has its 'lifecyclestatus' set to 0, the immediate calculation attribute rule will be triggered, and a copy of the row will be generated in the associated abandoned  class. When multiple fields and values are specified, all criteria must be met for the attribute rule to trigger.
+
+The second attribute rule created is applied to the newly created abandoned classes. This rule functions as a batch calculation rule, requiring manual triggering. Once activated, the rule evaluates the rows present in the abandoned class and, if they exist, removes them from the original source class. Until this rule is manually triggered, the row will persist in both the original class and the abandoned class. In order to manually trigger this rule, you will have to evaluate the rules either using the Error Inspector or the Evaluate Rules geoprocessing tool. More information can be found in the help on <a href="https://pro.arcgis.com/en/pro-app/latest/help/data/geodatabases/overview/evaluate-attribute-rules.htm">Evaluating Attribute Rules</a>.
+
+If you need to reverse the abandonment of a row, you can utilize the <a href="https://developers.arcgis.com/rest/services-reference/enterprise/restore-rows.htm">restore row</a> capability on your original source dataset and delete the feature from the abandoned feature class. It's important to note that this method only works in a versioned environment. Alternatively, in an un-versioned environment, you can use the append tool to reintroduce the row from a historical backup or from the abandoned class, but this will introduce a new Object ID and may not allow you to maintain its Global ID.
+
+<h3>License</h3>Standard</span>
+        </pre>
+      </p>
+    </div>
+    <div xmlns="">
+      <h3>Syntax</h3>
+      <p>AbandonRows (out_folder, in_table, prefixes, {where_clause}, {in_subtypes}, {type}, {is_editable}, {triggering_events}, {error_number}, {error_message}, {description}, {exclude_from_client_evaluation}, {batch}, {severity}, {tags}) <br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /><br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /></p>
+      <table xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">
+        <tr>
+          <th width="30%">Parameter</th>
+          <th width="50%">Explanation</th>
+          <th width="20%">Data Type</th>
+        </tr>
+        <tr>
+          <td class="gp">out_folder</td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>The folder where the output CSV will be saved. The name of the file is taken from in_table.</p>
+            </span>
+          </td>
+          <td class="gp" align="left">DEFolder</td>
+        </tr>
+        <tr>
+          <td class="gp">in_table</td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>The table or feature class that will have the new rule applied.</p>
+            </span>
+          </td>
+          <td class="gp" align="left">DETable</td>
+        </tr>
+        <tr>
+          <td class="gp">prefixes</td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>The prefix that will be added to the beginning of the newly created abandoned classes and their aliases.</p>
+            </span>
+          </td>
+          <td class="gp" align="left">GPValueTable</td>
+        </tr>
+        <tr>
+          <td class="gp">where_clause (Optional) </td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>SQL Expression to filter records. Only records that satisfy the query will be calculated.</p>
+            </span>
+          </td>
+          <td class="gp" align="left">GPSQLExpression</td>
+        </tr>
+        <tr>
+          <td class="gp">in_subtypes (Optional) </td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>The subtypes to which the rule will be applied.</p>
+            </span>
+          </td>
+          <td class="gp" align="left">GPString</td>
+        </tr>
+        <tr>
+          <td class="gp">type (Optional) </td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>Specifies the type of attribute rule that will be added.</p>
+            </span>
+          </td>
+          <td class="gp" align="left">GPString</td>
+        </tr>
+        <tr>
+          <td class="gp">is_editable (Optional) </td>
+          <td class="gp" align="left"></td>
+          <td class="gp" align="left">GPBoolean</td>
+        </tr>
+        <tr>
+          <td class="gp">triggering_events (Optional) </td>
+          <td class="gp" align="left"></td>
+          <td class="gp" align="left">GPString</td>
+        </tr>
+        <tr>
+          <td class="gp">error_number (Optional) </td>
+          <td class="gp" align="left"></td>
+          <td class="gp" align="left">GPLong</td>
+        </tr>
+        <tr>
+          <td class="gp">error_message (Optional) </td>
+          <td class="gp" align="left"></td>
+          <td class="gp" align="left">GPString</td>
+        </tr>
+        <tr>
+          <td class="gp">description (Optional) </td>
+          <td class="gp" align="left"></td>
+          <td class="gp" align="left">GPString</td>
+        </tr>
+        <tr>
+          <td class="gp">exclude_from_client_evaluation (Optional) </td>
+          <td class="gp" align="left"></td>
+          <td class="gp" align="left">GPBoolean</td>
+        </tr>
+        <tr>
+          <td class="gp">batch (Optional) </td>
+          <td class="gp" align="left"></td>
+          <td class="gp" align="left">GPBoolean</td>
+        </tr>
+        <tr>
+          <td class="gp">severity (Optional) </td>
+          <td class="gp" align="left"></td>
+          <td class="gp" align="left">GPLong</td>
+        </tr>
+        <tr>
+          <td class="gp">tags (Optional) </td>
+          <td class="gp" align="left"></td>
+          <td class="gp" align="left">GPString</td>
+        </tr>
+      </table>
+    </div>
+    <div xmlns="">
+      <h3>Code Samples</h3>
+      <p>
+        <span class="span.SubContentHeader">AbandonRows example 1 (Python window)</span>
+        <br />
+      </p>
+      <p>
+        <pre class="wrap">Creates the Abandon Layers and Attribute Rules</pre>
+      </p>
+      <div class="highlight">
+        <pre><span></span><span class="kn">import</span> <span class="nn">arcpy</span>
+
+<span class="n">arcpy</span><span class="o">.</span><span class="n">udms</span><span class="o">.</span><span class="n">CreateAbandonClasses</span><span class="p">(</span>
+    <span class="n">network</span><span class="o">=</span><span class="sa">r</span><span class="s2">"C:\Network.geodatabase\main.UtilityNetwork\main.Network"</span><span class="p">,</span>
+    <span class="n">un_classes</span><span class="o">=</span><span class="s2">"main.StructureJunction;main.StructureBoundary;main.StructureJunctionObject;main.StructureLine;main.StructureEdgeObject;main.ElectricDistributionDevice;main.ElectricDistributionAssembly;main.ElectricDistributionJunction;main.ElectricDistributionJunctionObject;main.ElectricDistributionLine;main.ElectricDistributionEdgeObject"</span><span class="p">,</span>
+    <span class="n">prefix</span><span class="o">=</span><span class="s2">"ABT"</span><span class="p">,</span>
+    <span class="n">abandon_values</span><span class="o">=</span><span class="s2">"lifecyclestatus 0;lifecyclestatus 1"</span><span class="p">,</span>
+<span class="p">)</span>
+</pre>
+      </div>
+      <br />
+      <p>
+        <span class="span.SubContentHeader">AbandonRows example 2 (stand-alone script)</span>
+        <br />
+      </p>
+      <p>
+        <pre class="wrap">Creates the Abandon Layers and Attribute Rules</pre>
+      </p>
+      <div class="highlight">
+        <pre><span></span><span class="kn">import</span> <span class="nn">arcpy</span>
+
+<span class="n">un</span> <span class="o">=</span> <span class="sa">r</span><span class="s2">"C:\Network.geodatabase\main.UtilityNetwork\main.Network"</span>
+<span class="n">un_classes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"main.StructureJunction"</span><span class="p">,</span>
+    <span class="s2">"main.StructureBoundary"</span><span class="p">,</span>
+    <span class="s2">"main.StructureJunctionObject"</span><span class="p">,</span>
+    <span class="s2">"main.StructureLine"</span><span class="p">,</span>
+    <span class="s2">"main.StructureEdgeObject"</span><span class="p">,</span>
+    <span class="s2">"main.ElectricDistributionDevice"</span><span class="p">,</span>
+    <span class="s2">"main.ElectricDistributionAssembly"</span><span class="p">,</span>
+    <span class="s2">"main.ElectricDistributionJunction"</span><span class="p">,</span>
+    <span class="s2">"main.ElectricDistributionJunctionObject"</span><span class="p">,</span>
+    <span class="s2">"main.ElectricDistributionLine"</span><span class="p">,</span>
+    <span class="s2">"main.ElectricDistributionEdgeObject"</span><span class="p">,</span>
+<span class="p">]</span>
+
+<span class="n">abandon_values</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">[</span><span class="s2">"lifecyclestatus"</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+    <span class="p">[</span><span class="s2">"lifecyclestatus"</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+<span class="p">]</span>
+<span class="n">prefix</span> <span class="o">=</span> <span class="s2">"ABT"</span>
+
+<span class="n">arcpy</span><span class="o">.</span><span class="n">udms</span><span class="o">.</span><span class="n">CreateAbandonClasses</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="n">un</span><span class="p">,</span> <span class="n">un_classes</span><span class="o">=</span><span class="n">un_classes</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">,</span> <span class="n">abandon_values</span><span class="o">=</span><span class="n">abandon_values</span><span class="p">)</span>
+</pre>
+      </div>
+    </div>
+  </body>
+</html>
