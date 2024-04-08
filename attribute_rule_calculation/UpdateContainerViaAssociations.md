@@ -81,9 +81,9 @@ function get_features(associated_ids){
         var features = Filter(feature_set, "globalid IN @global_ids");
         // Loop over the features and store them into a dict by class name
         associated_features[class_name] = []
-        for(var feature in features)
+        for(var feat in features)
         {
-            associated_features[class_name][Count(associated_features[class_name])] = feature;
+            associated_features[class_name][Count(associated_features[class_name])] = feat;
         }
         
     }
@@ -91,7 +91,7 @@ function get_features(associated_ids){
     return associated_features
 }
 
-function update_features(features, value, target_field)
+function update_features(all_features, value, target_field)
 {
     var edits = {};
     for (var class_name in associated_classes) {
@@ -105,10 +105,10 @@ function update_features(features, value, target_field)
             continue;
         }
         // Get the first feature and check if it has the target field
-        for (var feature in features)
+        for (var feat in all_features)
         {
             // If the values are the same, move to next feature
-            if (feature[target_field] == value)
+            if (feat[target_field] == value)
             {
                 continue;
             }
@@ -118,7 +118,7 @@ function update_features(features, value, target_field)
             }
             // Using classname, get the count of existing features in the array and use it to set the next features
             edits[class_name][count(edits[class_name])] = {
-                'globalid': feature.globalId,
+                'globalid': feat.globalId,
                 'attributes': Dictionary(target_field, value)
             }
         }
