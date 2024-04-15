@@ -85,20 +85,20 @@ function get_features(associated_ids){
         // Filter the class for only the associated features
         var features = Filter(feature_set, "globalid IN @global_ids");
         // Loop over the features and store them into a dict by class name
-        associated_features[class_name] = []
-        for(var feature in features)
+        associated_features[class_name] = [];
+        for(var feat in features)
         {
-            associated_features[class_name][Count(associated_features[class_name])] = feature;
+            associated_features[class_name][Count(associated_features[class_name])] = feat;
         }
 
     }
     // Return the features
-    return associated_features
+    return associated_features;
 }
-function update_features(features, value, target_field) {
+function update_features(all_features, value, target_field) {
     var edits = {};
-    for (var class_name in features) {
-        var features = features[class_name]
+    for (var class_name in all_features) {
+        var features = all_features[class_name];
         // No content features from this class, move to next class
         if (count(features) == 0) {
             continue;
@@ -110,9 +110,9 @@ function update_features(features, value, target_field) {
         // Get the first feature and check if it has the target field
         for (var i in features)
         {
-            var feature = features[i];
+            var feat = features[i];
             // If the values are the same, move to next feature
-            if (feature[target_field] == value)
+            if (feat[target_field] == value)
             {
                 continue;
             }
@@ -122,7 +122,7 @@ function update_features(features, value, target_field) {
             }
             // Using classname, get the count of existing features in the array and use it to set the next features
             edits[class_name][count(edits[class_name])] = {
-                'globalid': feature.globalId,
+                'globalid': feat.globalId,
                 'attributes': Dictionary(target_field, value)
             }
         }
