@@ -105,7 +105,7 @@ function update_features(all_features, value, target_field)
             continue;
         }
         // Get the first feature and check if it has the target field
-        for (var feat in all_features)
+        for (var feat in features)
         {
             // If the values are the same, move to next feature
             if (feat[target_field] == value)
@@ -156,7 +156,7 @@ if (IsEmpty(associated_ids)){
     return "No Associations";
 }
 var associated_features = get_features(associated_ids);
-update_features(features)
+update_features(associated_features)
 var edits = convert_to_edits(record_dict);
 // Return the value of the field this is assigned on and the edit info for the container
 return {
