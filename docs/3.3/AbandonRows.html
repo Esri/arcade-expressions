@@ -321,7 +321,7 @@ If you need to reverse the abandonment of a row, you can utilize the <a href="ht
     </div>
     <div xmlns="">
       <h3>Syntax</h3>
-      <p>AbandonRows (out_folder, in_table, prefixes, {where_clause}, {in_subtypes}, {type}, {is_editable}, {triggering_events}, {error_number}, {error_message}, {description}, {exclude_from_client_evaluation}, {batch}, {severity}, {tags}) <br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /><br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /></p>
+      <p>AbandonRows (out_folder, in_table, prefixes, {where_clause}) <br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /><br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /></p>
       <table xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">
         <tr>
           <th width="30%">Parameter</th>
@@ -334,7 +334,8 @@ If you need to reverse the abandonment of a row, you can utilize the <a href="ht
             <span class="SubContentHeader">Dialog Reference</span>
             <br />
             <span>
-              <p>The folder where the output CSV will be saved. The name of the file is taken from in_table.</p>
+              <p>The folder where the output CSV will be saved. The name of the file is taken from in_table.
+            </p>
             </span>
           </td>
           <td class="gp" align="left">DEFolder</td>
@@ -367,77 +368,11 @@ If you need to reverse the abandonment of a row, you can utilize the <a href="ht
             <span class="SubContentHeader">Dialog Reference</span>
             <br />
             <span>
-              <p>SQL Expression to filter records. Only records that satisfy the query will be calculated.</p>
+              <p>SQL Expression to filter records. Only records that satisfy the query will be calculated.
+            </p>
             </span>
           </td>
           <td class="gp" align="left">GPSQLExpression</td>
-        </tr>
-        <tr>
-          <td class="gp">in_subtypes (Optional) </td>
-          <td class="gp" align="left">
-            <span class="SubContentHeader">Dialog Reference</span>
-            <br />
-            <span>
-              <p>The subtypes to which the rule will be applied.</p>
-            </span>
-          </td>
-          <td class="gp" align="left">GPString</td>
-        </tr>
-        <tr>
-          <td class="gp">type (Optional) </td>
-          <td class="gp" align="left">
-            <span class="SubContentHeader">Dialog Reference</span>
-            <br />
-            <span>
-              <p>Specifies the type of attribute rule that will be added.</p>
-            </span>
-          </td>
-          <td class="gp" align="left">GPString</td>
-        </tr>
-        <tr>
-          <td class="gp">is_editable (Optional) </td>
-          <td class="gp" align="left"></td>
-          <td class="gp" align="left">GPBoolean</td>
-        </tr>
-        <tr>
-          <td class="gp">triggering_events (Optional) </td>
-          <td class="gp" align="left"></td>
-          <td class="gp" align="left">GPString</td>
-        </tr>
-        <tr>
-          <td class="gp">error_number (Optional) </td>
-          <td class="gp" align="left"></td>
-          <td class="gp" align="left">GPLong</td>
-        </tr>
-        <tr>
-          <td class="gp">error_message (Optional) </td>
-          <td class="gp" align="left"></td>
-          <td class="gp" align="left">GPString</td>
-        </tr>
-        <tr>
-          <td class="gp">description (Optional) </td>
-          <td class="gp" align="left"></td>
-          <td class="gp" align="left">GPString</td>
-        </tr>
-        <tr>
-          <td class="gp">exclude_from_client_evaluation (Optional) </td>
-          <td class="gp" align="left"></td>
-          <td class="gp" align="left">GPBoolean</td>
-        </tr>
-        <tr>
-          <td class="gp">batch (Optional) </td>
-          <td class="gp" align="left"></td>
-          <td class="gp" align="left">GPBoolean</td>
-        </tr>
-        <tr>
-          <td class="gp">severity (Optional) </td>
-          <td class="gp" align="left"></td>
-          <td class="gp" align="left">GPLong</td>
-        </tr>
-        <tr>
-          <td class="gp">tags (Optional) </td>
-          <td class="gp" align="left"></td>
-          <td class="gp" align="left">GPString</td>
         </tr>
       </table>
     </div>

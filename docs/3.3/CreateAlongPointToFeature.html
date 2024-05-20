@@ -223,13 +223,13 @@
   </style>
   </head>
   <body oncontextmenu="return true">
-    <h1 xmlns="" xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">IntersectingFeature</h1>
+    <h1 xmlns="" xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">CreateAlongPointToFeature</h1>
     <p xmlns=""><span class="ContentHeader">Title</span> 
-				Intersecting Feature</p>
+				Create Along Point To Feature</p>
     <div xmlns="" xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">
       <h3>Description</h3>
       <p>
-        <pre class="wrap">Creates an attribute rule to populate symbol rotation based on intersecting line features.</pre>
+        <pre class="wrap">An attribute rule that provides an editor template like experience for creating features from the placed location, along a line to the closet line or point(such as service connection or lateral line, or extending a sewer main from a manhole).</pre>
       </p>
     </div>
     <div xmlns="">
@@ -237,7 +237,25 @@
       <p>
         <pre class="wrap">
           <span>
+This tools adds an attribute rule, field/domain to the Edit Layer.
 
+To Trigger the rule, change the value of the DynamicValue field to Create Laterals.  This can be set on the edit template to trigger it on insert.
+
+The DynamicValue domain contains a list of values that control these edit template style attribute rules.  Each entry should be a power of 2, which will allow for combinations of edit events.  Note: This is the only rule at this time that uses this behavior, but is designed for future rules.
+
+The rule is configured by a group template on the Edit Layer.  The group template is used to define the features, their location and properties of the features added.
+
+The default attributes of the group template and the class are used in the rule to determine which template properties to use.  The Attribute Rule does not have the information about which template triggered the event, so we are using the attributes to determine which group template definition to use.  If you have group templates that are similar, specify the more descriptive or the ones with more attributes first.
+
+The group template must be created on a point layer.  The create points and a line, you must set the template, on the template dialog, to Line Tools.  This will allow you draw a line to place points along it and place the location of lateral line.
+
+The builder(point at end of line, point at beginning of line) of the assigned to layer is used determine the digitized direction of line.
+
+To create points along the line, use builders point at end/beginning of line with a distance or proportional value.
+
+To connect the assets via an association and not a line, check the "Add associations when creating new assets" in the associations section of the group template.
+
+Note: This tool can only be run using layers from a map.
 
 <h3>License</h3>Standard</span>
         </pre>
@@ -245,7 +263,7 @@
     </div>
     <div xmlns="">
       <h3>Syntax</h3>
-      <p>IntersectingFeature (out_folder, in_table, join_features, field_map, {where_clause}, {search_options}) <br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /><br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /></p>
+      <p>CreateAlongPointToFeature (out_folder, in_table, group_template, {where_clause}) <br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /><br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /></p>
       <table xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">
         <tr>
           <th width="30%">Parameter</th>
@@ -276,14 +294,15 @@
           <td class="gp" align="left">GPFeatureLayer</td>
         </tr>
         <tr>
-          <td class="gp">join_features</td>
-          <td class="gp" align="left"></td>
-          <td class="gp" align="left">GPFeatureLayer</td>
-        </tr>
-        <tr>
-          <td class="gp">field_map</td>
-          <td class="gp" align="left"></td>
-          <td class="gp" align="left">GPFieldMapping</td>
+          <td class="gp">group_template</td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>The list of group templates to store in the attribute rule that define the features placement.</p>
+            </span>
+          </td>
+          <td class="gp" align="left">GPValueTable</td>
         </tr>
         <tr>
           <td class="gp">where_clause (Optional) </td>
@@ -296,11 +315,6 @@
             </span>
           </td>
           <td class="gp" align="left">GPSQLExpression</td>
-        </tr>
-        <tr>
-          <td class="gp">search_options (Optional) </td>
-          <td class="gp" align="left"></td>
-          <td class="gp" align="left">GPValueTable</td>
         </tr>
       </table>
     </div>

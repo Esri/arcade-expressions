@@ -223,13 +223,13 @@
   </style>
   </head>
   <body oncontextmenu="return true">
-    <h1 xmlns="" xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">IntersectingFeature</h1>
+    <h1 xmlns="" xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">GenerateID</h1>
     <p xmlns=""><span class="ContentHeader">Title</span> 
-				Intersecting Feature</p>
+				Generate ID</p>
     <div xmlns="" xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">
       <h3>Description</h3>
       <p>
-        <pre class="wrap">Creates an attribute rule to populate symbol rotation based on intersecting line features.</pre>
+        <pre class="wrap">Creates an attribute rule to populate a unique ID on tables and feature classes.</pre>
       </p>
     </div>
     <div xmlns="">
@@ -237,7 +237,7 @@
       <p>
         <pre class="wrap">
           <span>
-
+Leverages database sequences for a unique id
 
 <h3>License</h3>Standard</span>
         </pre>
@@ -245,7 +245,7 @@
     </div>
     <div xmlns="">
       <h3>Syntax</h3>
-      <p>IntersectingFeature (out_folder, in_table, join_features, field_map, {where_clause}, {search_options}) <br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /><br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /></p>
+      <p>GenerateID (out_folder, in_table, create_seq, definition_method, in_field, {where_clause}, {builder_values}, {rec_set}) <br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /><br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /></p>
       <table xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">
         <tr>
           <th width="30%">Parameter</th>
@@ -273,17 +273,43 @@
               <p>The table or feature class that will have the new rule applied.</p>
             </span>
           </td>
-          <td class="gp" align="left">GPFeatureLayer</td>
+          <td class="gp" align="left">GPTableView</td>
         </tr>
         <tr>
-          <td class="gp">join_features</td>
-          <td class="gp" align="left"></td>
-          <td class="gp" align="left">GPFeatureLayer</td>
+          <td class="gp">create_seq</td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>Option to create the database sequences in the workspace.  A python file with the arcpy calls is created in the output folder regardless of this option
+			</p>
+            </span>
+          </td>
+          <td class="gp" align="left">GPBoolean</td>
         </tr>
         <tr>
-          <td class="gp">field_map</td>
-          <td class="gp" align="left"></td>
-          <td class="gp" align="left">GPFieldMapping</td>
+          <td class="gp">definition_method</td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>The method used to define the format of the ID.
+<ul><li>Builder - Interactively define the ID format.  This includes the sql used to apply different formats and sequences per asset, as well as padding, prefix and suffix values. </li><li>Table - Input the ID formats from a table.  Use the Helper-Field Combos to SQL tool to generate this tables and build out the sql combos.</li></ul>
+			</p>
+            </span>
+          </td>
+          <td class="gp" align="left">GPString</td>
+        </tr>
+        <tr>
+          <td class="gp">in_field</td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>The name of an existing field to which the rule will be applied.</p>
+            </span>
+          </td>
+          <td class="gp" align="left">Field</td>
         </tr>
         <tr>
           <td class="gp">where_clause (Optional) </td>
@@ -298,9 +324,28 @@
           <td class="gp" align="left">GPSQLExpression</td>
         </tr>
         <tr>
-          <td class="gp">search_options (Optional) </td>
-          <td class="gp" align="left"></td>
+          <td class="gp">builder_values (Optional) </td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>Interactively define the ID format.  This includes the sql used to apply different formats and sequences per asset, as well as padding, prefix and suffix values.
+			</p>
+            </span>
+          </td>
           <td class="gp" align="left">GPValueTable</td>
+        </tr>
+        <tr>
+          <td class="gp">rec_set (Optional) </td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>Input the ID formats from a table.  Use the Helper-Field Combos to SQL tool to generate this tables and build out the sql combos
+			</p>
+            </span>
+          </td>
+          <td class="gp" align="left">GPRecordSet</td>
         </tr>
       </table>
     </div>

@@ -223,13 +223,13 @@
   </style>
   </head>
   <body oncontextmenu="return true">
-    <h1 xmlns="" xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">IntersectingFeature</h1>
+    <h1 xmlns="" xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">FieldCombosToSQL</h1>
     <p xmlns=""><span class="ContentHeader">Title</span> 
-				Intersecting Feature</p>
+				Field Combos to SQL</p>
     <div xmlns="" xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">
       <h3>Description</h3>
       <p>
-        <pre class="wrap">Creates an attribute rule to populate symbol rotation based on intersecting line features.</pre>
+        <pre class="wrap">Generate a table with a sql statement per each coded value domain code combo for the provided fields.</pre>
       </p>
     </div>
     <div xmlns="">
@@ -237,7 +237,7 @@
       <p>
         <pre class="wrap">
           <span>
-
+Used as an input for the Generate ID tool with the Table builder method.
 
 <h3>License</h3>Standard</span>
         </pre>
@@ -245,7 +245,7 @@
     </div>
     <div xmlns="">
       <h3>Syntax</h3>
-      <p>IntersectingFeature (out_folder, in_table, join_features, field_map, {where_clause}, {search_options}) <br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /><br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /></p>
+      <p>FieldCombosToSQL (in_table, in_fields, out_folder) <br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /><br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /></p>
       <table xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">
         <tr>
           <th width="30%">Parameter</th>
@@ -253,54 +253,40 @@
           <th width="20%">Data Type</th>
         </tr>
         <tr>
-          <td class="gp">out_folder</td>
-          <td class="gp" align="left">
-            <span class="SubContentHeader">Dialog Reference</span>
-            <br />
-            <span>
-              <p>The folder where the output CSV will be saved. The name of the file is taken from in_table.
-            </p>
-            </span>
-          </td>
-          <td class="gp" align="left">DEFolder</td>
-        </tr>
-        <tr>
           <td class="gp">in_table</td>
           <td class="gp" align="left">
             <span class="SubContentHeader">Dialog Reference</span>
             <br />
             <span>
-              <p>The table or feature class that will have the new rule applied.</p>
+              <p>The table or feature class that will be used to generates the sql field combos from.
+			</p>
             </span>
           </td>
-          <td class="gp" align="left">GPFeatureLayer</td>
+          <td class="gp" align="left">GPTableView</td>
         </tr>
         <tr>
-          <td class="gp">join_features</td>
-          <td class="gp" align="left"></td>
-          <td class="gp" align="left">GPFeatureLayer</td>
-        </tr>
-        <tr>
-          <td class="gp">field_map</td>
-          <td class="gp" align="left"></td>
-          <td class="gp" align="left">GPFieldMapping</td>
-        </tr>
-        <tr>
-          <td class="gp">where_clause (Optional) </td>
+          <td class="gp">in_fields</td>
           <td class="gp" align="left">
             <span class="SubContentHeader">Dialog Reference</span>
             <br />
             <span>
-              <p>SQL Expression to filter records. Only records that satisfy the query will be calculated.
-            </p>
+              <p>The fields uses to build the sql statement
+			</p>
             </span>
           </td>
-          <td class="gp" align="left">GPSQLExpression</td>
+          <td class="gp" align="left">Field</td>
         </tr>
         <tr>
-          <td class="gp">search_options (Optional) </td>
-          <td class="gp" align="left"></td>
-          <td class="gp" align="left">GPValueTable</td>
+          <td class="gp">out_folder</td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>The folder where the output CSV will be saved.
+			</p>
+            </span>
+          </td>
+          <td class="gp" align="left">DEFolder</td>
         </tr>
       </table>
     </div>
