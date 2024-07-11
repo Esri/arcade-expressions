@@ -257,18 +257,29 @@ To connect the assets via an association and not a line, check the "Add associat
 
 Note: This tool can only be run using layers from a map.
 
-<h3>License</h3>Standard</span>
+<h3>License</h3>Standard<h3>Toolset</h3>Edit Templates</span>
         </pre>
       </p>
     </div>
     <div xmlns="">
       <h3>Syntax</h3>
-      <p>CreateAlongPointToFeature (out_folder, in_table, group_template, {where_clause}) <br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /><br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /></p>
+      <p>CreateAlongPointToFeature (in_table, out_folder, group_template, {where_clause}) <br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /><br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /></p>
       <table xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">
         <tr>
           <th width="30%">Parameter</th>
           <th width="50%">Explanation</th>
           <th width="20%">Data Type</th>
+        </tr>
+        <tr>
+          <td class="gp">in_table</td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>The table or feature class that will have the new rule applied.</p>
+            </span>
+          </td>
+          <td class="gp" align="left">GPFeatureLayer</td>
         </tr>
         <tr>
           <td class="gp">out_folder</td>
@@ -281,17 +292,6 @@ Note: This tool can only be run using layers from a map.
             </span>
           </td>
           <td class="gp" align="left">DEFolder</td>
-        </tr>
-        <tr>
-          <td class="gp">in_table</td>
-          <td class="gp" align="left">
-            <span class="SubContentHeader">Dialog Reference</span>
-            <br />
-            <span>
-              <p>The table or feature class that will have the new rule applied.</p>
-            </span>
-          </td>
-          <td class="gp" align="left">GPFeatureLayer</td>
         </tr>
         <tr>
           <td class="gp">group_template</td>

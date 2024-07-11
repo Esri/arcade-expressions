@@ -321,12 +321,23 @@ If you need to reverse the abandonment of a row, you can utilize the <a href="ht
     </div>
     <div xmlns="">
       <h3>Syntax</h3>
-      <p>AbandonRows (out_folder, in_table, prefixes, {where_clause}) <br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /><br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /></p>
+      <p>AbandonRows (in_table, out_folder, prefixes, {where_clause}) <br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /><br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /></p>
       <table xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">
         <tr>
           <th width="30%">Parameter</th>
           <th width="50%">Explanation</th>
           <th width="20%">Data Type</th>
+        </tr>
+        <tr>
+          <td class="gp">in_table</td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>The table or feature class that will have the new rule applied.</p>
+            </span>
+          </td>
+          <td class="gp" align="left">DETable</td>
         </tr>
         <tr>
           <td class="gp">out_folder</td>
@@ -339,17 +350,6 @@ If you need to reverse the abandonment of a row, you can utilize the <a href="ht
             </span>
           </td>
           <td class="gp" align="left">DEFolder</td>
-        </tr>
-        <tr>
-          <td class="gp">in_table</td>
-          <td class="gp" align="left">
-            <span class="SubContentHeader">Dialog Reference</span>
-            <br />
-            <span>
-              <p>The table or feature class that will have the new rule applied.</p>
-            </span>
-          </td>
-          <td class="gp" align="left">DETable</td>
         </tr>
         <tr>
           <td class="gp">prefixes</td>

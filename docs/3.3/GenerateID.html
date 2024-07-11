@@ -245,12 +245,23 @@ Leverages database sequences for a unique id
     </div>
     <div xmlns="">
       <h3>Syntax</h3>
-      <p>GenerateID (out_folder, in_table, create_seq, definition_method, in_field, {where_clause}, {builder_values}, {rec_set}) <br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /><br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /></p>
+      <p>GenerateID (in_table, out_folder, field, create_seq, definition_method, {where_clause}, {builder_values}, {rec_set}, {coded_value_fields}) <br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /><br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /></p>
       <table xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">
         <tr>
           <th width="30%">Parameter</th>
           <th width="50%">Explanation</th>
           <th width="20%">Data Type</th>
+        </tr>
+        <tr>
+          <td class="gp">in_table</td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>The table or feature class that will have the new rule applied.</p>
+            </span>
+          </td>
+          <td class="gp" align="left">GPTableView</td>
         </tr>
         <tr>
           <td class="gp">out_folder</td>
@@ -265,15 +276,9 @@ Leverages database sequences for a unique id
           <td class="gp" align="left">DEFolder</td>
         </tr>
         <tr>
-          <td class="gp">in_table</td>
-          <td class="gp" align="left">
-            <span class="SubContentHeader">Dialog Reference</span>
-            <br />
-            <span>
-              <p>The table or feature class that will have the new rule applied.</p>
-            </span>
-          </td>
-          <td class="gp" align="left">GPTableView</td>
+          <td class="gp">field</td>
+          <td class="gp" align="left"></td>
+          <td class="gp" align="left">Field</td>
         </tr>
         <tr>
           <td class="gp">create_seq</td>
@@ -294,22 +299,11 @@ Leverages database sequences for a unique id
             <br />
             <span>
               <p>The method used to define the format of the ID.
-<ul><li>Builder - Interactively define the ID format.  This includes the sql used to apply different formats and sequences per asset, as well as padding, prefix and suffix values. </li><li>Table - Input the ID formats from a table.  Use the Helper-Field Combos to SQL tool to generate this tables and build out the sql combos.</li></ul>
+<ul><li>Builder - Interactively define the ID format.  This includes the SQL used to apply different formats and sequences per asset, as well as padding, prefix and suffix values. </li><li>Table - Input the ID formats from a table.</li><li>Coded Values - Generate an configuration entry and sequence per each combination of coded values from selected fields.</li></ul>
 			</p>
             </span>
           </td>
           <td class="gp" align="left">GPString</td>
-        </tr>
-        <tr>
-          <td class="gp">in_field</td>
-          <td class="gp" align="left">
-            <span class="SubContentHeader">Dialog Reference</span>
-            <br />
-            <span>
-              <p>The name of an existing field to which the rule will be applied.</p>
-            </span>
-          </td>
-          <td class="gp" align="left">Field</td>
         </tr>
         <tr>
           <td class="gp">where_clause (Optional) </td>
@@ -330,6 +324,25 @@ Leverages database sequences for a unique id
             <br />
             <span>
               <p>Interactively define the ID format.  This includes the sql used to apply different formats and sequences per asset, as well as padding, prefix and suffix values.
+<ul><li>
+Filter SQL (Optional): A SQL expression used to determine if the sequence is applied to the row.
+	</li><li>
+Description (Optional): A description of the entry that is added to the rule settings in the attribute rule.
+	</li><li>
+Sequence Name (Required): The name you want to assign to the database sequence. For enterprise geodatabases, the name must meet sequence name requirements for the database platform you're using and must be unique in the database. For file geodatabases, the name must be unique to the file geodatabase.
+	</li><li>
+Starting Value (Required): The starting number of the sequence. If you do not provide a starting number, the sequence starts with 1. If you do provide a starting number, it must be greater than 0.
+	</li><li>
+Increment Value (Required): Describes how the sequence numbers will increment. For example, if the sequence starts at 10 and the increment value is 5, the next value in the sequence is 15, and the next value after that is 20. If you do not specify an increment value, sequence values will increment by 1.
+	</li><li>
+Prefix (Optional): The string or value placed before the sequence value.
+	</li><li>
+Suffix (Optional): The string or value placed after the sequence value.
+	</li><li>
+Padding (Optional): A positive number that represents number of digits, where 0's are used to fill the unused digits.  For example, a value of 5 will represent the sequence value of 1 as 00001.
+	</li><li>
+Separator (Optional): The value used to join the prefix, sequence and suffix.
+	</li></ul>
 			</p>
             </span>
           </td>
@@ -346,6 +359,18 @@ Leverages database sequences for a unique id
             </span>
           </td>
           <td class="gp" align="left">GPRecordSet</td>
+        </tr>
+        <tr>
+          <td class="gp">coded_value_fields (Optional) </td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>Use the distinct combinations of the coded values from the fields to generate a SQL expression and configuration for an ID.
+			</p>
+            </span>
+          </td>
+          <td class="gp" align="left">Field</td>
         </tr>
       </table>
     </div>

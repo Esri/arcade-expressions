@@ -223,13 +223,13 @@
   </style>
   </head>
   <body oncontextmenu="return true">
-    <h1 xmlns="" xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">IntersectingFeature</h1>
+    <h1 xmlns="" xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">UpdateRelated</h1>
     <p xmlns=""><span class="ContentHeader">Title</span> 
-				Intersecting Feature</p>
+				Update Related</p>
     <div xmlns="" xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">
       <h3>Description</h3>
       <p>
-        <pre class="wrap">Creates an attribute rule to populate symbol rotation based on intersecting line features.</pre>
+        <pre class="wrap">Creates an attribute rule to update fields in related rows.</pre>
       </p>
     </div>
     <div xmlns="">
@@ -237,7 +237,7 @@
       <p>
         <pre class="wrap">
           <span>
-
+This rule can be used to update related rows.  Rows can be related via Utility Network Associations, relationshop classes, a pair of fields(primary/foreign key), or a spatial intersection.
 
 <h3>License</h3>Standard</span>
         </pre>
@@ -245,12 +245,23 @@
     </div>
     <div xmlns="">
       <h3>Syntax</h3>
-      <p>IntersectingFeature (out_folder, in_table, join_features, field_map, {where_clause}, {search_options}) <br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /><br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /></p>
+      <p>UpdateRelated (in_table, out_folder, {where_clause}, {assoc_options}, {relate_options}, {match_fields_options}, {spatial_options}) <br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /><br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /></p>
       <table xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">
         <tr>
           <th width="30%">Parameter</th>
           <th width="50%">Explanation</th>
           <th width="20%">Data Type</th>
+        </tr>
+        <tr>
+          <td class="gp">in_table</td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>The table or feature class that will have the new rule applied.</p>
+            </span>
+          </td>
+          <td class="gp" align="left">GPFeatureLayer</td>
         </tr>
         <tr>
           <td class="gp">out_folder</td>
@@ -265,27 +276,6 @@
           <td class="gp" align="left">DEFolder</td>
         </tr>
         <tr>
-          <td class="gp">in_table</td>
-          <td class="gp" align="left">
-            <span class="SubContentHeader">Dialog Reference</span>
-            <br />
-            <span>
-              <p>The table or feature class that will have the new rule applied.</p>
-            </span>
-          </td>
-          <td class="gp" align="left">GPFeatureLayer</td>
-        </tr>
-        <tr>
-          <td class="gp">join_features</td>
-          <td class="gp" align="left"></td>
-          <td class="gp" align="left">GPFeatureLayer</td>
-        </tr>
-        <tr>
-          <td class="gp">field_map</td>
-          <td class="gp" align="left"></td>
-          <td class="gp" align="left">GPFieldMapping</td>
-        </tr>
-        <tr>
           <td class="gp">where_clause (Optional) </td>
           <td class="gp" align="left">
             <span class="SubContentHeader">Dialog Reference</span>
@@ -298,8 +288,47 @@
           <td class="gp" align="left">GPSQLExpression</td>
         </tr>
         <tr>
-          <td class="gp">search_options (Optional) </td>
-          <td class="gp" align="left"></td>
+          <td class="gp">assoc_options (Optional) </td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>The search options using utility network associations</p>
+            </span>
+          </td>
+          <td class="gp" align="left">GPValueTable</td>
+        </tr>
+        <tr>
+          <td class="gp">relate_options (Optional) </td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>The search options using a relationship class</p>
+            </span>
+          </td>
+          <td class="gp" align="left">GPValueTable</td>
+        </tr>
+        <tr>
+          <td class="gp">match_fields_options (Optional) </td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>The search options using a pair of fields to look up the related record</p>
+            </span>
+          </td>
+          <td class="gp" align="left">GPValueTable</td>
+        </tr>
+        <tr>
+          <td class="gp">spatial_options (Optional) </td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>A spatial search only</p>
+            </span>
+          </td>
           <td class="gp" align="left">GPValueTable</td>
         </tr>
       </table>

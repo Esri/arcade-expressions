@@ -223,9 +223,9 @@
   </style>
   </head>
   <body oncontextmenu="return true">
-    <h1 xmlns="" xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">SymbolRotation</h1>
+    <h1 xmlns="" xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">GenerateSymbolRotationAttributeRule</h1>
     <p xmlns=""><span class="ContentHeader">Title</span> 
-				Symbol Rotation</p>
+				Generate Symbol Rotation Attribute Rule</p>
     <div xmlns="" xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">
       <h3>Description</h3>
       <p>
@@ -245,12 +245,23 @@
     </div>
     <div xmlns="">
       <h3>Syntax</h3>
-      <p>SymbolRotation (out_folder, in_table, line_classes, in_field, {where_clause}, {orientation}, {rotation_style}, {additional_angle}) <br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /><br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /></p>
+      <p>GenerateSymbolRotationAttributeRule (in_table, out_folder, field, line_classes, {where_clause}, {rotate_towards}, {rotation_style}, {additional_rotation}) <br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /><br xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common" /></p>
       <table xmlns:esri="http://www.esri.com/metadata/" xmlns:msxsl="http://exslt.org/common">
         <tr>
           <th width="30%">Parameter</th>
           <th width="50%">Explanation</th>
           <th width="20%">Data Type</th>
+        </tr>
+        <tr>
+          <td class="gp">in_table</td>
+          <td class="gp" align="left">
+            <span class="SubContentHeader">Dialog Reference</span>
+            <br />
+            <span>
+              <p>The table or feature class that will have the new rule applied.</p>
+            </span>
+          </td>
+          <td class="gp" align="left">DEFeatureClass</td>
         </tr>
         <tr>
           <td class="gp">out_folder</td>
@@ -265,15 +276,9 @@
           <td class="gp" align="left">DEFolder</td>
         </tr>
         <tr>
-          <td class="gp">in_table</td>
-          <td class="gp" align="left">
-            <span class="SubContentHeader">Dialog Reference</span>
-            <br />
-            <span>
-              <p>The table or feature class that will have the new rule applied.</p>
-            </span>
-          </td>
-          <td class="gp" align="left">DEFeatureClass</td>
+          <td class="gp">field</td>
+          <td class="gp" align="left"></td>
+          <td class="gp" align="left">Field</td>
         </tr>
         <tr>
           <td class="gp">line_classes</td>
@@ -285,17 +290,6 @@
             </span>
           </td>
           <td class="gp" align="left">GPValueTable</td>
-        </tr>
-        <tr>
-          <td class="gp">in_field</td>
-          <td class="gp" align="left">
-            <span class="SubContentHeader">Dialog Reference</span>
-            <br />
-            <span>
-              <p>The name of an existing field to which the rule will be applied.</p>
-            </span>
-          </td>
-          <td class="gp" align="left">Field</td>
         </tr>
         <tr>
           <td class="gp">where_clause (Optional) </td>
@@ -310,18 +304,9 @@
           <td class="gp" align="left">GPSQLExpression</td>
         </tr>
         <tr>
-          <td class="gp">orientation (Optional) </td>
-          <td class="gp" align="left">
-            <span class="SubContentHeader">Dialog Reference</span>
-            <br />
-            <span>
-              <p>
-Defines which feature to orient towards when there are multiple intersecting lines.
-<ul><li>Checked - Use the higher field value. This is the default.</li><li>Unchecked - Use the lower field value.</li></ul>
-			</p>
-            </span>
-          </td>
-          <td class="gp" align="left">GPBoolean</td>
+          <td class="gp">rotate_towards (Optional) </td>
+          <td class="gp" align="left"></td>
+          <td class="gp" align="left">GPString</td>
         </tr>
         <tr>
           <td class="gp">rotation_style (Optional) </td>
@@ -338,14 +323,8 @@ Defines how direction is measured.
           <td class="gp" align="left">GPString</td>
         </tr>
         <tr>
-          <td class="gp">additional_angle (Optional) </td>
-          <td class="gp" align="left">
-            <span class="SubContentHeader">Dialog Reference</span>
-            <br />
-            <span>
-              <p>The additional amount to add to the calculated value. Defaults to 0.</p>
-            </span>
-          </td>
+          <td class="gp">additional_rotation (Optional) </td>
+          <td class="gp" align="left"></td>
           <td class="gp" align="left">GPDouble</td>
         </tr>
       </table>
