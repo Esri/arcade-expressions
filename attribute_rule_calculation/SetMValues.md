@@ -1,4 +1,4 @@
-# Calc Attributes from Edge
+# Calculate M values of a line using vertex distance
 
 This calculation calculates the measures of every segment of a line and updates the M values of the segments.
 
@@ -17,7 +17,7 @@ Using ArcGIS Pro, use the Add Attribute Rule geoprocessing tool to define this r
 
 ## Expression Template
 
-This Arcade expression will calculates field values from intersecting point layer
+This Arcade expression will calculates the M values using the distance the vertex is along a line
 ```js
 var line = Geometry($feature);
 var lineGeo = Dictionary(Text(line));
