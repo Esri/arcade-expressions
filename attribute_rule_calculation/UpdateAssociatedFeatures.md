@@ -73,13 +73,35 @@ function get_associated_feature_ids(feature, association_type) {
     //return a dict by class name with GlobalIDs of features
     return associated_ids;
 }
+function get_features_switch_yard(class_name, fields, include_geometry) {
+    var class_name = Split(class_name, '.')[-1];    
+    var feature_set = null;
+    if (class_name == 'SewerDevice') {
+        feature_set = FeatureSetByName($datastore, 'SewerDevice', fields, include_geometry);
+    } else if (class_name == 'SewerJunction') {
+        feature_set = FeatureSetByName($datastore, 'SewerJunction', fields, include_geometry);
+    } else if (class_name == 'SewerAssembly') {
+        feature_set = FeatureSetByName($datastore, 'SewerAssembly', fields, include_geometry);
+    } else if (class_name == 'SewerLine') {
+        feature_set = FeatureSetByName($datastore, 'SewerLine', fields, include_geometry);
+    } else if (class_name == 'StructureJunction') {
+        feature_set = FeatureSetByName($datastore, 'StructureJunction', fields, include_geometry);
+    } else if (class_name == 'StructureLine') {
+        feature_set = FeatureSetByName($datastore, 'StructureLine', fields, include_geometry);
+    } else if (class_name == 'StructureBoundary') {
+        feature_set = FeatureSetByName($datastore, 'StructureBoundary', fields, include_geometry);
+    } else {
+        feature_set = FeatureSetByName($datastore, 'StructureBoundary', fields, include_geometry);
+    }
+    return feature_set;
+}
 function get_features(associated_ids){
     // dict to store the features by class name
     var associated_features = {};
     // loop over classes
     for (var class_name in associated_ids) {
         // Get a feature set of the class
-        var feature_set = FeatureSetByName($datastore, class_name, ['*'], false);
+        var feature_set = get_features_switch_yard(class_name, ['*'], false);
         // Store the GlobalIDs as a variable to use in SQL
         var global_ids = associated_ids[class_name];
         // Filter the class for only the associated features
