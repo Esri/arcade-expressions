@@ -1,0 +1,39 @@
+//Set polyline M-values to cumulative length of line
+//https://i.stack.imgur.com/kxUDg.png
+//Works for both singlepart and multipart features.
+//Densifies true curves (unavoidable, since Arcade pre-densifies true curves).
+
+
+//**I'm open to criticism/ideas for improvement.**
+
+
+var geom_text = Text(Geometry($feature));
+
+//Using the Equals() function doesn't work as expected, so I compare Text() isntead. See: Arcade: Editing M-values not treated as change to geometry (https://community.esri.com/t5/arcgis-pro-questions/arcade-editing-m-values-not-treated-as-change-to/m-p/1153917)
+if (geom_text == Text(Geometry($originalfeature))) {
+    return
+}  
+
+function pythagoras(x1, y1, x2, y2) {
+    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+}
+
+var geom = Dictionary(geom_text);
+var paths = geom['paths'];
+var oldX = paths[0][0][0];
+var oldY = paths[0][0][1];
+var line_length = 0;
+
+for (var path_idx in paths) {
+    for (var point_idx in paths[path_idx]) {
+        var newX = paths[path_idx][point_idx][0];
+        var newY = paths[path_idx][point_idx][1];
+        if (point_idx != 0) {
+            line_length += pythagoras(oldX, oldY, newX, newY);
+        }
+        paths[path_idx][point_idx][-1] = line_length;
+        oldX = newX;
+        oldY = newY;
+    }
+}
+return { "result": { "geometry": Polyline(geom) } };
