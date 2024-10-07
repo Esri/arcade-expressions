@@ -11,6 +11,8 @@ geometry plus the new vertex.  So the code below is set up for the UN, where if 
 the point is not on the vertex, it does nothing as the AR on the line detects if the line has a new vertex inserted and if that vertex 
 is on point feature with that passes the exit early logic. 
 
+## Very important
+Very important for UN controlled layers that the **is_un_controlled** is set to True in the Device Attribute Rules.  This needs to be false for Non UN Layers and the Line AR is not needed for for Non UN layers.
 
 ## Workflow
 
@@ -44,7 +46,7 @@ var exit_early_values = Dictionary('SplitInt', [200],'SplitText', ['DontSplitThe
 // All fields listed here, need to be in upper case, they are forced to upper in the logic below.
 var remove_fields_from_new_feature = ['SHAPE_LENGTH', 'GLOBALID', 'OBJECTID'];
 
-// The line class to split
+// The line class to split, this must match what you specify in the FeatureSetByName below
 var line_class_name = "line";
 // This is used to get Non Editable fields, do not change the fields from *
 var line_fs = FeatureSetByName($datastore, "line", ['*'], true);
@@ -430,7 +432,7 @@ var exit_early_values = Dictionary('SplitInt', [200],'SplitText', ['DontSplitThe
 // All fields listed here, need to be in upper case, they are forced to upper in the logic below.
 var remove_fields_from_new_feature = ['SHAPE_LENGTH', 'GLOBALID', 'OBJECTID'];
 
-// The point on the vertex
+// The name classes in your database, the point_class_name must match the FeatureSetByName and the line class name must match the class this is assigned to.
 var point_class_name = "point";
 var line_class_name = "line";
 // This is used to get Non Editable fields, do not change the fields from *
@@ -491,7 +493,7 @@ function get_fields_by_type(feat, convert_string, param, value) {
 
 function set_date_type(feat, dict) {
     // Dates need to be set to date types for some platforms
-    var dt_keys = get_fields_by_type(feat, dict, 'type', 'esriFieldTypeDate');
+    var dt_keys = get_fields_by_type(feat, 'upper', 'type', 'esriFieldTypeDate');
     for (var k in dict) {
         if (IndexOf(dt_keys, Upper(k)) == -1) {
             continue;
@@ -735,13 +737,16 @@ function get_first_new_vertex(new_geom, orig_geom) {
 
 var current_geom = Geometry($feature);
 var orig_geom = Geometry($originalFeature);
-if (orig_gemo == null){
+if (orig_geom == null){
     return;
 }
-if (Equals(orig_geom, current_geom))
-{
-    return
-}
+
+// This check cannot be used as a line with an extra vertex is considered equal
+//if (Equals(orig_geom, current_geom))
+//{
+//    return
+//}
+
 var snap_vertex = get_first_new_vertex(current_geom,orig_geom);
 if (snap_vertex == null){
     return;

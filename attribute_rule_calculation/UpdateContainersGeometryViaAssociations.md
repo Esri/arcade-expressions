@@ -170,13 +170,13 @@ function get_features(associated_ids, only_geometry, fields) {
             associated_features[class_name] = {}
         }
         // Loop over the features and store them into a dict by class name by Global ID
-        for (var feature in features) {
+        for (var feat in features) {
 
             if (IsEmpty(only_geometry) || only_geometry == false) {
-                associated_features[class_name][feature.globalid] = feature;
+                associated_features[class_name][feat.globalid] = feature;
             } else {
                 var geom = Geometry(feature);
-                associated_features[class_name][feature.globalid] = geom;
+                associated_features[class_name][feat.globalid] = geom;
             }
         }
 
@@ -193,12 +193,12 @@ function get_first_container(features) {
 
     for (var class_name in features) {
         for (var globalid in associated_features[class_name]) {
-            var feature = associated_features[class_name][globalid];
+            var feat = associated_features[class_name][globalid];
 
-            var geom = Geometry(feature);
+            var geom = Geometry(feat);
             var geom_dict = Dictionary(Text(geom));
             if (TypeOf(geom) == 'Point' && HasKey(geom_dict, 'z')) {
-                return [class_name, feature];
+                return [class_name, feat];
             }
         }
     }
@@ -210,8 +210,8 @@ function get_lowest_z(features) {
     var lowest_z = null;
     for (var class_name in features) {
         for (var globalid in features[class_name]) {
-            var feature = features[class_name][globalid];
-            var geom = Geometry(feature);
+            var feat = features[class_name][globalid];
+            var geom = Geometry(feat);
             var geom_dict = Dictionary(Text(geom));
             if (TypeOf(geom) == 'Point' && HasKey(geom_dict, 'z')) {
                 if (IsEmpty(lowest_z)) {

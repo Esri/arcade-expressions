@@ -65,6 +65,8 @@ var groups = [
 ## Expression Template
 
 ```js
+// Set the number of values to return here.
+// This value should be less than or equal to the number of values defined in the groups below.
 var numTopValues = 3;
 
 var groups = [
@@ -90,7 +92,7 @@ function findAliases(top5a,fulla){
   var found = "";
   for(var i in top5a){
     for(var k in fulla){
-      if(top5a[i] == fulla[k].value && Find(fulla[k].alias, found) == -1){
+      if(top5a[i] == fulla[k].value && top5a[i] > 0 && Find(fulla[k].alias, found) == -1){
         found += fulla[k].alias;
         aliases[Count(aliases)] = {
           alias: fulla[k].alias,
@@ -101,26 +103,31 @@ function findAliases(top5a,fulla){
   }
   return aliases;
 }
- 
+
 function getTopGroups(groupsArray){
-    
+
   var values = getValuesArray(groupsArray);
   var top5Values = IIF(Max(values) > 0, Top(Reverse(Sort(values)),numTopValues), "no Asians live here");
   var top5Aliases = findAliases(top5Values,groupsArray);
-    
+
   if(TypeOf(top5Values) == "String"){
     return top5Values;
   } else {
     var content = "";
     for(var i in top5Aliases){
       content += (i+1) + ". " + top5Aliases[i].alias + " - " + Text(top5Aliases[i].value, "#,###");
-      content += IIF(i < numTopValues-1, TextFormatting.NewLine, "");
+      if(i < numTopValues-1){
+        content += TextFormatting.NewLine;
+      }
+      else {
+        break;
+      }
     }
   }
-    
+
   return content;
 }
- 
+
 getTopGroups(groups);
 ```
 

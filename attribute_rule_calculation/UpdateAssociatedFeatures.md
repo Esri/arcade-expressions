@@ -73,32 +73,54 @@ function get_associated_feature_ids(feature, association_type) {
     //return a dict by class name with GlobalIDs of features
     return associated_ids;
 }
+function get_features_switch_yard(class_name, fields, include_geometry) {
+    var class_name = Split(class_name, '.')[-1];    
+    var feature_set = null;
+    if (class_name == 'SewerDevice') {
+        feature_set = FeatureSetByName($datastore, 'SewerDevice', fields, include_geometry);
+    } else if (class_name == 'SewerJunction') {
+        feature_set = FeatureSetByName($datastore, 'SewerJunction', fields, include_geometry);
+    } else if (class_name == 'SewerAssembly') {
+        feature_set = FeatureSetByName($datastore, 'SewerAssembly', fields, include_geometry);
+    } else if (class_name == 'SewerLine') {
+        feature_set = FeatureSetByName($datastore, 'SewerLine', fields, include_geometry);
+    } else if (class_name == 'StructureJunction') {
+        feature_set = FeatureSetByName($datastore, 'StructureJunction', fields, include_geometry);
+    } else if (class_name == 'StructureLine') {
+        feature_set = FeatureSetByName($datastore, 'StructureLine', fields, include_geometry);
+    } else if (class_name == 'StructureBoundary') {
+        feature_set = FeatureSetByName($datastore, 'StructureBoundary', fields, include_geometry);
+    } else {
+        feature_set = FeatureSetByName($datastore, 'StructureBoundary', fields, include_geometry);
+    }
+    return feature_set;
+}
 function get_features(associated_ids){
     // dict to store the features by class name
     var associated_features = {};
     // loop over classes
     for (var class_name in associated_ids) {
         // Get a feature set of the class
-        var feature_set = FeatureSetByName($datastore, class_name, ['*'], false);
+        var feature_set = get_features_switch_yard(class_name, ['*'], false);
         // Store the GlobalIDs as a variable to use in SQL
         var global_ids = associated_ids[class_name];
         // Filter the class for only the associated features
         var features = Filter(feature_set, "globalid IN @global_ids");
         // Loop over the features and store them into a dict by class name
-        associated_features[class_name] = []
-        for(var feature in features)
+        associated_features[class_name] = [];
+        for(var feat in features)
         {
-            associated_features[class_name][Count(associated_features[class_name])] = feature;
+            associated_features[class_name][Count(associated_features[class_name])] = feat;
         }
 
     }
     // Return the features
-    return associated_features
+    return associated_features;
 }
-function update_features(features, value, target_field) {
+function update_features(all_features, value, target_field) {
     var edits = {};
-    for (var class_name in features) {
-        var features = features[class_name]
+    for (var class_name in all_features) {
+        var features = all_features[class_name];
         // No content features from this class, move to next class
         if (count(features) == 0) {
             continue;
@@ -110,9 +132,9 @@ function update_features(features, value, target_field) {
         // Get the first feature and check if it has the target field
         for (var i in features)
         {
-            var feature = features[i];
+            var feat = features[i];
             // If the values are the same, move to next feature
-            if (feature[target_field] == value)
+            if (feat[target_field] == value)
             {
                 continue;
             }
@@ -122,7 +144,7 @@ function update_features(features, value, target_field) {
             }
             // Using classname, get the count of existing features in the array and use it to set the next features
             edits[class_name][count(edits[class_name])] = {
-                'globalid': feature.globalId,
+                'globalid': feat.globalId,
                 'attributes': Dictionary(target_field, value)
             }
         }
