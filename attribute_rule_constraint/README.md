@@ -10,8 +10,10 @@ Each expression lives in a Markdown file, which contains a general description o
 
 See the list below for shared expressions.
 
+- [Only allow the point to be at the start of end of a line](./only_at_start_end.md)
 - [Reject too many related features](./reject_too_many_related.md)
-- [Restrict Editing](./restrict_edting.md)
+- [Restrict editing](./restrict_edting.md)
+- [Restrict editing - prevent delete](./prevent_delete.md)
 
 
 ## Resources

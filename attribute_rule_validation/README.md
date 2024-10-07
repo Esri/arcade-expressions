@@ -10,7 +10,8 @@ Each expression lives in a Markdown file, which contains a general description o
 
 See the list below for shared expressions.
 
-- [Validate Related Features Cardinality](./validate_related_cardinality.md)
+- [Require reducer on diamater change](./require_reducer.md)
+- [Validate related features cardinality](./validate_related_cardinality.md)
 
 
 ## Resources

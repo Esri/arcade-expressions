@@ -10,6 +10,7 @@ Each expression lives in a Markdown file, which contains a general description o
 
 See the list below for shared expressions.
 
+- [Constrain value by subtype and other field](./constainValueBySubtypeOtherField.md)
 - [Constrain to domain code](./constrainToDomainCode.md)
 
 *There aren't any expression templates or functions shared for this profile.*

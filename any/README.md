@@ -8,8 +8,6 @@ Each expression lives in a Markdown file, which contains a general description o
 
 See the list below for shared expressions.
 
-* [Weekdays](./weekdays.md)
-* [Unit Conversion](./unit-conversion.md)
 * [Attribute from Intersection](./attributeFromLargestArea.md)
 * [Barcode - Gas Component Type](./barcode-gas/barcode-gas-componenttype.md)
 * [Barcode - Gas Component Size](./barcode-gas/barcode-gas-componentsize.md)
@@ -20,8 +18,10 @@ See the list below for shared expressions.
 * [Sandbag Wall Estimation - Sandbags](./sandbag-wall-estimation/sandbag-estimate.md)
 * [Sandbag Wall Estimation - Sand](./sandbag-wall-estimation/sand-estimate.md)
 * [Sandbag Wall Estimation - Sheeting](./sandbag-wall-estimation/sheeting-estimate.md)
-* [Relative Humidity](./weather-observation/relative-humidity.md)
-* [Heat Index](./weather-observation/heat-index.md)
+* [Unit Conversion](./unit-conversion.md)
+* [Weather Observation - Relative Humidity](./weather-observation/relative-humidity.md)
+* [Weather Observation - Heat Index](./weather-observation/heat-index.md)
+* [Weekdays](./weekdays.md)
 
 ## Resources
 
