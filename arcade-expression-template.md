@@ -9,10 +9,10 @@
 ## Workflow
 
 > Explain the necessary steps to test the expression: 
-> * Add any notes related to backwards compatibility (e.g. [Calculations across fields](https://github.com/Esri/arcade-expressions/blob/master/dashboard_data/CalculationAcrossFields.md)) (if needed).
+> * Add any notes related to backwards compatibility (e.g. [Calculations across fields](./dashboard/dashboard_data/CalculationAcrossFields.md)) (if needed).
 > * Specify changes to be made (e.g. [how to replace variables](https://github.com/Esri/arcade-expressions/blob/master/popup/url-basic.md#dynamically-create-a-hyperlink-in-a-popup)).
 > * List of the product(s) supported.
-> * Configuration requirements (e.g. [attribute rule values](https://github.com/Esri/arcade-expressions/blob/master/attribute_rule_validation/require_reducer.md#workflow), service description, ...).
+> * Configuration requirements (e.g. [attribute rule values](./attribute-rules/attribute_rule_validation/require_reducer.md#workflow), service description, ...).
 > * Using the provided sample data versus your own data (e.g. [sample vs own data](https://github.com/Esri/arcade-expressions/blob/master/dictionary_renderer/Conduit/Readme.md#workflow)). If sample data is provided, reference it.
 
 
@@ -22,7 +22,7 @@
 
 ## Expression Template
 
-> Add any necessary clarifications. Instead of embedding the example code, you may also reference an external file (e.g. [create points along line](https://github.com/Esri/arcade-expressions/blob/master/attribute_rule_calculation/CreatePointsAlongLine.md)).
+> Add any necessary clarifications. Instead of embedding the example code, you may also reference an external file (e.g. [create points along line](./attribute-rules/attribute_rule_calculation/CreatePointsAlongLine.md)).
 
 ```js
 // Your code here (comments are allowed)

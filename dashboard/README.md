@@ -1,6 +1,6 @@
-# Expressions for any profile
+# Dashboard expressions
 
-This folder contains Arcade expression templates and functions that may be used in any of the execution [profiles](https://developers.arcgis.com/arcade/guide/profiles/).
+This folder contains Arcade expression templates and functions that may be used in the [Dashboard profile](https://developers.arcgis.com/arcade/profiles/dashboard/).
 
 ## General workflow
 
@@ -8,21 +8,8 @@ Each expression lives in a Markdown file, which contains a general description o
 
 See the list below for shared expressions.
 
-* [Attribute from Intersection](./attributeFromLargestArea.md)
-* [Barcode - Gas Component Type](./barcode-gas/barcode-gas-componenttype.md)
-* [Barcode - Gas Component Size](./barcode-gas/barcode-gas-componentsize.md)
-* [Barcode - Gas Component Lot Number](./barcode-gas/barcode-gas-lotnumber.md)
-* [Barcode - Gas Component Manufacturer](./barcode-gas/barcode-gas-manufacturer.md)
-* [Barcode - Gas Component Material](./barcode-gas/barcode-gas-material.md)
-* [Barcode - Gas Component Production Date](./barcode-gas/barcode-gas-productionDate.md)
-* [Constraint expressions](./constraint-expressions)
-* [Sandbag Wall Estimation - Sandbags](./sandbag-wall-estimation/sandbag-estimate.md)
-* [Sandbag Wall Estimation - Sand](./sandbag-wall-estimation/sand-estimate.md)
-* [Sandbag Wall Estimation - Sheeting](./sandbag-wall-estimation/sheeting-estimate.md)
-* [Unit Conversion](./unit-conversion.md)
-* [Weather Observation - Relative Humidity](./weather-observation/relative-humidity.md)
-* [Weather Observation - Heat Index](./weather-observation/heat-index.md)
-* [Weekdays](./weekdays.md)
+* [Dashboard Data](./dashboard_data/)
+* [Dashboard Formatting](./dashboard_data/)
 
 ## Resources
 
@@ -34,7 +21,8 @@ See the list below for shared expressions.
 Esri welcomes [contributions](CONTRIBUTING.md) from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing).
 
 ## License
-Copyright 2018 Esri
+
+Copyright 2024 Esri
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -49,4 +37,3 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 A copy of the license is available in the repository's [LICENSE](LICENSE) file.
-

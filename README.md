@@ -1,6 +1,6 @@
 # ArcGIS Arcade expressions
 
-This repository is intended for sharing and maintaining reuseable Arcade expressions across all supported profiles.
+This repository is intended for sharing and maintaining reuseable Arcade expressions across all supported profiles, and some helper tools to create Arcade Expressions.
 
 ## General workflow
 
@@ -8,10 +8,9 @@ These expressions are organized based on their intended [execution profile](http
 
 * [Any](./any)
 * [Alias](./alias)
-* [Calculation](./attribute_rule_calculation)
-* [Constraint](./constraint)
-* [Dashboard data](./dashboard_data)
-* [Form Calculation](./form_calculation/)
+* [Attribute rules](./attribute-rules)
+* [Dashboard](./dashboard)
+* [Form calculation](./form_calculation/)
 * [Labeling](./labeling)
 * [Popup](./popup)
 * [Visualization](./visualization)
@@ -21,6 +20,10 @@ Click on the desired profile name to view relevant expressions.
 > Note that expressions living in one folder don't have to be exclusively used in the associated profile. They can likely be used in different profiles, though they were designed for the profile indicated by the folder name.
 
 Each expression lives in a Markdown file, which contains a general description of the expression, its use case, a depiction of the result, the code to copy, and an example of an executable form of the expression along with its output. It may also include a link to a web map demonstrating the expression in action.
+
+## Helper tools
+
+In [helper-tools](./helper-tools/) you will find tools to help you create Arcade Expressions.
 
 ## Resources
 
