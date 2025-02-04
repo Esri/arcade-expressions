@@ -4,13 +4,13 @@ This expression can be used to add a tag to a pop up similar to the [Calcite Com
 
 ## Use cases
 
-This is best used in the webmap pop up to style one or multiple catagorical identifiers for quick reference. This expression will automatically generate the html needed to create the chit(s) and ensure they are placed on one line
+This is best used in the webmap popup profile to display one or multiple catagorical identifiers for quick reference. This expression will automatically generate the html needed to create the chit(s) and ensure they are placed on one line
 
 ## Workflow
 
 1) Copy the epxression below into an arcade element
 2) Modify the field to match your data and the color variables to fir your popup's styling
-3) As necessary, repeate line 9 to add more chips
+3) As necessary, repeate line 9 to add more chips -- extra variables may be needed to set different colors and text
 
 ## Expression Template
 
@@ -39,4 +39,6 @@ return {
 ## Example output
 
 The output of this expression will be one or more chips displayed on your popup. 
+
+![image](https://github.com/user-attachments/assets/a3b88818-4c05-4e97-99c7-23b70eb46863)
 
