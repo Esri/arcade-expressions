@@ -1,4 +1,4 @@
-# Display Chit
+# Display Chip
 
 This expression can be used to add a tag to a pop up similar to the [Calcite Components Chip](https://developers.arcgis.com/calcite-design-system/components/chip/).
 
