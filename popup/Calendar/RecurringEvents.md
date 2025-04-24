@@ -3,13 +3,13 @@
 
 Generates array of dates for recurring events.
 
-** Parameters **
+**Parameters**
 
  - **eventDay**: Text – The day of the week the event occurs. 
- - **Schedule** *(Optional)*: Text – How often the event occurs 
+ - **Schedule** *(Optional)*: Text – How often the event occurs
     Accepted values:
     - Daily
-	- Weekly
+    - Weekly
     - Monthly
 
 
@@ -17,7 +17,7 @@ Generates array of dates for recurring events.
  - **numberMonths** *(Optional)*: - Number – The number of months to generate recurring dates
  - **EventSeason** *(Optional)*: Array &lt;Array&gt;&lt;Number&gt; - A two item array representing the start and end date for the event’s season.
 
-** Return value **: Array &lt;Date&gt;
+**Return value**: Array &lt;Date&gt;
 
 **Example** (run on final line as a function) :
 
