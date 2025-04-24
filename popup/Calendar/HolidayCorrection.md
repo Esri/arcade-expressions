@@ -3,7 +3,7 @@
 
 Generates array of dates corrected for holidays. 
 
-** Parameters **
+**Parameters**
 
  - **eventList**: Array &lt;Date&gt; – An array of input dates to assess
  - **holidayDict**: Dictionary – A dictionary where event correction types are the key and events are list of relative and exact dates.  
@@ -15,7 +15,7 @@ Generates array of dates corrected for holidays.
     - **Push Entire Week**: Array&lt;Number&gt; - Input holidays
 
 
-** Return value **: Array &lt;Date&gt;
+**Return value**: Array &lt;Date&gt;
 
 **Example** (run on final line as a function) :
 
