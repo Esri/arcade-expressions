@@ -2,6 +2,8 @@
 
 This folder contains Arcade functions that work in tandem to generate an html calendar. This calendar supports multiple events per day and can be generated with either exact dates or relative dates. 
 
+![image](https://github.com/user-attachments/assets/89262dbd-1fe7-4fa3-9ee2-49a6b3d1a314)
+
 
 
 ## General Workflow
