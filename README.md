@@ -21,6 +21,19 @@ Click on the desired profile name to view relevant expressions.
 
 Each expression lives in a Markdown file, which contains a general description of the expression, its use case, a depiction of the result, the code to copy, and an example of an executable form of the expression along with its output. It may also include a link to a web map demonstrating the expression in action.
 
+## Getting Started
+
+To use an Arcade expression from this repository:
+
+1. Browse to the profile folder (e.g., Popup, Visualization, Dashboard).
+2. Open the Markdown file for the expression you want.
+3. Copy the Arcade code provided in the example.
+4. Paste the code into the ArcGIS application that supports Arcade (such as ArcGIS Online, ArcGIS Pro, or Dashboards).
+5. Adjust the expression as needed for your dataset.
+
+This workflow helps new users quickly test and apply shared expressions.
+
+
 ## Helper tools
 
 In [helper-tools](./helper-tools/) you will find tools to help you create Arcade Expressions.
