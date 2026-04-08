@@ -388,7 +388,7 @@ If you need to reverse the abandonment of a row, you can utilize the <a href="ht
       <div class="highlight">
         <pre><span></span><span class="kn">import</span> <span class="nn">arcpy</span>
 
-<span class="n">arcpy</span><span class="o">.</span><span class="n">udms</span><span class="o">.</span><span class="n">CreateAbandonClasses</span><span class="p">(</span>
+<span class="n">arcpy</span><span class="o">.</span><span class="n">aa</span><span class="o">.</span><span class="n">CreateAbandonClasses</span><span class="p">(</span>
     <span class="n">network</span><span class="o">=</span><span class="sa">r</span><span class="s2">"C:\Network.geodatabase\main.UtilityNetwork\main.Network"</span><span class="p">,</span>
     <span class="n">un_classes</span><span class="o">=</span><span class="s2">"main.StructureJunction;main.StructureBoundary;main.StructureJunctionObject;main.StructureLine;main.StructureEdgeObject;main.ElectricDistributionDevice;main.ElectricDistributionAssembly;main.ElectricDistributionJunction;main.ElectricDistributionJunctionObject;main.ElectricDistributionLine;main.ElectricDistributionEdgeObject"</span><span class="p">,</span>
     <span class="n">prefix</span><span class="o">=</span><span class="s2">"ABT"</span><span class="p">,</span>
@@ -428,7 +428,7 @@ If you need to reverse the abandonment of a row, you can utilize the <a href="ht
 <span class="p">]</span>
 <span class="n">prefix</span> <span class="o">=</span> <span class="s2">"ABT"</span>
 
-<span class="n">arcpy</span><span class="o">.</span><span class="n">udms</span><span class="o">.</span><span class="n">CreateAbandonClasses</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="n">un</span><span class="p">,</span> <span class="n">un_classes</span><span class="o">=</span><span class="n">un_classes</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">,</span> <span class="n">abandon_values</span><span class="o">=</span><span class="n">abandon_values</span><span class="p">)</span>
+<span class="n">arcpy</span><span class="o">.</span><span class="n">aa</span><span class="o">.</span><span class="n">CreateAbandonClasses</span><span class="p">(</span><span class="n">network</span><span class="o">=</span><span class="n">un</span><span class="p">,</span> <span class="n">un_classes</span><span class="o">=</span><span class="n">un_classes</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">,</span> <span class="n">abandon_values</span><span class="o">=</span><span class="n">abandon_values</span><span class="p">)</span>
 </pre>
       </div>
     </div>
